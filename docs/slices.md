@@ -17,9 +17,14 @@ This document tracks our vertical slice execution and exit tests.
 
 ---
 
-## Slice 1: Real Login (Nov 3 - 5)
+## Slice 1: Real Login & Gasless Relayer (Nov 3 - 5)
 - **Goal**: Email login creates embedded wallet, displays player's name & starter Coin, zero popups or gas.
-- **Fallback Trigger**: If blocked for > 24 hours, activate server-managed accounts with session tokens so Slices 2-5 never pause.
+- **Components Delivered**:
+  - `src/lib/wallet.ts`: `EmbeddedWalletManager` deriving ed25519 implicit NEAR accounts, public/private keys, and persistent local session.
+  - `server/relayer.ts`: `Nep366Relayer` wrapping delegate meta-transactions with sponsor account.
+  - `server/index.ts`: Account onboarding and `/api/relay` endpoints.
+  - `src/App.tsx`: Interactive email sign-in modal, demo presets (`judge@near.org`), player address copy pill, starter purse (50.0 Coin), and gasless sponsorship badge.
+- **Exit Test Status**: ✅ Passed (`scripts/verify-slice1.ts` and `npm run build` verified cleanly).
 
 ---
 
