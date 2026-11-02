@@ -2,128 +2,34 @@
 
 @layer base {
   body {
-    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
-    background-color: #070e1c;
-  }
-  
-  h1, h2, h3, .font-cinzel {
-    font-family: 'Cinzel', Georgia, serif;
-  }
-  
-  .font-display {
-    font-family: 'Cinzel Decorative', 'Cinzel', serif;
-  }
-  
-  .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #050c18;
+    color: #f8fafc;
   }
 }
 
-/* Movie-Style Smooth Floating Animations */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+/* Smooth Interactive Micro-animations */
+@keyframes softPulse {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
 }
 
-@keyframes cinematicFloat {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-7px) rotate(0.4deg); }
+.animate-soft-pulse {
+  animation: softPulse 3s ease-in-out infinite;
 }
 
-@keyframes bobSlow {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+/* Clean Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-@keyframes pulseGlow {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 94, 54, 0.4)); }
-  50% { filter: drop-shadow(0 0 22px rgba(255, 94, 54, 0.8)); }
+::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 22s linear infinite;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
 }
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
-.animate-cinematic-float {
-  animation: cinematicFloat 7s ease-in-out infinite;
-}
-
-.animate-bob {
-  animation: bobSlow 3.5s ease-in-out infinite;
-}
-
-.animate-glow-orange {
-  animation: pulseGlow 3s ease-in-out infinite;
-}
-
-/* Halftone Dot Grid Pattern (as seen in DevHack reference) */
-.dot-pattern-overlay {
-  background-image: radial-gradient(rgba(255, 120, 60, 0.18) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
-}
-
-/* Neo-Brutalist Tactile Shadow Elements */
-.neo-box-orange {
-  background: #091326;
-  border: 2.5px solid #ff5e36;
-  box-shadow: 5px 5px 0px #000;
-}
-
-.neo-box-white {
-  background: #0c1830;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 4px 4px 0px #000;
-}
-
-.neo-signboard {
-  background: #fff4db;
-  color: #1a1209;
-  border: 2.5px solid #000;
-  box-shadow: 4px 4px 0px #000;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 800;
-}
-
-.neo-btn-orange {
-  background: linear-gradient(135deg, #ff6636 0%, #ff451a 100%);
-  color: #ffffff;
-  border: 2.5px solid #000000;
-  box-shadow: 4px 4px 0px #000000;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.neo-btn-orange:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #000000;
-  background: linear-gradient(135deg, #ff7a4f 0%, #ff5229 100%);
-}
-
-.neo-btn-orange:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #000000;
-}
-
-.neo-btn-dark {
-  background: #111d33;
-  color: #ffffff;
-  border: 2px solid #000000;
-  box-shadow: 3px 3px 0px #000000;
-  transition: all 0.15s ease;
-}
-
-.neo-btn-dark:hover {
-  transform: translate(-1.5px, -1.5px);
-  box-shadow: 5px 5px 0px #ff5e36;
-  border-color: #ff5e36;
-}
-
-.neo-btn-dark:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 1px 1px 0px #000000;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
