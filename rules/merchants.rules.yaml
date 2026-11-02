@@ -1,0 +1,153 @@
+# Hollow Harbor - Canonical Merchant & Economy Rules
+# Single source of truth: loaded by shared/ engine, shown in tooltips, and live-editable by judges.
+
+goods:
+  iron_ore:
+    name: "Iron Ore"
+    tier: "raw"
+    description: "Mined from coastal cliffs. High weight, low raw value."
+    gather_daily_cap: 80
+  iron_ingot:
+    name: "Iron Ingot"
+    tier: "refined"
+    description: "Smelted from 2 iron ore at the workshop."
+    craft_recipe:
+      inputs: { iron_ore: 2 }
+      output_qty: 1
+  timber:
+    name: "Timber"
+    tier: "raw"
+    description: "Felled pine from the harbor woods."
+    gather_daily_cap: 80
+  plank:
+    name: "Plank"
+    tier: "refined"
+    description: "Milled from 2 timber at the workshop."
+    craft_recipe:
+      inputs: { timber: 2 }
+      output_qty: 1
+  smoked_fish:
+    name: "Smoked Fish"
+    tier: "refined"
+    description: "Salt-cured fish, staple sustenance for harbor crews."
+    craft_recipe:
+      inputs: { fish: 2 }
+      output_qty: 1
+  fish:
+    name: "Raw Fish"
+    tier: "raw"
+    description: "Caught in harbor nets."
+    gather_daily_cap: 60
+
+merchants:
+  forge_marta:
+    name: "Marta's Forge"
+    role: "Blacksmith"
+    personality: "Low margin, high volume"
+    buys: [iron_ore]
+    sells: [iron_ingot]
+    starting_cash: 120
+    starting_stock:
+      iron_ore: 40
+      iron_ingot: 15
+    target_stock:
+      iron_ore: 100
+      iron_ingot: 50
+    price:
+      base:
+        iron_ore: 8.0
+        iron_ingot: 22.0
+      stock_pressure_exponent: 0.6  # bid = base * (target/stock)^0.6 * (1 - spread)
+      demand_ema: 0.3
+      spread: 0.12                  # 12% buy/sell spread
+    survival:
+      min_cash_to_quote: 15
+      close_when_cash_below: 5
+      reopen_when_cash_above: 60
+    caps:
+      max_buy_per_trade_pct_of_cash: 0.25
+
+  piers_timberyard:
+    name: "Old Piers Timberyard"
+    role: "Lumber Merchant"
+    personality: "Cautious with cash, steady buyer"
+    buys: [timber]
+    sells: [plank]
+    starting_cash: 100
+    starting_stock:
+      timber: 50
+      plank: 20
+    target_stock:
+      timber: 120
+      plank: 60
+    price:
+      base:
+        timber: 5.0
+        plank: 14.0
+      stock_pressure_exponent: 0.5
+      demand_ema: 0.25
+      spread: 0.15
+    survival:
+      min_cash_to_quote: 15
+      close_when_cash_below: 8
+      reopen_when_cash_above: 50
+    caps:
+      max_buy_per_trade_pct_of_cash: 0.20
+
+  tavern_gull:
+    name: "The Gull and Anchor"
+    role: "Tavern & Smokehouse"
+    personality: "Pays well when food stock is low"
+    buys: [fish]
+    sells: [smoked_fish]
+    starting_cash: 90
+    starting_stock:
+      fish: 25
+      smoked_fish: 30
+    target_stock:
+      fish: 80
+      smoked_fish: 60
+    price:
+      base:
+        fish: 6.0
+        smoked_fish: 16.0
+      stock_pressure_exponent: 0.75  # sensitive to fish shortages
+      demand_ema: 0.35
+      spread: 0.18
+    survival:
+      min_cash_to_quote: 12
+      close_when_cash_below: 6
+      reopen_when_cash_above: 45
+    caps:
+      max_buy_per_trade_pct_of_cash: 0.30
+
+  shipyard_brannock:
+    name: "Brannock's Shipyard"
+    role: "Shipwright"
+    personality: "The big spender, consumes finished materials"
+    buys: [iron_ingot, plank, smoked_fish]
+    sells: []  # Pure consumer/sink
+    starting_cash: 300
+    starting_stock:
+      iron_ingot: 10
+      plank: 20
+      smoked_fish: 15
+    target_stock:
+      iron_ingot: 60
+      plank: 80
+      smoked_fish: 50
+    price:
+      base:
+        iron_ingot: 24.0
+        plank: 16.0
+        smoked_fish: 18.0
+      stock_pressure_exponent: 0.5
+      demand_ema: 0.2
+      spread: 0.08
+    survival:
+      min_cash_to_quote: 30
+      close_when_cash_below: 15
+      reopen_when_cash_above: 120
+    caps:
+      max_buy_per_trade_pct_of_cash: 0.25
+
