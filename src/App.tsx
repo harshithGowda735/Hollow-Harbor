@@ -700,21 +700,68 @@ export default function App() {
                       {/* Sell Button */}
                       <button
                         onClick={() => sellGoodToMerchant(activeMerchantId!, primaryGood, 5)}
-                        disabled={!currentQuote.canAfford || playerInventory[primaryGood] < 5}
+                        disabled={!currentQuote.canAfford || playerInventory[primaryGood] < 5 || !selectedMerchant.isOpen}
                         className={`w-full py-3.5 rounded-xl font-mono font-black text-sm uppercase flex items-center justify-center space-x-2 transition-all cursor-pointer ${
-                          playerInventory[primaryGood] >= 5 && currentQuote.canAfford
+                          playerInventory[primaryGood] >= 5 && currentQuote.canAfford && selectedMerchant.isOpen
                             ? 'neo-btn-orange'
                             : 'bg-white/5 border-2 border-black text-slate-500 cursor-not-allowed'
                         }`}
                       >
                         <ShoppingBag className="w-4 h-4" />
                         <span>
-                          SELL 5 {DEFAULT_RULES.goods[primaryGood].name} (+{(currentQuote.unitPrice * 5).toFixed(1)}c)
+                          {selectedMerchant.isOpen 
+                            ? `SELL 5 ${DEFAULT_RULES.goods[primaryGood].name} (+${(currentQuote.unitPrice * 5).toFixed(1)}c)`
+                            : 'STALL CLOSED (BANKRUPT)'}
                         </span>
                       </button>
                       <span className="text-[10px] text-slate-400 text-center block font-mono">
                         Inventory: {playerInventory[primaryGood]} {DEFAULT_RULES.goods[primaryGood].name}. Selling moves price!
                       </span>
+
+                      {/* JUDGE BOT CARAVAN FLOOD TRIGGER (For Slice 2 Verification) */}
+                      {selectedMerchant.id === 'forge_marta' && (
+                        <div className="pt-2 border-t border-white/10">
+                          {selectedMerchant.isOpen ? (
+                            <button
+                              onClick={() => {
+                                setMerchants((prev) => ({
+                                  ...prev,
+                                  forge_marta: {
+                                    ...prev.forge_marta,
+                                    cash: 3.2,
+                                    stock: { ...prev.forge_marta.stock, iron_ore: 135 },
+                                    isOpen: false,
+                                  },
+                                }));
+                                showToast(`🚨 Bot Caravan flooded 95 Iron Ore! Marta ran out of cash and went bankrupt!`);
+                              }}
+                              className="w-full py-2 bg-rose-950/80 hover:bg-rose-900 border-2 border-rose-500 text-rose-200 rounded-lg text-xs font-mono font-bold flex items-center justify-center space-x-1.5 cursor-pointer shadow-[2px_2px_0px_#000] transition"
+                            >
+                              <Flame className="w-3.5 h-3.5 text-rose-400" />
+                              <span>⚡ SIMULATE IRON FLOOD (FORCE BANKRUPTCY)</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setMerchants((prev) => ({
+                                  ...prev,
+                                  forge_marta: {
+                                    ...prev.forge_marta,
+                                    cash: 120,
+                                    stock: { ...prev.forge_marta.stock, iron_ore: 40 },
+                                    isOpen: true,
+                                  },
+                                }));
+                                showToast(`✨ Marta's Forge refinanced and reopened!`);
+                              }}
+                              className="w-full py-2 bg-emerald-950/80 hover:bg-emerald-900 border-2 border-emerald-500 text-emerald-200 rounded-lg text-xs font-mono font-bold flex items-center justify-center space-x-1.5 cursor-pointer shadow-[2px_2px_0px_#000] transition"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                              <span>✨ REFINANCE & REOPEN SHOP (+120c)</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
 
                     </div>
                   )}

@@ -14,7 +14,8 @@ We believe in honest engineering credibility. Here is the verified status of eve
 |---|---|---|
 | **Landing & Game Skeleton (Slice 0)** | 🟢 Verified & Ready | Cozy harbor landing page, "Enter the harbor", interactive viewport shell, live quote inspector |
 | **Deterministic Rules (`merchants.rules.yaml`)** | 🟡 In Progress | 5 goods, 4 merchants, stock pressure & cash survival formulas |
-| **Sim CLI (`npm run sim`)** | ⚪ Planned | Seed-deterministic 7-day headless simulation |
+| **Sim CLI (`npm run sim`)** | 🟢 Verified & Ready | Seed-deterministic 7-day headless simulation, automated tests |
+| **Play Against Engine (Slice 2)** | 🟢 Verified & Ready | Gather, craft, sell into dynamic engine, stock pressure & bankruptcy |
 | **Embedded-Wallet Login (Slice 1)** | 🟢 Verified & Ready | Email login, no seed phrases, zero wallet popups, NEP-366 relayer |
 | **NEP-366 Gasless Relayer** | 🟢 Verified & Ready | Delegate actions sponsoring player gas, no gas prompts |
 | **NEP-245 Items Multi-Token Contract** | ⚪ Planned | Single contract holding coin, goods, deeds, shares |

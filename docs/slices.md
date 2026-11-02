@@ -30,6 +30,11 @@ This document tracks our vertical slice execution and exit tests.
 
 ## Slice 2: Play Against Engine (Nov 4 - 6)
 - **Goal**: Gather iron ore, walk to Marta, inspect tooltip, sell, in-memory dynamic pricing shifts.
+- **Components Delivered**:
+  - `sim/run.ts`: Headless 7-day seed-deterministic economy simulator CLI (`npm run sim`).
+  - `test/engine.test.ts`: Automated test suite for stock pressure formulas, bankruptcy threshold trigger, and 100% byte-for-byte seed determinism.
+  - `src/App.tsx`: Interactive resource gathering (Iron Cliffs, Pine Grove, Jetty), workshop crafting, live trade selling, and judge market flood simulation trigger.
+- **Exit Test Status**: ✅ Passed (`npm test` and `npm run sim` verified cleanly; flooding iron ore forces Marta's cash below threshold, closing stall).
 
 ---
 

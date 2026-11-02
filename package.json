@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "test": "tsx test/engine.test.ts",
     "sim": "tsx sim/run.ts"
   },
   "dependencies": {
