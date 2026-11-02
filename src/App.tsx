@@ -30,8 +30,9 @@ import {
   Zap, 
   X, 
   SlidersHorizontal,
-  ChevronRight,
-  Maximize2
+  ExternalLink,
+  Box,
+  Compass as CompassIcon
 } from 'lucide-react';
 import { DEFAULT_RULES } from '@shared/rules';
 import { MerchantState, MerchantId, GoodId } from '@shared/types';
@@ -250,184 +251,279 @@ export default function App() {
   const currentQuote = selectedMerchant ? getMerchantQuote(selectedMerchant, primaryGood) : null;
 
   return (
-    <div className="min-h-screen bg-[#070e1c] text-slate-100 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950 relative overflow-hidden">
+    <div className="min-h-screen bg-[#070e1c] text-slate-100 flex flex-col font-sans selection:bg-[#ff5e36] selection:text-white relative overflow-hidden dot-pattern-overlay">
       
+      {/* 1. TOP NEWS MARQUEE TICKER TAPE (Exactly like the DevHack reference) */}
+      <div className="w-full bg-[#ff5e36] text-[#070e1c] py-1.5 px-4 font-mono font-black text-xs tracking-wider border-b-2 border-black overflow-hidden z-50 flex items-center shadow-md">
+        <span className="shrink-0 bg-black text-[#ff5e36] px-2.5 py-0.5 rounded-sm uppercase tracking-widest text-[10px] mr-3 font-extrabold">
+          LATEST DISPATCH
+        </span>
+        <div className="overflow-hidden whitespace-nowrap flex-1">
+          <div className="animate-marquee font-bold">
+            <span className="mx-4 font-extrabold">🌊 HOLLOW HARBOR 3.0: WHERE THE ECONOMY IS THE GAMEPLAY!</span>
+            <span className="mx-4">⚡ EVERY MERCHANT IS AN AUTONOMOUS NEAR SOLVER WITH A REAL WALLET</span>
+            <span className="mx-4">🪙 ZERO WALLET POPUPS • ZERO GAS INTERRUPTIONS (NEP-366 SPONSORED)</span>
+            <span className="mx-4">🔨 MARTA’S FORGE CASH LOW: FLOOD IRON TO TRIGGER BANKRUPTCY</span>
+            <span className="mx-4">📈 REOPEN STALLS THROUGH NEAR INTENTS & CLAIM 100% AUDITABLE SHARES</span>
+            <span className="mx-4 font-extrabold">🌊 HOLLOW HARBOR 3.0: WHERE THE ECONOMY IS THE GAMEPLAY!</span>
+            <span className="mx-4">⚡ EVERY MERCHANT IS AN AUTONOMOUS NEAR SOLVER WITH A REAL WALLET</span>
+            <span className="mx-4">🪙 ZERO WALLET POPUPS • ZERO GAS INTERRUPTIONS (NEP-366 SPONSORED)</span>
+          </div>
+        </div>
+      </div>
+
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 px-6 py-3 rounded-full shadow-2xl font-black text-sm flex items-center space-x-2.5 border-2 border-white/60 animate-bounce">
-          <Sparkles className="w-4 h-4 text-slate-950" />
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 neo-btn-orange px-6 py-2.5 rounded-xl font-black text-sm flex items-center space-x-2 animate-bounce">
+          <Sparkles className="w-4 h-4 text-white" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* WHISPERFLOW-STYLE FLOATING TOP NAVBAR */}
-      <header className="fixed top-4 left-4 right-4 z-40 max-w-7xl mx-auto flex items-center justify-between pointer-events-none">
-        
-        {/* Left Floating Brand Pill */}
-        <div 
-          onClick={() => setInGame(false)}
-          className="pointer-events-auto bg-[#0a1528]/85 backdrop-blur-2xl border border-white/15 px-4 py-2.5 rounded-full shadow-2xl flex items-center space-x-3 cursor-pointer hover:border-amber-400/50 transition-all duration-300 group"
-        >
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-300 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/30 group-hover:rotate-12 transition-transform">
-            <Anchor className="w-5 h-5 stroke-[2.5]" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-display text-lg font-black tracking-wide text-white">
-                Hollow Harbor
-              </span>
-              <span className="text-[9px] font-mono uppercase bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">
-                NEAR Testnet
-              </span>
-            </div>
-            <span className="text-[10px] text-cyan-300 font-medium block -mt-0.5">
-              Autonomous Agent Solvers
-            </span>
-          </div>
-        </div>
-
-        {/* Center Live Purse Pill (When In-Game) */}
-        {inGame && (
-          <div className="pointer-events-auto hidden md:flex items-center space-x-4 bg-[#0a1528]/85 backdrop-blur-2xl border border-white/15 px-5 py-2.5 rounded-full shadow-2xl">
-            <div className="flex items-center space-x-2 text-amber-300">
-              <Coins className="w-4 h-4 text-amber-400" />
-              <span className="font-mono font-black text-sm text-amber-200">{playerCoin.toFixed(1)} Coin</span>
-            </div>
-            <div className="h-4 w-px bg-white/15" />
-            <div className="flex items-center space-x-2 text-xs">
-              <span className="text-orange-300 font-mono">⛏️ {playerInventory.iron_ore}</span>
-              <span className="text-emerald-300 font-mono">🌲 {playerInventory.timber}</span>
-              <span className="text-cyan-300 font-mono">🐟 {playerInventory.fish}</span>
-            </div>
-          </div>
-        )}
-
-        {/* Right Controls Pill */}
-        <div className="pointer-events-auto flex items-center space-x-2 bg-[#0a1528]/85 backdrop-blur-2xl border border-white/15 p-1.5 rounded-full shadow-2xl">
+      {/* 2. SIGNATURE DEVHACK-STYLE FLOATING PILL NAVBAR */}
+      <header className="sticky top-3 z-40 max-w-7xl mx-auto w-full px-4 pt-1 pointer-events-none">
+        <div className="pointer-events-auto bg-[#091326] border-[2.5px] border-[#ff5e36] shadow-[5px_5px_0px_#000] rounded-full px-5 py-2.5 flex items-center justify-between transition-all duration-300">
           
-          {/* Audio Synthesizer */}
-          <button
-            onClick={toggleSound}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-              isAudioOn 
-                ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/30' 
-                : 'text-slate-400 hover:text-white hover:bg-white/10'
-            }`}
-            title={isAudioOn ? "Mute Ocean Surf" : "Enable Coastal Audio Ambiance"}
+          {/* Logo & Brand Icon */}
+          <div 
+            onClick={() => setInGame(false)}
+            className="flex items-center space-x-3 cursor-pointer group"
           >
-            {isAudioOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
-          </button>
-
-          {/* User Session */}
-          {user ? (
-            <div className="flex items-center space-x-2 bg-white/5 border border-white/10 pl-3 pr-2 py-1 rounded-full text-xs">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-slate-200 font-bold hidden sm:inline">{user.email.split('@')[0]}</span>
-              <button 
-                onClick={copyAccountId}
-                className="text-[10px] text-cyan-300 font-mono hover:text-cyan-200 cursor-pointer px-1.5 py-0.5 rounded bg-black/40"
-                title="Copy Implicit Address"
-              >
-                {copiedAccount ? <Check className="w-3 h-3 text-emerald-400" /> : `${user.accountId.slice(0, 6)}...`}
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="text-slate-400 hover:text-rose-400 transition cursor-pointer p-1"
-                title="Sign Out"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
+            <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center text-black font-black group-hover:rotate-6 transition-transform">
+              <Anchor className="w-5 h-5 text-[#ff5e36] stroke-[3]" />
             </div>
-          ) : (
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/30 transition-all cursor-pointer flex items-center space-x-1.5"
-            >
-              <Mail className="w-3.5 h-3.5" />
-              <span>Email Sign In</span>
-            </button>
-          )}
+            <div className="flex items-center space-x-2">
+              <span className="font-cinzel text-lg font-black tracking-wide text-white group-hover:text-[#ff5e36] transition-colors">
+                HOLLOW HARBOR
+              </span>
+              <span className="text-[10px] font-mono font-black uppercase bg-[#ff5e36] text-white px-2 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000]">
+                3.0
+              </span>
+            </div>
+          </div>
 
-          {/* Ledger Toggle */}
-          <button
-            onClick={() => setShowLedgerModal(true)}
-            className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 text-cyan-300 flex items-center justify-center transition cursor-pointer border border-white/10"
-            title="View Public Blockchain Ledger"
-          >
-            <Layers className="w-4 h-4" />
-          </button>
+          {/* Center Navigation Links (Matching DEVHACK Navbar) */}
+          <nav className="hidden lg:flex items-center space-x-6 text-xs font-mono font-bold tracking-wider text-slate-200">
+            <button 
+              onClick={() => setInGame(false)} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
+            >
+              MAIN
+            </button>
+            <button 
+              onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
+            >
+              MERCHANTS
+            </button>
+            <button 
+              onClick={() => { setInGame(true); setShowWorkshopModal(true); }} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
+            >
+              WORKSHOP
+            </button>
+            <button 
+              onClick={() => { setInGame(true); setShowTownBoardModal(true); }} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
+            >
+              TOWN BOARD
+            </button>
+            <button 
+              onClick={() => setShowLedgerModal(true)} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
+            >
+              LEDGER
+            </button>
+          </nav>
+
+          {/* Right Controls Pill */}
+          <div className="flex items-center space-x-2.5">
+            
+            {/* Audio Toggle */}
+            <button
+              onClick={toggleSound}
+              className={`w-8 h-8 rounded-lg border-2 border-black flex items-center justify-center transition-all cursor-pointer shadow-[2px_2px_0px_#000] ${
+                isAudioOn 
+                  ? 'bg-[#ff5e36] text-white' 
+                  : 'bg-[#15233c] text-slate-300 hover:text-white'
+              }`}
+              title={isAudioOn ? "Mute Ocean Surf" : "Enable Coastal Audio Ambiance"}
+            >
+              {isAudioOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+
+            {/* User Session */}
+            {user ? (
+              <div className="flex items-center space-x-2 bg-[#121e33] border-2 border-black shadow-[2px_2px_0px_#000] px-3 py-1 rounded-lg text-xs">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-white font-bold font-mono">{user.email.split('@')[0]}</span>
+                <button 
+                  onClick={copyAccountId}
+                  className="text-[10px] text-amber-300 font-mono hover:underline cursor-pointer"
+                  title="Copy Implicit Address"
+                >
+                  {copiedAccount ? <Check className="w-3 h-3 text-emerald-400 inline" /> : `${user.accountId.slice(0, 5)}..`}
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="text-slate-400 hover:text-rose-400 transition cursor-pointer p-0.5"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="neo-btn-orange px-4 py-1.5 rounded-lg text-xs font-black cursor-pointer uppercase tracking-wider flex items-center space-x-1.5"
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>SIGN IN</span>
+              </button>
+            )}
+
+            {/* Quick Ledger Pill */}
+            <button
+              onClick={() => setShowLedgerModal(true)}
+              className="neo-btn-dark px-3 py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer uppercase flex items-center space-x-1"
+            >
+              <Layers className="w-3.5 h-3.5 text-[#ff5e36]" />
+              <span className="hidden sm:inline">LEDGER</span>
+            </button>
+
+          </div>
 
         </div>
-
       </header>
 
       {/* MAIN VIEWPORT */}
-      <main className="flex-1 flex flex-col relative w-full h-screen overflow-hidden">
+      <main className="flex-1 flex flex-col relative w-full h-[calc(100vh-80px)] overflow-hidden">
         
-        {/* CARTOON HARBOR PANORAMA BACKGROUND IMAGE */}
-        <div className="absolute inset-0 z-0 overflow-hidden select-none">
+        {/* CARTOON HARBOR PANORAMA BACKGROUND IMAGE (Cinematic movie-like slow float) */}
+        <div className="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none">
           <img 
             src="/assets/harbor_panoramic.jpg" 
             alt="Hollow Harbor Panoramic View" 
-            className="w-full h-full object-cover object-center filter saturate-110 brightness-95 scale-102 transform transition-transform duration-1000"
+            className="w-full h-full object-cover object-center filter saturate-110 brightness-95 animate-cinematic-float"
           />
-          {/* Subtle vignette for crisp UI legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050c19] via-transparent to-[#050c19]/40 pointer-events-none" />
+          {/* Subtle Halftone dot overlay & dark vignette */}
+          <div className="absolute inset-0 dot-pattern-overlay pointer-events-none opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050c19] via-transparent to-[#050c19]/30 pointer-events-none" />
         </div>
 
         {!inGame ? (
           /* ========================================================================= */
-          /* WHISPERFLOW-STYLE HERO OVERLAY                                           */
+          /* DEVHACK 3.0 RETRO-NEOBRUTALIST HERO VIEW                                 */
           /* ========================================================================= */
           <div className="relative z-10 flex-1 flex items-center justify-center p-6">
-            <div className="max-w-2xl w-full bg-[#071326]/80 backdrop-blur-3xl border border-white/20 p-8 sm:p-12 rounded-[2.5rem] shadow-2xl text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+            <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               
-              <div className="inline-flex items-center space-x-2 bg-amber-400/15 border border-amber-400/40 px-4 py-1.5 rounded-full text-amber-300 text-xs font-bold mb-6">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
-                <span>NEAR Hackathon: Games With Real Economies</span>
+              {/* Left Column: Big Neo-Brutalist Title & Actions */}
+              <div className="lg:col-span-7 text-left space-y-6">
+                
+                {/* Sponsor / Platform Tag (like GitHub Presents) */}
+                <div className="inline-flex items-center space-x-2 bg-white text-black border-2 border-black px-3 py-1 rounded-md shadow-[3px_3px_0px_#000] text-xs font-mono font-black uppercase">
+                  <span className="w-2 h-2 rounded-full bg-[#ff5e36]" />
+                  <span>NEAR PROTOCOL PRESENTS</span>
+                </div>
+
+                {/* Big Chunky 3D Title */}
+                <div>
+                  <h1 className="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight drop-shadow-[5px_5px_0px_#000]">
+                    HOLLOW <br />
+                    <span className="text-white drop-shadow-[6px_6px_0px_#ff5e36]">
+                      HARBOR
+                    </span>
+                  </h1>
+                  <span className="font-mono text-3xl sm:text-5xl font-black text-white block mt-2 drop-shadow-[4px_4px_0px_#000]">
+                    3.0
+                  </span>
+                </div>
+
+                {/* Subtitle */}
+                <p className="text-base sm:text-lg text-slate-100 max-w-xl font-medium leading-relaxed drop-shadow-[1px_1px_2px_#000] bg-[#071326]/60 p-4 rounded-xl border border-white/10 backdrop-blur-md">
+                  A harbor town where every merchant is an <strong>autonomous agent with a real NEAR wallet</strong>. 
+                  Prices fluctuate on real inventory and survival pressure. Flood iron, watch the forge go bankrupt, and invest to revive it.
+                </p>
+
+                {/* Tactile DevHack Buttons */}
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <button
+                    onClick={() => setShowLoginModal(true)}
+                    className="neo-btn-dark px-7 py-3.5 rounded-lg font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2"
+                  >
+                    <span>ENTER WITH EMAIL</span>
+                    <ArrowRight className="w-4 h-4 text-[#ff5e36]" />
+                  </button>
+
+                  <button
+                    onClick={() => handleLogin('judge@near.org')}
+                    className="neo-btn-orange px-7 py-3.5 rounded-lg font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2"
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>LAUNCH JUDGE DEMO</span>
+                  </button>
+                </div>
+
+                {/* Hanging Wooden Rope Signboard (like September 18th & 19th in reference) */}
+                <div className="pt-4">
+                  <div className="inline-block relative">
+                    {/* Hanging Ropes */}
+                    <div className="absolute -top-4 left-6 w-1 h-4 bg-[#8a5d3b] border-x border-black" />
+                    <div className="absolute -top-4 right-6 w-1 h-4 bg-[#8a5d3b] border-x border-black" />
+                    
+                    {/* Wooden Signboard */}
+                    <div className="neo-signboard px-6 py-2 rounded-sm text-xs uppercase tracking-widest flex items-center space-x-2">
+                      <CompassIcon className="w-4 h-4 text-[#ff5e36]" />
+                      <span>NEAR HACKATHON • GAMES WITH REAL ECONOMIES • NOV 2026</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-              <h1 className="font-display text-4xl sm:text-6xl font-black text-white mb-4 leading-tight drop-shadow-md">
-                Hollow Harbor
-              </h1>
+              {/* Right Column: DevHack-Style 3D Isometric Character/Block Cluster */}
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="relative w-80 sm:w-96 p-4">
+                  
+                  {/* Marta Avatar Feature Card */}
+                  <div className="neo-box-orange p-5 rounded-2xl relative shadow-[8px_8px_0px_#000] transform hover:scale-102 transition-all">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <img 
+                        src="/assets/marta_avatar.jpg" 
+                        alt="Marta" 
+                        className="w-16 h-16 rounded-xl object-cover border-2 border-black shadow-[3px_3px_0px_#000]" 
+                      />
+                      <div>
+                        <span className="text-[10px] font-mono font-black uppercase text-[#ff5e36] bg-black px-2 py-0.5 rounded">
+                          AI SOLVER #01
+                        </span>
+                        <h3 className="font-cinzel text-xl font-black text-white">Marta's Forge</h3>
+                        <span className="text-xs text-amber-300 font-mono">Autonomous Merchant</span>
+                      </div>
+                    </div>
 
-              <p className="text-base sm:text-lg text-slate-200 mb-8 leading-relaxed font-light">
-                Every merchant is an <strong className="text-amber-300 font-semibold">autonomous agent</strong> with a real NEAR wallet. 
-                Prices fluctuate on real inventory and survival pressure. Flood iron, watch the forge go bankrupt, and invest to revive it.
-              </p>
+                    <div className="space-y-2 bg-[#050b17] p-3 rounded-xl border-2 border-black font-mono text-xs">
+                      <div className="flex justify-between text-slate-300">
+                        <span>Cash Reserve:</span>
+                        <span className="text-amber-400 font-black">120.0 Coin</span>
+                      </div>
+                      <div className="flex justify-between text-slate-300">
+                        <span>Iron Ore Stock:</span>
+                        <span className="text-emerald-400 font-black">40 / 100 Target</span>
+                      </div>
+                      <div className="flex justify-between text-slate-300 border-t border-white/10 pt-1.5 font-bold">
+                        <span className="text-white">Dynamic Bid:</span>
+                        <span className="text-[#ff5e36] font-black text-sm">8.1 Coin</span>
+                      </div>
+                    </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black text-base shadow-xl shadow-amber-500/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center space-x-2.5"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>Enter with Email (Gasless)</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                    <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                      <span>NEP-245 Token ID</span>
+                      <span className="text-emerald-400">Gasless Relayer On</span>
+                    </div>
+                  </div>
 
-                <button
-                  onClick={() => handleLogin('judge@near.org')}
-                  className="w-full sm:w-auto px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 text-cyan-200 font-bold text-sm border border-white/20 transition-all cursor-pointer flex items-center justify-center space-x-2"
-                >
-                  <Zap className="w-4 h-4 text-amber-400" />
-                  <span>Quick Judge Demo</span>
-                </button>
-              </div>
-
-              {/* 3 Value bullets */}
-              <div className="mt-8 pt-6 border-t border-white/10 grid grid-cols-3 gap-2 text-left">
-                <div className="text-center">
-                  <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">Real Economy</span>
-                  <span className="text-xs text-slate-300 font-medium">No Fake Combat</span>
-                </div>
-                <div className="text-center border-x border-white/10">
-                  <span className="text-[10px] text-emerald-300 font-bold uppercase tracking-wider block">NEP-366 Relayer</span>
-                  <span className="text-xs text-slate-300 font-medium">Zero Gas Prompts</span>
-                </div>
-                <div className="text-center">
-                  <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider block">NEAR Intents</span>
-                  <span className="text-xs text-slate-300 font-medium">Shop Backing</span>
                 </div>
               </div>
 
@@ -435,30 +531,30 @@ export default function App() {
           </div>
         ) : (
           /* ========================================================================= */
-          /* INTERACTIVE CARTOON MAP VIEWPORT WITH FLOATING HOTSPOT PINS              */
+          /* PLAYABLE TOWN VIEWPORT WITH 3D NEO-BRUTALIST HOTSPOT PINS                */
           /* ========================================================================= */
           <div className="relative z-10 flex-1 flex flex-col justify-between p-6 pointer-events-none">
             
             {/* Top Space for Navigation */}
-            <div className="h-16" />
+            <div className="h-10" />
 
-            {/* INTERACTIVE CARTOON MAP HOTSPOT PINS */}
+            {/* INTERACTIVE CARTOON MAP HOTSPOT PINS (DevHack 3D Block Badges) */}
             <div className="absolute inset-0 pointer-events-auto">
               
-              {/* Pin 1: Marta's Forge (Blacksmith) */}
+              {/* Pin 1: Marta's Forge */}
               <div 
                 style={{ top: '48%', left: '38%' }}
                 onClick={() => setActiveMerchantId('forge_marta')}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group animate-bob"
               >
-                <div className={`px-3 py-1.5 rounded-full flex items-center space-x-2 transition-all transform duration-300 shadow-2xl ${
+                <div className={`px-3 py-1.5 rounded-lg flex items-center space-x-2 border-2 border-black transition-all transform shadow-[4px_4px_0px_#000] ${
                   activeMerchantId === 'forge_marta'
-                    ? 'bg-amber-400 text-slate-950 scale-110 ring-4 ring-amber-400/40 font-black'
-                    : 'bg-[#071326]/90 text-amber-200 border border-amber-400/50 hover:scale-105 backdrop-blur-xl'
+                    ? 'bg-[#ff5e36] text-white scale-110 font-black'
+                    : 'bg-[#091326] text-amber-200 hover:scale-105'
                 }`}>
-                  <Flame className="w-3.5 h-3.5 text-orange-500 fill-orange-500" />
-                  <span className="text-xs font-bold font-cinzel">Marta's Forge</span>
-                  <span className="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded-full">
+                  <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                  <span className="text-xs font-bold font-mono">Marta's Forge</span>
+                  <span className="text-[10px] font-mono bg-black text-[#ff5e36] px-1.5 py-0.5 rounded">
                     {merchants.forge_marta.cash.toFixed(0)}c
                   </span>
                 </div>
@@ -468,16 +564,16 @@ export default function App() {
               <div 
                 style={{ top: '38%', left: '24%' }}
                 onClick={() => setActiveMerchantId('piers_timberyard')}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group animate-bob"
               >
-                <div className={`px-3 py-1.5 rounded-full flex items-center space-x-2 transition-all transform duration-300 shadow-2xl ${
+                <div className={`px-3 py-1.5 rounded-lg flex items-center space-x-2 border-2 border-black transition-all transform shadow-[4px_4px_0px_#000] ${
                   activeMerchantId === 'piers_timberyard'
-                    ? 'bg-emerald-400 text-slate-950 scale-110 ring-4 ring-emerald-400/40 font-black'
-                    : 'bg-[#071326]/90 text-emerald-200 border border-emerald-400/50 hover:scale-105 backdrop-blur-xl'
+                    ? 'bg-emerald-500 text-white scale-110 font-black'
+                    : 'bg-[#091326] text-emerald-200 hover:scale-105'
                 }`}>
                   <TreePine className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-                  <span className="text-xs font-bold font-cinzel">Piers Timber</span>
-                  <span className="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded-full">
+                  <span className="text-xs font-bold font-mono">Piers Timber</span>
+                  <span className="text-[10px] font-mono bg-black text-emerald-400 px-1.5 py-0.5 rounded">
                     {merchants.piers_timberyard.cash.toFixed(0)}c
                   </span>
                 </div>
@@ -487,16 +583,16 @@ export default function App() {
               <div 
                 style={{ top: '56%', left: '58%' }}
                 onClick={() => setActiveMerchantId('tavern_gull')}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group animate-bob"
               >
-                <div className={`px-3 py-1.5 rounded-full flex items-center space-x-2 transition-all transform duration-300 shadow-2xl ${
+                <div className={`px-3 py-1.5 rounded-lg flex items-center space-x-2 border-2 border-black transition-all transform shadow-[4px_4px_0px_#000] ${
                   activeMerchantId === 'tavern_gull'
-                    ? 'bg-cyan-400 text-slate-950 scale-110 ring-4 ring-cyan-400/40 font-black'
-                    : 'bg-[#071326]/90 text-cyan-200 border border-cyan-400/50 hover:scale-105 backdrop-blur-xl'
+                    ? 'bg-cyan-500 text-black scale-110 font-black'
+                    : 'bg-[#091326] text-cyan-200 hover:scale-105'
                 }`}>
                   <Fish className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-xs font-bold font-cinzel">Gull & Anchor</span>
-                  <span className="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded-full">
+                  <span className="text-xs font-bold font-mono">Gull & Anchor</span>
+                  <span className="text-[10px] font-mono bg-black text-cyan-300 px-1.5 py-0.5 rounded">
                     {merchants.tavern_gull.cash.toFixed(0)}c
                   </span>
                 </div>
@@ -506,16 +602,16 @@ export default function App() {
               <div 
                 style={{ top: '65%', left: '76%' }}
                 onClick={() => setActiveMerchantId('shipyard_brannock')}
-                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group animate-bob"
               >
-                <div className={`px-3 py-1.5 rounded-full flex items-center space-x-2 transition-all transform duration-300 shadow-2xl ${
+                <div className={`px-3 py-1.5 rounded-lg flex items-center space-x-2 border-2 border-black transition-all transform shadow-[4px_4px_0px_#000] ${
                   activeMerchantId === 'shipyard_brannock'
-                    ? 'bg-yellow-400 text-slate-950 scale-110 ring-4 ring-yellow-400/40 font-black'
-                    : 'bg-[#071326]/90 text-yellow-200 border border-yellow-400/50 hover:scale-105 backdrop-blur-xl'
+                    ? 'bg-yellow-400 text-black scale-110 font-black'
+                    : 'bg-[#091326] text-yellow-200 hover:scale-105'
                 }`}>
                   <Anchor className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-bold font-cinzel">Shipyard</span>
-                  <span className="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded-full">
+                  <span className="text-xs font-bold font-mono">Shipyard</span>
+                  <span className="text-[10px] font-mono bg-black text-yellow-300 px-1.5 py-0.5 rounded">
                     {merchants.shipyard_brannock.cash.toFixed(0)}c
                   </span>
                 </div>
@@ -527,9 +623,9 @@ export default function App() {
                 onClick={() => gatherResource('iron_ore', 5)}
                 className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
               >
-                <button className="bg-gradient-to-r from-orange-500/90 to-amber-600/90 hover:from-orange-400 hover:to-amber-500 text-slate-950 px-3 py-1.5 rounded-full text-xs font-black shadow-xl flex items-center space-x-1.5 border border-white/40 transform hover:scale-105 transition-all">
+                <button className="neo-btn-orange px-3.5 py-1.5 rounded-md text-xs font-mono font-black uppercase flex items-center space-x-1.5">
                   <Pickaxe className="w-3.5 h-3.5" />
-                  <span>Mine Iron Ore (+5)</span>
+                  <span>MINE ORE (+5)</span>
                 </button>
               </div>
 
@@ -539,9 +635,9 @@ export default function App() {
                 onClick={() => gatherResource('fish', 4)}
                 className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
               >
-                <button className="bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-slate-950 px-3 py-1.5 rounded-full text-xs font-black shadow-xl flex items-center space-x-1.5 border border-white/40 transform hover:scale-105 transition-all">
+                <button className="neo-btn-dark px-3.5 py-1.5 rounded-md text-xs font-mono font-black uppercase flex items-center space-x-1.5 text-cyan-300 border-cyan-400">
                   <Waves className="w-3.5 h-3.5" />
-                  <span>Cast Fish Nets (+4)</span>
+                  <span>CAST NETS (+4)</span>
                 </button>
               </div>
 
@@ -549,38 +645,38 @@ export default function App() {
 
             {/* FLOATING RIGHT DRAWER: LIVE SOLVER QUOTE & SELL INTERFACE */}
             {selectedMerchant && (
-              <div className="pointer-events-auto fixed right-6 top-24 bottom-24 w-88 md:w-96 bg-[#071326]/90 backdrop-blur-3xl border border-white/20 rounded-[2.5rem] shadow-2xl p-6 flex flex-col justify-between z-30 animate-in slide-in-from-right duration-300">
+              <div className="pointer-events-auto fixed right-6 top-24 bottom-24 w-88 md:w-96 neo-box-orange rounded-2xl shadow-[8px_8px_0px_#000] p-6 flex flex-col justify-between z-30 animate-in slide-in-from-right duration-300">
                 
                 <div>
                   {/* Drawer Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center justify-between pb-3 border-b-2 border-black">
                     <div className="flex items-center space-x-3">
                       {selectedMerchant.id === 'forge_marta' ? (
                         <img 
                           src="/assets/marta_avatar.jpg" 
                           alt="Marta Avatar" 
-                          className="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-md shadow-amber-400/30"
+                          className="w-12 h-12 rounded-xl object-cover border-2 border-black shadow-[2px_2px_0px_#000]"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center font-black text-slate-950 font-cinzel text-lg">
+                        <div className="w-12 h-12 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black font-cinzel text-lg">
                           {selectedMerchant.name[0]}
                         </div>
                       )}
                       <div>
-                        <span className="text-[10px] text-amber-400 font-black uppercase tracking-wider block">
-                          Autonomous Solver
+                        <span className="text-[10px] text-[#ff5e36] font-mono font-black uppercase tracking-wider block">
+                          NEAR INTENT SOLVER
                         </span>
                         <h3 className="font-cinzel text-lg font-black text-white leading-tight">
                           {selectedMerchant.name}
                         </h3>
-                        <span className="text-[11px] text-slate-300">
+                        <span className="text-[11px] text-slate-300 font-mono">
                           {selectedMerchant.role} • {selectedMerchant.cash.toFixed(0)} Coin Cash
                         </span>
                       </div>
                     </div>
                     <button 
                       onClick={() => setActiveMerchantId(null)}
-                      className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 text-slate-400 hover:text-white flex items-center justify-center transition cursor-pointer"
+                      className="w-8 h-8 rounded-lg bg-black text-white hover:text-[#ff5e36] flex items-center justify-center transition cursor-pointer border border-white/20"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -591,9 +687,9 @@ export default function App() {
                     <div className="mt-4 space-y-3.5">
                       
                       {/* Transparent Reason */}
-                      <div className="bg-black/40 border border-amber-400/30 p-3.5 rounded-2xl">
-                        <div className="flex items-center space-x-1.5 text-xs font-bold text-amber-300 mb-1">
-                          <Info className="w-3.5 h-3.5 text-amber-400" />
+                      <div className="bg-[#050b17] border-2 border-black p-3.5 rounded-xl shadow-[3px_3px_0px_#000]">
+                        <div className="flex items-center space-x-1.5 text-xs font-bold text-amber-300 mb-1 font-mono">
+                          <Info className="w-3.5 h-3.5 text-[#ff5e36]" />
                           <span>Dynamic Pricing Reason:</span>
                         </div>
                         <p className="text-xs text-amber-100/90 leading-relaxed italic">
@@ -602,22 +698,22 @@ export default function App() {
                       </div>
 
                       {/* Formula Terms */}
-                      <div className="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2 font-mono text-xs">
+                      <div className="bg-black border-2 border-black rounded-xl p-3.5 space-y-2 font-mono text-xs shadow-[3px_3px_0px_#000]">
                         <div className="flex justify-between text-slate-400">
                           <span>Base Price:</span>
-                          <span className="text-white">{currentQuote.terms.basePrice.toFixed(1)} Coin</span>
+                          <span className="text-white font-bold">{currentQuote.terms.basePrice.toFixed(1)} Coin</span>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Stock / Target:</span>
-                          <span className="text-white">{currentQuote.terms.currentStock} / {currentQuote.terms.targetStock}</span>
+                          <span className="text-white font-bold">{currentQuote.terms.currentStock} / {currentQuote.terms.targetStock}</span>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Stock Pressure:</span>
                           <span className="text-cyan-400 font-bold">{currentQuote.terms.stockPressureFactor.toFixed(3)}x</span>
                         </div>
-                        <div className="flex justify-between border-t border-white/10 pt-2 font-bold text-sm">
-                          <span className="text-amber-300">Live Bid Quote:</span>
-                          <span className="text-amber-400 text-base">{currentQuote.unitPrice.toFixed(1)} Coin</span>
+                        <div className="flex justify-between border-t border-white/20 pt-2 font-bold text-sm">
+                          <span className="text-[#ff5e36]">Calculated Bid Quote:</span>
+                          <span className="text-[#ff5e36] text-base">{currentQuote.unitPrice.toFixed(1)} Coin</span>
                         </div>
                       </div>
 
@@ -625,19 +721,19 @@ export default function App() {
                       <button
                         onClick={() => sellGoodToMerchant(activeMerchantId!, primaryGood, 5)}
                         disabled={!currentQuote.canAfford || playerInventory[primaryGood] < 5}
-                        className={`w-full py-3.5 rounded-2xl font-black text-sm flex items-center justify-center space-x-2 transition-all shadow-xl cursor-pointer ${
+                        className={`w-full py-3.5 rounded-xl font-mono font-black text-sm uppercase flex items-center justify-center space-x-2 transition-all cursor-pointer ${
                           playerInventory[primaryGood] >= 5 && currentQuote.canAfford
-                            ? 'bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 shadow-amber-500/25 transform hover:-translate-y-0.5'
-                            : 'bg-white/5 border border-white/10 text-slate-500 cursor-not-allowed'
+                            ? 'neo-btn-orange'
+                            : 'bg-white/5 border-2 border-black text-slate-500 cursor-not-allowed'
                         }`}
                       >
                         <ShoppingBag className="w-4 h-4" />
                         <span>
-                          Sell 5 {DEFAULT_RULES.goods[primaryGood].name} (+{(currentQuote.unitPrice * 5).toFixed(1)} Coin)
+                          SELL 5 {DEFAULT_RULES.goods[primaryGood].name} (+{(currentQuote.unitPrice * 5).toFixed(1)}c)
                         </span>
                       </button>
-                      <span className="text-[10px] text-slate-400 text-center block">
-                        Purse has {playerInventory[primaryGood]} {DEFAULT_RULES.goods[primaryGood].name}. Selling moves price!
+                      <span className="text-[10px] text-slate-400 text-center block font-mono">
+                        Inventory: {playerInventory[primaryGood]} {DEFAULT_RULES.goods[primaryGood].name}. Selling moves price!
                       </span>
 
                     </div>
@@ -645,39 +741,39 @@ export default function App() {
 
                 </div>
 
-                <div className="text-[10px] text-slate-400 border-t border-white/10 pt-3 flex justify-between font-mono">
-                  <span>Single File: merchants.rules.yaml</span>
-                  <span className="text-emerald-400">NEP-245 Token ID</span>
+                <div className="text-[10px] text-slate-400 border-t-2 border-black pt-3 flex justify-between font-mono">
+                  <span>merchants.rules.yaml</span>
+                  <span className="text-emerald-400 font-bold">NEP-245 Token ID</span>
                 </div>
 
               </div>
             )}
 
-            {/* WHISPERFLOW-STYLE FLOATING BOTTOM DOCK */}
-            <div className="pointer-events-auto max-w-xl mx-auto w-full bg-[#0a1528]/90 backdrop-blur-3xl border border-white/20 p-2 rounded-full shadow-2xl flex items-center justify-around z-20">
+            {/* DEVHACK-STYLE FLOATING BOTTOM DOCK */}
+            <div className="pointer-events-auto max-w-xl mx-auto w-full neo-box-orange p-2 rounded-2xl shadow-[6px_6px_0px_#000] flex items-center justify-around z-20">
               
               {/* Mine Ore */}
               <button 
                 onClick={() => gatherResource('iron_ore', 5)}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-full hover:bg-white/10 text-orange-300 text-xs font-bold transition cursor-pointer"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-black/40 text-orange-400 text-xs font-mono font-bold transition cursor-pointer"
               >
-                <Flame className="w-4 h-4 text-orange-400" />
-                <span className="hidden sm:inline">Mine Ore</span>
+                <Flame className="w-4 h-4" />
+                <span>Mine Ore</span>
               </button>
 
               {/* Chop Timber */}
               <button 
                 onClick={() => gatherResource('timber', 5)}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-full hover:bg-white/10 text-emerald-300 text-xs font-bold transition cursor-pointer"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-black/40 text-emerald-400 text-xs font-mono font-bold transition cursor-pointer"
               >
-                <TreePine className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline">Chop Timber</span>
+                <TreePine className="w-4 h-4" />
+                <span>Chop Timber</span>
               </button>
 
               {/* Workshop Modal */}
               <button 
                 onClick={() => setShowWorkshopModal(true)}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black shadow-lg shadow-amber-400/30 transition cursor-pointer"
+                className="neo-btn-orange px-4 py-2 rounded-lg text-xs font-mono font-black uppercase flex items-center space-x-1.5 cursor-pointer"
               >
                 <Hammer className="w-4 h-4" />
                 <span>Workshop</span>
@@ -686,19 +782,19 @@ export default function App() {
               {/* Fish */}
               <button 
                 onClick={() => gatherResource('fish', 4)}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-full hover:bg-white/10 text-cyan-300 text-xs font-bold transition cursor-pointer"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-black/40 text-cyan-400 text-xs font-mono font-bold transition cursor-pointer"
               >
-                <Fish className="w-4 h-4 text-cyan-400" />
-                <span className="hidden sm:inline">Fish</span>
+                <Fish className="w-4 h-4" />
+                <span>Fish</span>
               </button>
 
               {/* Town Board */}
               <button 
                 onClick={() => setShowTownBoardModal(true)}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-full hover:bg-white/10 text-slate-300 text-xs font-bold transition cursor-pointer"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-black/40 text-slate-300 text-xs font-mono font-bold transition cursor-pointer"
               >
                 <Building2 className="w-4 h-4 text-blue-400" />
-                <span className="hidden sm:inline">Town Board</span>
+                <span>Town Board</span>
               </button>
 
             </div>
@@ -710,56 +806,56 @@ export default function App() {
       {/* WORKSHOP MODAL */}
       {showWorkshopModal && (
         <div className="fixed inset-0 bg-[#040912]/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-          <div className="bg-[#071326] border border-white/20 max-w-md w-full rounded-[2.5rem] p-7 shadow-2xl">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="neo-box-orange max-w-md w-full rounded-2xl p-7 shadow-[10px_10px_0px_#000]">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-black">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-black">
-                  <Hammer className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black">
+                  <Hammer className="w-5 h-5 text-[#ff5e36]" />
                 </div>
                 <h3 className="font-cinzel text-lg font-black text-white">Harbor Workshop</h3>
               </div>
               <button 
                 onClick={() => setShowWorkshopModal(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                className="text-slate-400 hover:text-white cursor-pointer font-bold font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <div className="py-6 space-y-3">
-              <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-center justify-between">
+            <div className="py-6 space-y-3 font-mono">
+              <div className="bg-[#050b17] border-2 border-black p-4 rounded-xl flex items-center justify-between shadow-[3px_3px_0px_#000]">
                 <div>
-                  <span className="text-xs font-bold text-slate-200 block">Smelt Iron Ingot</span>
+                  <span className="text-xs font-bold text-white block">Smelt Iron Ingot</span>
                   <span className="text-[10px] text-amber-300">Cost: 2 Iron Ore → 1 Ingot</span>
                 </div>
                 <button
                   onClick={() => craftResource('iron_ingot')}
                   disabled={playerInventory.iron_ore < 2}
-                  className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 disabled:opacity-40 text-slate-950 font-black text-xs cursor-pointer transition"
+                  className="neo-btn-orange px-4 py-2 rounded-lg text-xs font-black uppercase cursor-pointer"
                 >
                   Smelt
                 </button>
               </div>
 
-              <div className="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-center justify-between">
+              <div className="bg-[#050b17] border-2 border-black p-4 rounded-xl flex items-center justify-between shadow-[3px_3px_0px_#000]">
                 <div>
-                  <span className="text-xs font-bold text-slate-200 block">Mill Wooden Plank</span>
+                  <span className="text-xs font-bold text-white block">Mill Wooden Plank</span>
                   <span className="text-[10px] text-emerald-300">Cost: 2 Timber → 1 Plank</span>
                 </div>
                 <button
                   onClick={() => craftResource('plank')}
                   disabled={playerInventory.timber < 2}
-                  className="px-4 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 disabled:opacity-40 text-slate-950 font-black text-xs cursor-pointer transition"
+                  className="neo-btn-dark px-4 py-2 rounded-lg text-xs font-black uppercase cursor-pointer"
                 >
                   Mill
                 </button>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex justify-end">
+            <div className="pt-4 border-t-2 border-black flex justify-end">
               <button
                 onClick={() => setShowWorkshopModal(false)}
-                className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-bold cursor-pointer"
+                className="neo-btn-dark px-4 py-2 rounded-lg text-xs font-mono font-bold cursor-pointer"
               >
                 Done
               </button>
@@ -771,29 +867,29 @@ export default function App() {
       {/* TOWN BOARD MODAL */}
       {showTownBoardModal && (
         <div className="fixed inset-0 bg-[#040912]/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-          <div className="bg-[#071326] border border-white/20 max-w-lg w-full rounded-[2.5rem] p-7 shadow-2xl">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="neo-box-orange max-w-lg w-full rounded-2xl p-7 shadow-[10px_10px_0px_#000]">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-black">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-full bg-blue-500 text-white flex items-center justify-center font-black">
-                  <Building2 className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black">
+                  <Building2 className="w-5 h-5 text-blue-500" />
                 </div>
-                <h3 className="font-cinzel text-lg font-black text-white">Harbor Town Notice Board</h3>
+                <h3 className="font-cinzel text-lg font-black text-white">Harbor Notice Board</h3>
               </div>
               <button 
                 onClick={() => setShowTownBoardModal(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                className="text-slate-400 hover:text-white cursor-pointer font-bold font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <div className="py-6 space-y-3">
-              <div className="bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-2xl text-xs text-emerald-200">
+            <div className="py-6 space-y-3 font-mono">
+              <div className="bg-emerald-500/15 border-2 border-black p-4 rounded-xl text-xs text-emerald-200 shadow-[3px_3px_0px_#000]">
                 <strong>Market Health:</strong> All 4 merchants are solvent and operating within normal stock targets. No bankruptcies reported today.
               </div>
 
-              <div className="border border-white/10 rounded-2xl p-4 bg-black/40 text-xs space-y-2">
-                <span className="font-bold text-amber-300 block">Upcoming Track Mechanics:</span>
+              <div className="border-2 border-black rounded-xl p-4 bg-black text-xs space-y-2 shadow-[3px_3px_0px_#000]">
+                <span className="font-bold text-[#ff5e36] block">Upcoming Track Mechanics:</span>
                 <p className="text-slate-300">
                   When a merchant runs out of Coin, their stall will shut down with a red notice. 
                   Players can fund them through <strong>NEAR Intents</strong> to reopen the shop and claim revenue shares.
@@ -801,10 +897,10 @@ export default function App() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex justify-end">
+            <div className="pt-4 border-t-2 border-black flex justify-end">
               <button
                 onClick={() => setShowTownBoardModal(false)}
-                className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-bold cursor-pointer"
+                className="neo-btn-dark px-5 py-2.5 rounded-lg text-xs font-mono font-bold cursor-pointer"
               >
                 Close
               </button>
@@ -816,29 +912,29 @@ export default function App() {
       {/* LOGIN MODAL */}
       {showLoginModal && (
         <div className="fixed inset-0 bg-[#040912]/85 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
-          <div className="bg-[#071326] border border-white/20 max-w-md w-full rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="neo-box-orange max-w-md w-full rounded-2xl p-8 shadow-[10px_10px_0px_#000] relative">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-black">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center font-black">
-                  <KeyRound className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black">
+                  <KeyRound className="w-5 h-5 text-[#ff5e36]" />
                 </div>
                 <h3 className="font-cinzel text-lg font-black text-white">Enter Hollow Harbor</h3>
               </div>
               <button 
                 onClick={() => setShowLoginModal(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                className="text-slate-400 hover:text-white cursor-pointer font-bold font-mono"
               >
                 ✕
               </button>
             </div>
 
             <div className="py-5 space-y-4">
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed font-mono">
                 Sign in with email. An embedded ed25519 NEAR wallet is created silently in local storage—no wallet popups, no seed phrases, no gas interruptions.
               </p>
 
               <div>
-                <label className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block mb-1.5">
+                <label className="text-[10px] font-bold text-[#ff5e36] uppercase tracking-wider block mb-1.5 font-mono">
                   Email Address
                 </label>
                 <div className="relative">
@@ -848,7 +944,7 @@ export default function App() {
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="judge@near.org"
-                    className="w-full bg-[#030712] border border-white/15 rounded-2xl py-2.5 pl-10 pr-4 text-sm text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-amber-400"
+                    className="w-full bg-[#030712] border-2 border-black rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#ff5e36] font-mono shadow-[2px_2px_0px_#000]"
                     onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   />
                 </div>
@@ -856,13 +952,13 @@ export default function App() {
 
               {/* Demo Quick Presets */}
               <div>
-                <span className="text-[10px] text-slate-400 block mb-2 font-medium">Quick Demo Profiles:</span>
+                <span className="text-[10px] text-slate-400 block mb-2 font-mono font-bold">Quick Demo Profiles:</span>
                 <div className="flex flex-wrap gap-2">
                   {['judge@near.org', 'captain@hollowharbor.io', 'investor@near.org'].map((preset) => (
                     <button
                       key={preset}
                       onClick={() => handleLogin(preset)}
-                      className="text-xs bg-white/5 hover:bg-white/10 text-cyan-200 px-3 py-1.5 rounded-full border border-white/10 transition cursor-pointer font-mono"
+                      className="neo-btn-dark text-xs px-3 py-1.5 rounded-md font-mono"
                     >
                       {preset}
                     </button>
@@ -870,26 +966,26 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="bg-emerald-500/10 border border-emerald-500/30 p-3.5 rounded-2xl flex items-start space-x-2.5 text-xs text-emerald-300">
+              <div className="bg-emerald-500/15 border-2 border-black p-3.5 rounded-xl flex items-start space-x-2.5 text-xs text-emerald-300 shadow-[2px_2px_0px_#000]">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <span>
+                <span className="font-mono text-[11px]">
                   <strong>Gasless Grant:</strong> Grants 50.0 Coin purse & registers implicit account on NEAR testnet with NEP-366 relayer sponsorship.
                 </span>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex items-center justify-end space-x-3">
+            <div className="pt-4 border-t-2 border-black flex items-center justify-end space-x-3">
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="px-4 py-2 text-xs text-slate-400 hover:text-slate-200 cursor-pointer"
+                className="px-4 py-2 text-xs text-slate-400 hover:text-white cursor-pointer font-mono font-bold"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleLogin()}
-                className="px-6 py-2.5 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-black rounded-full text-xs shadow-xl shadow-amber-500/30 cursor-pointer flex items-center space-x-2"
+                className="neo-btn-orange px-6 py-2.5 rounded-lg text-xs font-mono font-black uppercase flex items-center space-x-2"
               >
-                <span>Enter Harbor</span>
+                <span>ENTER HARBOR</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -900,57 +996,57 @@ export default function App() {
       {/* LEDGER MODAL */}
       {showLedgerModal && (
         <div className="fixed inset-0 bg-[#040912]/85 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
-          <div className="bg-[#071326] border border-white/20 max-w-xl w-full rounded-[2.5rem] p-8 shadow-2xl">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="neo-box-orange max-w-xl w-full rounded-2xl p-8 shadow-[10px_10px_0px_#000]">
+            <div className="flex items-center justify-between pb-4 border-b-2 border-black">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
-                  <Layers className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black">
+                  <Layers className="w-5 h-5 text-[#ff5e36]" />
                 </div>
                 <h3 className="font-cinzel text-lg font-black text-white">Public Blockchain Ledger</h3>
               </div>
               <button 
                 onClick={() => setShowLedgerModal(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                className="text-slate-400 hover:text-white cursor-pointer font-bold font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <div className="py-6 space-y-4">
-              <div className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl text-xs text-cyan-200 leading-relaxed">
+            <div className="py-6 space-y-4 font-mono">
+              <div className="bg-[#050b17] border-2 border-black p-4 rounded-xl text-xs text-cyan-200 leading-relaxed shadow-[3px_3px_0px_#000]">
                 <strong>Verifiable Blockchain Ledger:</strong> Players never see gas prompts or addresses during gameplay, but every transaction is verifiable on NEAR testnet via NEP-245 & NEP-366.
               </div>
 
-              <div className="border border-white/10 rounded-2xl overflow-hidden text-xs">
-                <div className="bg-black/60 p-3 font-bold text-slate-400 border-b border-white/10 grid grid-cols-3">
+              <div className="border-2 border-black rounded-xl overflow-hidden text-xs shadow-[3px_3px_0px_#000]">
+                <div className="bg-black p-3 font-bold text-slate-400 border-b-2 border-black grid grid-cols-3">
                   <span>Action</span>
                   <span>Tokens Swapped</span>
                   <span>Ledger Status</span>
                 </div>
-                <div className="p-3 bg-white/5 text-slate-300 grid grid-cols-3 items-center border-b border-white/5">
+                <div className="p-3 bg-[#091326] text-slate-300 grid grid-cols-3 items-center border-b border-black">
                   <span className="font-mono text-amber-300">Genesis Init</span>
                   <span>Coin / Shop Deeds</span>
-                  <span className="text-emerald-400 font-medium">Testnet Verified</span>
+                  <span className="text-emerald-400 font-bold">Testnet Verified</span>
                 </div>
                 {user && (
-                  <div className="p-3 bg-white/5 text-slate-300 grid grid-cols-3 items-center border-b border-white/5">
+                  <div className="p-3 bg-[#091326] text-slate-300 grid grid-cols-3 items-center border-b border-black">
                     <span className="font-mono text-emerald-300">Starter Purse</span>
                     <span>50.0 Coin</span>
-                    <span className="text-emerald-400 font-medium">Sponsored by Relayer</span>
+                    <span className="text-emerald-400 font-bold">Sponsored Relayer</span>
                   </div>
                 )}
-                <div className="p-3 bg-white/5 text-slate-300 grid grid-cols-3 items-center">
-                  <span className="font-mono text-cyan-300">NEP-366 Relayer</span>
+                <div className="p-3 bg-[#091326] text-slate-300 grid grid-cols-3 items-center">
+                  <span className="font-mono text-[#ff5e36]">NEP-366 Relayer</span>
                   <span>Gas Sponsorship</span>
-                  <span className="text-emerald-400 font-medium">Active (Zero Gas Prompt)</span>
+                  <span className="text-emerald-400 font-bold">Active (Zero Gas Prompt)</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex justify-end">
+            <div className="pt-4 border-t-2 border-black flex justify-end">
               <button
                 onClick={() => setShowLedgerModal(false)}
-                className="px-6 py-2.5 bg-white/10 hover:bg-white/15 text-slate-200 rounded-full text-xs font-bold cursor-pointer"
+                className="neo-btn-dark px-6 py-2.5 rounded-lg text-xs font-mono font-bold cursor-pointer uppercase"
               >
                 Close Ledger
               </button>
