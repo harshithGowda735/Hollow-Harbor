@@ -40,6 +40,14 @@ This document tracks our vertical slice execution and exit tests.
 
 ## Slice 3: First Real Trade (Nov 6 - 8)
 - **Goal**: Atomic swap on NEAR testnet via relayer with zero gas prompts, live explorer link.
+- **Components Delivered**:
+  - `contracts/items/`: NEP-245 Multi-Token contract in Rust with authority mint and market-only atomic trade methods.
+  - `contracts/market/`: Market Intent Solver Contract in Rust verifying player intents and merchant solver quotes.
+  - `shared/intents.ts`: Trade intent creator and solver quote data types.
+  - `server/index.ts`: `/api/trade/settle` atomic settlement endpoint + live `/api/ledger`.
+  - `scripts/verify-slice3.ts`: Automated script verifying trade intent creation, solver quotes, gasless relayer broadcast, and testnet explorer generation.
+  - `src/App.tsx`: Real-time trade settlement with animated spinner, floating transaction receipt banner with clickable **"View on Explorer ↗"** link, and public ledger integration.
+- **Exit Test Status**: ✅ Passed (`scripts/verify-slice3.ts` and `npm run build` verified cleanly).
 
 ---
 

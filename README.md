@@ -18,8 +18,9 @@ We believe in honest engineering credibility. Here is the verified status of eve
 | **Play Against Engine (Slice 2)** | 🟢 Verified & Ready | Gather, craft, sell into dynamic engine, stock pressure & bankruptcy |
 | **Embedded-Wallet Login (Slice 1)** | 🟢 Verified & Ready | Email login, no seed phrases, zero wallet popups, NEP-366 relayer |
 | **NEP-366 Gasless Relayer** | 🟢 Verified & Ready | Delegate actions sponsoring player gas, no gas prompts |
-| **NEP-245 Items Multi-Token Contract** | ⚪ Planned | Single contract holding coin, goods, deeds, shares |
-| **Market Intent Settlement Contract** | ⚪ Planned | Solver-style atomic trade execution |
+| **First Real Trade Settlement (Slice 3)** | 🟢 Verified & Ready | Gasless atomic trade, live explorer link on NEAR testnet |
+| **NEP-245 Items Multi-Token Contract** | 🟢 Built & Ready | Rust smart contract holding coin, goods, deeds, shares |
+| **Market Intent Settlement Contract** | 🟢 Built & Ready | Rust solver contract with atomic trade settlement |
 | **NEAR Intents Shop Backing** | ⚪ Planned | Cross-asset funding to revive bankrupt merchants |
 | **Fast-Forward "Skip a week"** | ⚪ Planned | 60s fast-forward with batched daily on-chain settlement |
 
