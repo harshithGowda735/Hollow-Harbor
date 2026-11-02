@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { Nep366Relayer } from './relayer';
-import { TradeIntent, SolverQuote, SettlementReceipt } from '../shared/intents';
+import { TradeIntent, SolverQuote, SettlementReceipt, ShopInvestmentIntent } from '../shared/intents';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -171,6 +171,60 @@ app.post('/api/trade/settle', async (req, res) => {
   return res.json({
     success: true,
     receipt,
+    ledgerItem,
+  });
+});
+
+// NEAR Intents: Back a Bankrupt Shop (Slice 4: Shops & Investing)
+app.post('/api/invest/back-shop', async (req, res) => {
+  const { intent }: { intent: ShopInvestmentIntent } = req.body;
+
+  if (!intent) {
+    return res.status(400).json({ error: 'Investment intent is required' });
+  }
+
+  // Submit via relayer (gas sponsored)
+  const relayResult = await relayer.relayTransaction({
+    senderId: intent.investorId,
+    receiverId: 'items.hollowharbor.testnet',
+    actions: [
+      {
+        type: 'FunctionCall',
+        methodName: 'mint',
+        args: {
+          receiver_id: intent.investorId,
+          token_id: `share:${intent.shopId}`,
+          amount: intent.sharesToMint.toString(),
+        },
+      },
+    ],
+  });
+
+  const tokensSwappedStr = `${intent.depositAmount} ${intent.depositAsset} ⇄ ${intent.sharesToMint} share:${intent.shopId}`;
+
+  // Log on public ledger
+  const ledgerItem: LedgerEntry = {
+    id: `invest-${Date.now()}`,
+    action: `NEAR Intent: Back Shop (${intent.shopId})`,
+    senderId: intent.investorId,
+    merchantId: intent.shopId,
+    tokensSwapped: tokensSwappedStr,
+    transactionHash: relayResult.transactionHash,
+    explorerUrl: relayResult.explorerUrl,
+    gasSponsored: '0.00045 NEAR (100% Relayer)',
+    timestamp: new Date().toLocaleTimeString(),
+  };
+  ledger.unshift(ledgerItem);
+
+  return res.json({
+    success: true,
+    sharesMinted: intent.sharesToMint,
+    cashAdded: intent.depositAmount * 4, // 1 USDC = 4 In-game Coin
+    shopReopened: true,
+    receipt: {
+      transactionHash: relayResult.transactionHash,
+      explorerUrl: relayResult.explorerUrl,
+    },
     ledgerItem,
   });
 });

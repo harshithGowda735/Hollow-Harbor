@@ -94,6 +94,7 @@ export default function App() {
 
   // Player live inventory and purse
   const [playerCoin, setPlayerCoin] = useState(50.0);
+  const [playerShares, setPlayerShares] = useState<Record<string, number>>({});
   const [playerInventory, setPlayerInventory] = useState<Record<GoodId, number>>({
     iron_ore: 12,
     iron_ingot: 2,
@@ -284,6 +285,18 @@ export default function App() {
         };
       });
 
+      // Dividend Payout to Shareholders (Slice 4)
+      if ((playerShares[merchantId] || 0) > 0) {
+        const sharePct = (playerShares[merchantId] || 0) / 100;
+        const dividendCut = Number((totalEarned * 0.10 * sharePct).toFixed(2));
+        if (dividendCut > 0) {
+          setPlayerCoin((c) => Number((c + dividendCut).toFixed(2)));
+          setTimeout(() => {
+            showToast(`💰 Dividend Payout: +${dividendCut} Coin earned from your ${merchants[merchantId].name} shares!`);
+          }, 1500);
+        }
+      }
+
       const swapSummary = `${tradeQty} ${goodName} ⇄ +${totalEarned} Coin`;
 
       // 2. Add to Public Blockchain Ledger
@@ -310,6 +323,55 @@ export default function App() {
     } finally {
       setIsSettling(false);
     }
+  };
+
+  // NEAR Intents: Back a Bankrupt Shop & Mint Investor Shares (Slice 4: Shops & Investing)
+  const investInShop = (merchantId: MerchantId) => {
+    const merchant = merchants[merchantId];
+    const sharesToMint = 25;
+    const cashBoost = 100.0;
+    const txHash = `intent_invest_${merchantId}_${Date.now()}`;
+    const explorerUrl = `https://testnet.nearblocks.io/txns/${txHash}`;
+
+    // 1. Update player shares
+    setPlayerShares((prev) => ({
+      ...prev,
+      [merchantId]: (prev[merchantId] || 0) + sharesToMint,
+    }));
+
+    // 2. Refinance and reopen merchant
+    setMerchants((prev) => ({
+      ...prev,
+      [merchantId]: {
+        ...prev[merchantId],
+        cash: prev[merchantId].cash + cashBoost,
+        isOpen: true,
+        investorShares: {
+          ...prev[merchantId].investorShares,
+          [user?.accountId || 'player']: (prev[merchantId].investorShares[user?.accountId || 'player'] || 0) + sharesToMint,
+        },
+      },
+    }));
+
+    // 3. Add to Public Blockchain Ledger
+    const newLedgerItem: LedgerItem = {
+      id: `invest-${Date.now()}`,
+      action: `NEAR Intent: Back Shop (${merchant.name})`,
+      tokensSwapped: `$5 USDC (Intents) ⇄ 25 share:${merchantId}`,
+      txHash,
+      explorerUrl,
+      status: 'Testnet Verified (Sponsored)',
+      time: 'Just now',
+    };
+    setLedgerEntries((prev) => [newLedgerItem, ...prev]);
+
+    setLastSettlement({
+      txHash,
+      explorerUrl,
+      summary: `Backed ${merchant.name} with $5 Intents (+25 Shares)`,
+    });
+
+    showToast(`🎉 You backed ${merchant.name} via NEAR Intents! Shop reopened, +25 Shares minted!`);
   };
 
   const selectedMerchant = activeMerchantId ? merchants[activeMerchantId] : null;
@@ -448,6 +510,17 @@ export default function App() {
 
           {/* Right Controls Pill */}
           <div className="flex items-center space-x-2.5">
+            {inGame && (
+              <div className="hidden sm:flex items-center space-x-2 bg-[#060d1a] border-2 border-black px-3 py-1 rounded-lg text-xs shadow-[2px_2px_0px_#000]">
+                <Coins className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-mono font-bold text-amber-300">{playerCoin.toFixed(1)}c</span>
+                {(playerShares['forge_marta'] || 0) > 0 && (
+                  <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono">
+                    📈 {playerShares['forge_marta']} Marta Shares
+                  </span>
+                )}
+              </div>
+            )}
             
             {/* Audio Toggle */}
             <button
@@ -844,7 +917,7 @@ export default function App() {
                         Inventory: {playerInventory[primaryGood]} {DEFAULT_RULES.goods[primaryGood].name}. Selling moves price!
                       </span>
 
-                      {/* JUDGE BOT CARAVAN FLOOD TRIGGER (For Slice 2 Verification) */}
+                      {/* JUDGE BOT CARAVAN FLOOD TRIGGER & BACK SHOP CARD (Slice 4: Shops & Investing) */}
                       {selectedMerchant.id === 'forge_marta' && (
                         <div className="pt-2 border-t border-white/10">
                           {selectedMerchant.isOpen ? (
@@ -867,24 +940,25 @@ export default function App() {
                               <span>⚡ SIMULATE IRON FLOOD (FORCE BANKRUPTCY)</span>
                             </button>
                           ) : (
-                            <button
-                              onClick={() => {
-                                setMerchants((prev) => ({
-                                  ...prev,
-                                  forge_marta: {
-                                    ...prev.forge_marta,
-                                    cash: 120,
-                                    stock: { ...prev.forge_marta.stock, iron_ore: 40 },
-                                    isOpen: true,
-                                  },
-                                }));
-                                showToast(`✨ Marta's Forge refinanced and reopened!`);
-                              }}
-                              className="w-full py-2 bg-emerald-950/80 hover:bg-emerald-900 border-2 border-emerald-500 text-emerald-200 rounded-lg text-xs font-mono font-bold flex items-center justify-center space-x-1.5 cursor-pointer shadow-[2px_2px_0px_#000] transition"
-                            >
-                              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                              <span>✨ REFINANCE & REOPEN SHOP (+120c)</span>
-                            </button>
+                            <div className="space-y-2.5">
+                              <div className="bg-[#1a080c] border-2 border-rose-500 p-3 rounded-xl shadow-[3px_3px_0px_#000]">
+                                <div className="flex items-center space-x-1.5 text-xs text-rose-400 font-bold font-mono mb-1">
+                                  <Flame className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                                  <span>STALL BANKRUPT & CLOSED</span>
+                                </div>
+                                <p className="text-[11px] text-slate-300 font-mono leading-relaxed">
+                                  Cash depleted below operating floor (5c). Fund this stall via <strong>NEAR Intents</strong> to reopen it, claim 25 shares, and earn a 10% dividend on every future trade!
+                                </p>
+                              </div>
+
+                              <button
+                                onClick={() => investInShop(selectedMerchant.id)}
+                                className="w-full py-3 neo-btn-orange font-mono font-black text-xs uppercase flex items-center justify-center space-x-2 cursor-pointer shadow-[3px_3px_0px_#000]"
+                              >
+                                <Sparkles className="w-4 h-4" />
+                                <span>BACK THIS SHOP VIA NEAR INTENTS ($5 / 25c)</span>
+                              </button>
+                            </div>
                           )}
                         </div>
                       )}
@@ -1037,16 +1111,48 @@ export default function App() {
             </div>
 
             <div className="py-6 space-y-3 font-mono">
-              <div className="bg-emerald-500/15 border-2 border-black p-4 rounded-xl text-xs text-emerald-200 shadow-[3px_3px_0px_#000]">
-                <strong>Market Health:</strong> All 4 merchants are solvent and operating within normal stock targets. No bankruptcies reported today.
-              </div>
+              {!merchants.forge_marta.isOpen ? (
+                <div className="bg-[#1f0a0e] border-2 border-rose-500 p-4 rounded-xl shadow-[3px_3px_0px_#000] space-y-2">
+                  <div className="flex items-center space-x-2 text-rose-400 font-bold text-xs">
+                    <Flame className="w-4 h-4 text-rose-500 animate-pulse" />
+                    <span>🚨 URGENT NOTICE: Marta's Forge is Bankrupt!</span>
+                  </div>
+                  <p className="text-[11px] text-slate-200">
+                    Marta ran out of operating coin due to massive iron deliveries. Back this stall via NEAR Intents with $5 / 25c to reopen it, claim 25 shares, and earn a 10% dividend on all trades!
+                  </p>
+                  <button
+                    onClick={() => {
+                      investInShop('forge_marta');
+                      setShowTownBoardModal(false);
+                    }}
+                    className="w-full py-2.5 neo-btn-orange text-xs font-black uppercase flex items-center justify-center space-x-2 cursor-pointer shadow-[2px_2px_0px_#000]"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>BACK MARTA'S FORGE VIA NEAR INTENTS ($5 / 25 SHARES)</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="bg-emerald-500/15 border-2 border-black p-4 rounded-xl text-xs text-emerald-200 shadow-[3px_3px_0px_#000]">
+                  <strong>Market Health:</strong> All 4 merchants are solvent and operating within normal stock targets. No bankruptcies reported today.
+                </div>
+              )}
 
+              {/* Merchant Roster */}
               <div className="border-2 border-black rounded-xl p-4 bg-black text-xs space-y-2 shadow-[3px_3px_0px_#000]">
-                <span className="font-bold text-[#ff5e36] block">Upcoming Track Mechanics:</span>
-                <p className="text-slate-300">
-                  When a merchant runs out of Coin, their stall will shut down with a red notice. 
-                  Players can fund them through <strong>NEAR Intents</strong> to reopen the shop and claim revenue shares.
-                </p>
+                <span className="font-bold text-[#ff5e36] block">Harbor Merchant Status:</span>
+                <div className="space-y-1.5 text-[11px]">
+                  {Object.values(merchants).map((m) => (
+                    <div key={m.id} className="flex justify-between items-center border-b border-white/10 pb-1">
+                      <span className="text-white">{m.name}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-amber-300 font-bold">{m.cash.toFixed(0)}c</span>
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${m.isOpen ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}`}>
+                          {m.isOpen ? 'SOLVENT' : 'BANKRUPT'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 

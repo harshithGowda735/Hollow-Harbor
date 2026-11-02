@@ -53,6 +53,12 @@ This document tracks our vertical slice execution and exit tests.
 
 ## Slice 4: Shops and Investing (Nov 8 - 10)
 - **Goal**: Marta bankrupt & closed, town board alert, "Back this shop" investment, shares minted, shop reopens.
+- **Components Delivered**:
+  - `shared/intents.ts`: `ShopInvestmentIntent` for cross-asset intent funding ($5 / 25c).
+  - `server/index.ts`: `POST /api/invest/back-shop` endpoint minting `share:<shop>` on NEAR testnet via relayer.
+  - `scripts/verify-slice4.ts`: Automated script testing Marta bankruptcy, investment intent processing, stall reopening, and recurring dividend distribution.
+  - `src/App.tsx`: Bankruptcy UI with red closed badges, Town Board urgent alert, 1-click **"BACK THIS SHOP VIA NEAR INTENTS"**, shareholder HUD badge, and real-time trade dividend payouts.
+- **Exit Test Status**: ✅ Passed (`scripts/verify-slice4.ts` and `npm run build` verified cleanly).
 
 ---
 

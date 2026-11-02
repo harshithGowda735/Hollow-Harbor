@@ -65,5 +65,6 @@ export interface MerchantState {
 export interface PlayerInventory {
   coin: number;
   goods: Record<GoodId, number>;
+  shares: Record<string, number>; // e.g. 'share:forge_marta'
 }
 

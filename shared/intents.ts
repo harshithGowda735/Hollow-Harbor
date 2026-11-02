@@ -26,10 +26,21 @@ export interface SolverQuote {
   signature?: string;
 }
 
+export interface ShopInvestmentIntent {
+  intentId: string;
+  investorId: string;
+  shopId: MerchantId;
+  depositAsset: string;
+  depositAmount: number;
+  sharesToMint: number;
+  timestamp: number;
+  signature?: string;
+}
+
 export interface SettlementReceipt {
   success: boolean;
   intentId: string;
-  quoteId: string;
+  quoteId?: string;
   transactionHash: string;
   explorerUrl: string;
   blockHeight?: number;
@@ -62,6 +73,26 @@ export function createTradeIntent(
       amount: expectedCoin,
     },
     nonce: Date.now(),
-    expiry: Date.now() + 60_000, // 60s quote validity
+    expiry: Date.now() + 60_000,
+  };
+}
+
+/**
+ * Creates a NEAR Intent for backing a bankrupt shop
+ */
+export function createShopInvestmentIntent(
+  investorId: string,
+  shopId: MerchantId,
+  depositAmount = 25.0,
+  sharesToMint = 25
+): ShopInvestmentIntent {
+  return {
+    intentId: `invest_${shopId}_${Date.now()}`,
+    investorId,
+    shopId,
+    depositAsset: 'USDC (Cross-Asset Intent) / Coin',
+    depositAmount,
+    sharesToMint,
+    timestamp: Date.now(),
   };
 }
