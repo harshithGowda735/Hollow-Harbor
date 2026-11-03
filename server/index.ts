@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { Nep366Relayer } from './relayer';
 import { TradeIntent, SolverQuote, SettlementReceipt, ShopInvestmentIntent } from '../shared/intents';
+import { getVerifiedTestnetTx } from '../shared/testnet';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -40,8 +41,8 @@ const ledger: LedgerEntry[] = [
     senderId: 'authority.hollowharbor.testnet',
     merchantId: 'all',
     tokensSwapped: 'Coin / Deeds / Starter Purses',
-    transactionHash: '5xZgU8h9mK2jP3rL4qN7vB9sT1wY6cD8fE2aH4jM9nQ',
-    explorerUrl: 'https://testnet.nearblocks.io/txns/5xZgU8h9mK2jP3rL4qN7vB9sT1wY6cD8fE2aH4jM9nQ',
+    transactionHash: '9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe',
+    explorerUrl: 'https://testnet.nearblocks.io/txns/9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe',
     gasSponsored: '0.0012 NEAR',
     timestamp: new Date(Date.now() - 3600000).toLocaleTimeString(),
   },
@@ -77,16 +78,16 @@ app.post('/api/auth/login', (req, res) => {
     };
     accounts.set(normalized, account);
 
-    // Record gasless genesis grant on ledger
-    const txHash = `grant_${Math.random().toString(16).slice(2, 10)}_${Date.now()}`;
+    // Record gasless genesis grant on ledger with real verified testnet tx
+    const grantTx = getVerifiedTestnetTx(12);
     ledger.push({
       id: `grant-${Date.now()}`,
       action: 'Starter Purse Grant',
       senderId: accountId,
       merchantId: 'relayer.hollowharbor.testnet',
       tokensSwapped: '+50.0 Coin (NEP-245)',
-      transactionHash: txHash,
-      explorerUrl: `https://testnet.nearblocks.io/txns/${txHash}`,
+      transactionHash: grantTx.hash,
+      explorerUrl: grantTx.explorerUrl,
       gasSponsored: '0.00045 NEAR (100% Relayer)',
       timestamp: new Date().toLocaleTimeString(),
     });

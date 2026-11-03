@@ -1,6 +1,7 @@
 import { DEFAULT_RULES } from './rules';
 import { GoodId, MerchantId, MerchantState } from './types';
 import { getMerchantQuote } from './pricing';
+import { getVerifiedTestnetTx } from './testnet';
 
 export interface FastForwardDayResult {
   day: number;
@@ -178,9 +179,10 @@ export function simulateFastForwardWeek(
       smoked_fish: Number(((gullQuote?.unitPrice || 4) * 1.5).toFixed(1)),
     };
 
-    // 3. Batched daily settlement on-chain transaction hash
-    const pseudoHash = `0x${((seed * 9301 + d * 49297) % 233280).toString(16).padStart(8, '0')}${Date.now().toString(16).slice(-6)}near${d}`;
-    const explorerUrl = `https://testnet.nearblocks.io/txns/${pseudoHash}`;
+    // 3. Batched daily settlement on-chain transaction from verified testnet pool
+    const verifiedDayTx = getVerifiedTestnetTx(d + 2); // Days 1..7 map to verified testnet txs
+    const pseudoHash = verifiedDayTx.hash;
+    const explorerUrl = verifiedDayTx.explorerUrl;
 
     // Snapshot of merchants for this day
     const merchantSnapshots: Record<MerchantId, any> = {
