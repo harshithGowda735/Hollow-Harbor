@@ -22,7 +22,7 @@ We believe in honest engineering credibility. Here is the verified status of eve
 | **NEP-245 Items Multi-Token Contract** | 🟢 Built & Ready | Rust smart contract holding coin, goods, deeds, shares |
 | **Market Intent Settlement Contract** | 🟢 Built & Ready | Rust solver contract with atomic trade settlement |
 | **NEAR Intents Shop Backing (Slice 4)** | 🟢 Verified & Ready | Cross-asset intent funding, shares minted, stall reopened, dividends |
-| **Fast-Forward "Skip a week" (Slice 5)** | ⚪ Planned | 60s fast-forward with batched daily on-chain settlement |
+| **Fast-Forward "Skip a week" (Slice 5)** | 🟢 Verified & Ready | 7-day fast-forward, dynamic price graphs, daily on-chain settlement |
 
 ---
 

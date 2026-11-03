@@ -229,6 +229,59 @@ app.post('/api/invest/back-shop', async (req, res) => {
   });
 });
 
+// Fast-Forward: Batched 7-day settlement endpoint (Slice 5)
+app.post('/api/fastforward/batch-settle', async (req, res) => {
+  const { weekSummary, days } = req.body;
+
+  if (!weekSummary || !days || !Array.isArray(days)) {
+    return res.status(400).json({ error: 'Week summary and daily records are required' });
+  }
+
+  // Relay a consolidated batch settlement transaction on NEAR Testnet
+  const relayResult = await relayer.relayTransaction({
+    senderId: 'relayer.hollowharbor.testnet',
+    receiverId: 'market.hollowharbor.testnet',
+    actions: [
+      {
+        type: 'FunctionCall',
+        methodName: 'settle_batch_week',
+        args: {
+          days_count: days.length,
+          total_volume: weekSummary.totalVolume.toString(),
+          total_trades: weekSummary.totalTrades.toString(),
+          total_dividends: weekSummary.totalDividends.toString(),
+        },
+      },
+    ],
+  });
+
+  // Append daily settlements to public ledger
+  const newLedgerEntries: LedgerEntry[] = [];
+  for (const day of days) {
+    const entry: LedgerEntry = {
+      id: `ff-day-${day.day}-${Date.now()}`,
+      action: `Fast-Forward Day ${day.day} Net Settlement`,
+      senderId: 'market.hollowharbor.testnet',
+      merchantId: 'all_harbor_merchants',
+      tokensSwapped: `${day.volumeCoin}c Vol • ${day.tradesCount} Swaps • ${day.playerDividendEarned}c Div`,
+      transactionHash: day.settlementTx?.txHash || relayResult.transactionHash,
+      explorerUrl: day.settlementTx?.explorerUrl || relayResult.explorerUrl,
+      gasSponsored: '0.00078 NEAR (100% Relayer)',
+      timestamp: new Date().toLocaleTimeString(),
+    };
+    ledger.unshift(entry);
+    newLedgerEntries.push(entry);
+  }
+
+  return res.json({
+    success: true,
+    transactionHash: relayResult.transactionHash,
+    explorerUrl: relayResult.explorerUrl,
+    settledDays: days.length,
+    newLedgerEntries,
+  });
+});
+
 // Public Ledger API
 app.get('/api/ledger', (req, res) => {
   res.json({
