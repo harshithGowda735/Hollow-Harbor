@@ -74,5 +74,10 @@ This document tracks our vertical slice execution and exit tests.
 ---
 
 ## Slice 6: Demo & Submission (Nov 12 - 14)
-- **Goal**: Feature freeze, 2-minute video, public URL, verified submission checklist.
+- **Goal**: Feature freeze, 2-minute video walkthrough script, public URL, verified submission checklist.
+- **Components Delivered**:
+  - `docs/demo-script.md`: High-impact 2-minute video recording storyboard and judge runbook detailing the complete narrative flow.
+  - `scripts/verify-slice6.ts`: Automated golden-path verification script testing onboarding, crafting, dynamic pricing, bankruptcy, intent shop rescue, 7-day fast forward, and real testnet explorer resolution.
+  - `README.md`: Polished hackathon documentation with status table, architectural diagrams, contract links, disclosures, and setup commands.
+- **Exit Test Status**: ✅ Passed (`scripts/verify-slice6.ts`, `npm test`, and `npm run build` verified cleanly).
 
