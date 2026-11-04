@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Anchor, 
   Coins, 
@@ -114,6 +114,13 @@ export default function App() {
   const [emailInput, setEmailInput] = useState('');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
+  
+  // YouTube Interstellar Official Soundtrack Player State
+  const ytIframeRef = useRef<HTMLIFrameElement>(null);
+  const [isYtPlaying, setIsYtPlaying] = useState(true);
+  const [isYtExpanded, setIsYtExpanded] = useState(false);
+  const [showYtWidget, setShowYtWidget] = useState(true);
+
   const [showStoryPrologue, setShowStoryPrologue] = useState(false);
   const [storyChapter, setStoryChapter] = useState(0);
 
@@ -220,7 +227,38 @@ export default function App() {
     },
   });
 
-  // Restore session on mount & auto-start Interstellar audio on first gesture
+  // YouTube Playback Control Functions
+  const playYouTube = () => {
+    try {
+      ytIframeRef.current?.contentWindow?.postMessage(
+        JSON.stringify({ event: 'command', func: 'playVideo', args: [] }),
+        '*'
+      );
+      setIsYtPlaying(true);
+    } catch {}
+  };
+
+  const pauseYouTube = () => {
+    try {
+      ytIframeRef.current?.contentWindow?.postMessage(
+        JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
+        '*'
+      );
+      setIsYtPlaying(false);
+    } catch {}
+  };
+
+  const toggleYouTube = () => {
+    if (isYtPlaying) {
+      pauseYouTube();
+      showToast('⏸ Interstellar Theme Paused');
+    } else {
+      playYouTube();
+      showToast('🎵 Hans Zimmer — Interstellar Theme (YouTube)');
+    }
+  };
+
+  // Restore session on mount & auto-start YouTube on first gesture
   useEffect(() => {
     const session = EmbeddedWalletManager.getSession();
     if (session) {
@@ -229,8 +267,7 @@ export default function App() {
     }
 
     const startAudioOnGesture = () => {
-      harborAudio.enable();
-      setIsAudioOn(true);
+      playYouTube();
       window.removeEventListener('click', startAudioOnGesture);
       window.removeEventListener('keydown', startAudioOnGesture);
       window.removeEventListener('touchstart', startAudioOnGesture);
@@ -248,11 +285,7 @@ export default function App() {
   }, []);
 
   const toggleSound = () => {
-    const on = harborAudio.toggle();
-    setIsAudioOn(on);
-    if (on) {
-      showToast('🎵 Hans Zimmer — Interstellar Theme Active');
-    }
+    toggleYouTube();
   };
 
   const startStoryPrologue = () => {
@@ -605,6 +638,68 @@ export default function App() {
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* FLOATING RETRO-NEOBRUTALIST YOUTUBE INTERSTELLAR PLAYER WIDGET             */}
+      {/* ========================================================================= */}
+      {showYtWidget && (
+        <div className="fixed bottom-4 right-4 z-40 select-none animate-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-[#09152b] border-[2.5px] border-black ring-2 ring-white/10 shadow-[6px_6px_0px_#000] rounded-2xl p-3 max-w-xs sm:max-w-sm relative backdrop-blur-md">
+            
+            {/* Header Track Info & Controls */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-7 h-7 rounded-lg bg-[#ff0000] border border-black text-white flex items-center justify-center font-black text-xs shadow-[1.5px_1.5px_0px_#000]">
+                  ▶
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-mono font-black text-amber-300 leading-tight flex items-center space-x-1">
+                    <span>Interstellar Theme</span>
+                    <span className="text-[9px] bg-[#ff0000] text-white px-1 py-0.2 rounded font-mono font-bold">YT</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-slate-300">
+                    Hans Zimmer • Official Score
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={toggleYouTube}
+                  className={`p-1.5 rounded-lg border-2 border-black font-black text-xs cursor-pointer shadow-[2px_2px_0px_#000] transition ${
+                    isYtPlaying ? 'bg-[#ff5e36] text-white' : 'bg-[#00ec97] text-black'
+                  }`}
+                  title={isYtPlaying ? "Pause YouTube Music" : "Play YouTube Music"}
+                >
+                  {isYtPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                </button>
+                <button
+                  onClick={() => setIsYtExpanded(!isYtExpanded)}
+                  className="px-2 py-1.5 rounded-lg border-2 border-black bg-[#121e33] text-slate-200 hover:text-white cursor-pointer text-[10px] font-mono font-bold shadow-[2px_2px_0px_#000]"
+                  title={isYtExpanded ? "Hide Video Window" : "Show Video Window"}
+                >
+                  {isYtExpanded ? "MIN" : "EXP"}
+                </button>
+              </div>
+            </div>
+
+            {/* Embedded YouTube Player (Continues playing whether expanded or minimized) */}
+            <div className={isYtExpanded ? "mt-3 pt-2 border-t border-white/10 block" : "w-0 h-0 overflow-hidden opacity-0 pointer-events-none absolute"}>
+              <div className="w-72 sm:w-80 aspect-video rounded-xl overflow-hidden border-2 border-black shadow-[3px_3px_0px_#000]">
+                <iframe
+                  ref={ytIframeRef}
+                  src="https://www.youtube-nocookie.com/embed/UDVtMYqUAyw?enablejsapi=1&autoplay=1&loop=1&playlist=UDVtMYqUAyw"
+                  title="Hans Zimmer - Interstellar Main Theme"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* On-Chain Settlement Banner with Explorer Link (Slice 3: First Real Trade) */}
       {lastSettlement && (
         <div className="fixed top-20 right-6 z-50 neo-box-orange p-4 rounded-xl shadow-[8px_8px_0px_#000] max-w-sm w-full animate-in slide-in-from-top-4 duration-300">
@@ -734,35 +829,36 @@ export default function App() {
               </div>
             )}
             
-            {/* Live Interstellar Equalizer Indicator (when active) */}
-            {isAudioOn && (
-              <div 
-                onClick={toggleSound}
-                className="hidden xl:flex items-center space-x-2 bg-[#060e1f] border border-amber-400/40 px-2.5 py-1 rounded-full cursor-pointer hover:border-amber-400 transition shadow-[0_0_12px_rgba(251,191,36,0.25)]"
-                title="Playing Hans Zimmer's Interstellar Theme — click to mute"
-              >
-                <div className="flex items-end space-x-0.5 h-3 w-4">
-                  <span className="w-1 bg-amber-400 rounded-sm animate-[bounce_1s_infinite_100ms] h-full" />
-                  <span className="w-1 bg-[#ff5e36] rounded-sm animate-[bounce_1.2s_infinite_300ms] h-2/3" />
-                  <span className="w-1 bg-amber-300 rounded-sm animate-[bounce_0.8s_infinite_200ms] h-4/5" />
-                </div>
-                <span className="text-[10px] font-mono font-black text-amber-300 tracking-wider uppercase">
-                  INTERSTELLAR
-                </span>
+            {/* Live YouTube Interstellar Indicator */}
+            <div 
+              onClick={toggleYouTube}
+              className={`hidden xl:flex items-center space-x-2 bg-[#060e1f] border px-2.5 py-1 rounded-full cursor-pointer transition shadow-[0_0_12px_rgba(255,0,0,0.25)] ${
+                isYtPlaying ? 'border-amber-400 text-amber-300' : 'border-slate-700 text-slate-400'
+              }`}
+              title="Click to toggle Hans Zimmer Interstellar on YouTube"
+            >
+              <div className="flex items-end space-x-0.5 h-3 w-4">
+                <span className={`w-1 bg-[#ff0000] rounded-sm h-full ${isYtPlaying ? 'animate-[bounce_1s_infinite_100ms]' : ''}`} />
+                <span className={`w-1 bg-amber-400 rounded-sm h-2/3 ${isYtPlaying ? 'animate-[bounce_1.2s_infinite_300ms]' : ''}`} />
+                <span className={`w-1 bg-amber-300 rounded-sm h-4/5 ${isYtPlaying ? 'animate-[bounce_0.8s_infinite_200ms]' : ''}`} />
               </div>
-            )}
+              <span className="text-[10px] font-mono font-black tracking-wider uppercase flex items-center space-x-1">
+                <span className="text-[#ff0000]">▶</span>
+                <span>INTERSTELLAR (YOUTUBE)</span>
+              </span>
+            </div>
 
             {/* Audio Toggle */}
             <button
-              onClick={toggleSound}
+              onClick={toggleYouTube}
               className={`w-8 h-8 rounded-lg border-2 border-black flex items-center justify-center transition-all cursor-pointer shadow-[2px_2px_0px_#000] ${
-                isAudioOn 
-                  ? 'bg-[#ff5e36] text-white shadow-[0_0_12px_rgba(255,94,54,0.6)]' 
+                isYtPlaying 
+                  ? 'bg-[#ff0000] text-white shadow-[0_0_12px_rgba(255,0,0,0.6)]' 
                   : 'bg-[#15233c] text-slate-300 hover:text-white'
               }`}
-              title={isAudioOn ? "Mute Interstellar Theme" : "Play Hans Zimmer Interstellar Theme"}
+              title={isYtPlaying ? "Pause YouTube Soundtrack" : "Play Hans Zimmer Interstellar on YouTube"}
             >
-              {isAudioOn ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+              {isYtPlaying ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
             </button>
 
             {/* User Session */}

@@ -369,10 +369,7 @@ class HarborAudioEngine {
       noise.start();
       swellLfo.start();
 
-      // =========================================================================
-      // 3. START HANS ZIMMER INTERSTELLAR PIPE ORGAN PROGRESSION
-      // =========================================================================
-      this.startInterstellarProgression();
+      // Synthetic organ disabled in favor of YouTube high-fidelity official orchestral stream
 
       // =========================================================================
       // 4. PERIODIC DISTANT HARBOR BUOY BELL (Every 24 seconds)
