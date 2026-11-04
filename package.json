@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "tsx server/index.ts",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "tsx test/engine.test.ts",
-    "sim": "tsx sim/run.ts"
+    "sim": "tsx sim/run.ts",
+    "demo": "tsx scripts/verify-slice6.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

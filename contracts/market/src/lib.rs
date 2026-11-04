@@ -69,3 +69,26 @@ impl HollowHarborMarket {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use near_sdk::test_utils::VMContextBuilder;
+    use near_sdk::testing_env;
+
+    #[test]
+    fn test_market_init() {
+        let owner: AccountId = "owner.near".parse().unwrap();
+        let items: AccountId = "items.near".parse().unwrap();
+
+        let context = VMContextBuilder::new()
+            .predecessor_account_id(owner.clone())
+            .build();
+        testing_env!(context);
+
+        let contract = HollowHarborMarket::new(owner.clone(), items.clone());
+        assert_eq!(contract.trades_count, 0);
+        assert_eq!(contract.owner_id, owner);
+        assert_eq!(contract.items_contract_id, items);
+    }
+}
+

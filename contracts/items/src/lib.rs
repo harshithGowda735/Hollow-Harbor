@@ -86,3 +86,65 @@ impl HollowHarborItems {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use near_sdk::test_utils::VMContextBuilder;
+    use near_sdk::testing_env;
+
+    #[test]
+    fn test_mint_and_balance() {
+        let owner: AccountId = "owner.near".parse().unwrap();
+        let market: AccountId = "market.near".parse().unwrap();
+        let player: AccountId = "player.near".parse().unwrap();
+
+        let context = VMContextBuilder::new()
+            .predecessor_account_id(owner.clone())
+            .build();
+        testing_env!(context);
+
+        let mut contract = HollowHarborItems::new(owner.clone(), market.clone());
+        contract.mint(player.clone(), "iron_ore".to_string(), U128(50));
+
+        assert_eq!(contract.mt_balance_of(player, "iron_ore".to_string()), U128(50));
+    }
+
+    #[test]
+    fn test_atomic_trade() {
+        let owner: AccountId = "owner.near".parse().unwrap();
+        let market: AccountId = "market.near".parse().unwrap();
+        let player: AccountId = "player.near".parse().unwrap();
+        let merchant: AccountId = "marta.near".parse().unwrap();
+
+        // Setup with owner minting tokens
+        let context = VMContextBuilder::new()
+            .predecessor_account_id(owner.clone())
+            .build();
+        testing_env!(context);
+
+        let mut contract = HollowHarborItems::new(owner.clone(), market.clone());
+        contract.mint(player.clone(), "iron_ore".to_string(), U128(10));
+        contract.mint(merchant.clone(), "coin".to_string(), U128(100));
+
+        // Call trade from market
+        let context_market = VMContextBuilder::new()
+            .predecessor_account_id(market.clone())
+            .build();
+        testing_env!(context_market);
+
+        contract.trade(
+            player.clone(),
+            "iron_ore".to_string(),
+            U128(10),
+            merchant.clone(),
+            "coin".to_string(),
+            U128(60),
+        );
+
+        assert_eq!(contract.mt_balance_of(player.clone(), "iron_ore".to_string()), U128(0));
+        assert_eq!(contract.mt_balance_of(player.clone(), "coin".to_string()), U128(60));
+        assert_eq!(contract.mt_balance_of(merchant.clone(), "iron_ore".to_string()), U128(10));
+        assert_eq!(contract.mt_balance_of(merchant.clone(), "coin".to_string()), U128(40));
+    }
+}
+
