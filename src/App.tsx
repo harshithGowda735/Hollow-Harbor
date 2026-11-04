@@ -112,7 +112,7 @@ export default function App() {
   const [fastForwardData, setFastForwardData] = useState<FastForwardWeekResult | null>(null);
   const [selectedFFDay, setSelectedFFDay] = useState<number>(1);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [emailInput, setEmailInput] = useState('');
+  const [emailInput, setEmailInput] = useState('judge@near.org');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
   
@@ -939,91 +939,109 @@ export default function App() {
               </div>
             )}
 
-            {/* STAGE 4: 8 to 10s — Glowing Enter Button with Email Field (Intro Doubles as Login) */}
+            {/* STAGE 4: 8 to 10s — Designed Animated Logo Patch (Intro Doubles as Login) */}
             {coldOpenStage === 'login' && (
               <div 
                 onClick={(e) => e.stopPropagation()} 
-                className="relative z-20 w-full max-w-lg px-6 py-6 animate-in zoom-in-95 fade-in duration-500"
+                className="relative z-20 w-full max-w-md px-4 py-4 animate-in zoom-in-95 fade-in duration-500"
               >
-                {/* Neo-brutalist Vintage Maritime Stamp Card */}
-                <div className="neo-card-parchment p-6 sm:p-8 rounded-2xl shadow-[10px_10px_0px_#000] border-3 border-black text-left relative overflow-hidden">
+                {/* Designed Animated Logo Patch with Notched Border (Not a clean box border) */}
+                <div className="relative w-full bg-[#071120] border-4 border-[#ff5e36] shadow-[0_0_50px_rgba(255,94,54,0.45),10px_10px_0px_#000] rounded-3xl p-6 sm:p-7 text-left overflow-hidden">
                   
-                  {/* Subtle Stamp Decoration */}
-                  <div className="absolute top-3 right-3 border-2 border-dashed border-[#ff5e36]/40 px-2 py-0.5 rounded text-[10px] font-mono font-black text-[#ff5e36] uppercase rotate-6">
-                    OFFICIAL VISA
+                  {/* Decorative Notched Stamp Insets (Left & Right Cutouts) */}
+                  <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black border-2 border-[#ff5e36] z-20" />
+                  <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black border-2 border-[#ff5e36] z-20" />
+
+                  {/* Embroidered Stitched Inner Seam */}
+                  <div className="absolute inset-2 border-2 border-dashed border-amber-400/40 rounded-2xl pointer-events-none" />
+
+                  {/* Golden Corner Grommets */}
+                  <div className="absolute top-3 left-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+                  <div className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+                  <div className="absolute bottom-3 left-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+                  <div className="absolute bottom-3 right-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+
+                  {/* Pinned Washi-Tape Stamp Badge: 📌 OFFICIAL PORT ENTRY VISA • NEP-366. */}
+                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 z-30 transform -rotate-1">
+                    <div className="bg-[#ffe600] text-black border-2 border-black px-4 py-0.5 rounded shadow-[3px_3px_0px_#000] font-mono font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center space-x-1.5 whitespace-nowrap">
+                      <span>📌 OFFICIAL PORT ENTRY VISA • NEP-366.</span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-black border-2 border-black flex items-center justify-center text-amber-400 shadow-[2px_2px_0px_#ff5e36]">
-                      <Anchor className="w-6 h-6 stroke-[2.5]" />
+                  {/* Designed Animated Logo Patch Emblem */}
+                  <div className="flex flex-col items-center justify-center pt-3 pb-1 text-center">
+                    <div className="relative w-16 h-16 sm:w-20 sm:h-20 mb-2 flex items-center justify-center">
+                      {/* Outer Rotating Compass Line */}
+                      <div className="absolute inset-0 rounded-full border-2 border-dashed border-amber-400 animate-[spin_18s_linear_infinite]" />
+                      {/* Volumetric Glowing Pulse */}
+                      <div className="absolute inset-1.5 rounded-full bg-gradient-to-tr from-[#ff5e36]/50 via-amber-400/40 to-cyan-400/30 blur-md animate-pulse" />
+                      {/* Inner Shield Core */}
+                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#040914] border-2 border-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.6)] flex items-center justify-center">
+                        <Anchor className="w-7 h-7 sm:w-8 sm:h-8 text-[#ff5e36] stroke-[2.5] drop-shadow-[0_0_10px_rgba(255,94,54,0.9)]" />
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-cinzel font-black text-xl text-black leading-tight">
-                        Enter Hollow Harbor
-                      </h3>
-                      <p className="font-mono text-xs text-slate-700 font-bold">
-                        Autonomous Maritime Trading Pass
-                      </p>
-                    </div>
+                    <h3 className="font-cinzel text-xl sm:text-2xl font-black text-white tracking-widest leading-none drop-shadow-md">
+                      HOLLOW HARBOR
+                    </h3>
                   </div>
 
-                  <p className="font-serif text-xs text-slate-800 leading-relaxed mb-4">
-                    Claim your trader visa and 50.0 Coin purse. Instant seamless access—no wallet popups, no seed phrases, no gas interruptions.
-                  </p>
+                  {/* Single User Preset Only: 👑 JUDGE (01) • judge@near.org */}
+                  <div className="my-3.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmailInput('judge@near.org');
+                        finishColdOpen('judge@near.org');
+                      }}
+                      className="w-full bg-[#0c182f] hover:bg-[#122344] border-2 border-amber-400/90 rounded-xl p-3 text-left transition shadow-[3px_3px_0px_#000] cursor-pointer flex items-center justify-between group"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xl">👑</span>
+                        <div>
+                          <div className="font-mono font-black text-xs sm:text-sm text-amber-300 group-hover:text-white uppercase tracking-wider">
+                            👑 JUDGE (01) • judge@near.org
+                          </div>
+                          <div className="text-[10px] font-mono text-emerald-400 font-bold flex items-center space-x-1.5 mt-0.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                            <span>50.0 Coin Starter Purse • Instant Access</span>
+                          </div>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
 
+                  {/* Email Input & Enter Form */}
                   <form 
                     onSubmit={(e) => {
                       e.preventDefault();
                       finishColdOpen();
                     }}
-                    className="space-y-4"
+                    className="space-y-3"
                   >
-                    <div>
-                      <label className="block text-[10px] font-mono font-black uppercase text-slate-700 tracking-wider mb-1">
-                        Merchant Email Address
-                      </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
                       <input 
                         type="email" 
                         required
                         value={emailInput}
                         onChange={(e) => setEmailInput(e.target.value)}
                         placeholder="judge@near.org"
-                        className="w-full bg-white border-2 border-black rounded-xl px-4 py-3 font-mono text-sm text-black font-bold focus:outline-none focus:ring-2 focus:ring-[#ff5e36] shadow-[2px_2px_0px_#000]"
+                        className="w-full bg-[#040813] border-2 border-black rounded-xl py-3 pl-10 pr-4 font-mono text-sm text-white font-bold placeholder:text-slate-500 focus:outline-none focus:border-amber-400 shadow-[2px_2px_0px_#000]"
                       />
-                    </div>
-
-                    {/* Quick Demo Profile Pills */}
-                    <div className="space-y-1.5">
-                      <div className="text-[10px] font-mono font-bold text-slate-600 uppercase">
-                        Quick Demo Profiles:
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {['judge@near.org', 'captain@hollowharbor.io', 'investor@near.org'].map((em) => (
-                          <button
-                            key={em}
-                            type="button"
-                            onClick={() => {
-                              setEmailInput(em);
-                              finishColdOpen(em);
-                            }}
-                            className="text-[11px] font-mono font-bold bg-amber-100 hover:bg-amber-200 text-black border border-black px-2.5 py-1 rounded-lg transition shadow-[1px_1px_0px_#000] cursor-pointer"
-                          >
-                            ⚡ {em}
-                          </button>
-                        ))}
-                      </div>
                     </div>
 
                     {/* Big Glowing Enter Button */}
                     <button
                       type="submit"
-                      className="w-full neo-btn-orange py-4 rounded-xl font-mono font-black text-sm uppercase tracking-widest cursor-pointer shadow-[0_0_25px_rgba(255,94,54,0.8)] transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2 text-white border-2 border-black"
+                      className="w-full neo-btn-orange py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-widest cursor-pointer shadow-[0_0_30px_rgba(255,94,54,0.9)] transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2 text-white border-2 border-black"
                     >
                       <Play className="w-4 h-4 fill-white" />
-                      <span>ENTER THE HARBOR</span>
+                      <span>ENTER HARBOR</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </form>
+
                 </div>
               </div>
             )}
@@ -1933,153 +1951,114 @@ export default function App() {
         </div>
       )}
 
-      {/* CRAZY PRINTED IMMIGRATION PASSPORT LOGIN MODAL (Animated Logos & Wax Seals) */}
+      {/* CRAZY PRINTED IMMIGRATION PASSPORT LOGIN MODAL (Animated Logos & Patch Design) */}
       {showLoginModal && (
         <div className="fixed inset-0 bg-[#020612]/90 backdrop-blur-2xl z-50 flex items-center justify-center p-4 select-none">
           
-          {/* Main Die-Cut Boarding Pass Container with White Vinyl Ring & Deep 3D Shadow */}
-          <div className="relative max-w-lg w-full bg-[#0a1528] border-4 border-black ring-4 ring-white shadow-[16px_16px_0px_#000] rounded-3xl p-6 sm:p-8 animate-in zoom-in-95 duration-300 overflow-hidden">
+          {/* Designed Animated Logo Patch with Notched Border (Not a clean box border) */}
+          <div className="relative max-w-md w-full bg-[#071120] border-4 border-[#ff5e36] shadow-[0_0_50px_rgba(255,94,54,0.45),12px_12px_0px_#000] rounded-3xl p-6 sm:p-7 text-left animate-in zoom-in-95 duration-300 overflow-hidden">
             
-            {/* Ticket Stub Cutout Notches (Left & Right) */}
-            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#020612] border-r-4 border-black z-30" />
-            <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#020612] border-l-4 border-black z-30" />
+            {/* Decorative Notched Stamp Insets (Left & Right Cutouts) */}
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black border-2 border-[#ff5e36] z-20" />
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black border-2 border-[#ff5e36] z-20" />
 
-            {/* Slanted Top Washi Tape Sticker */}
-            <div className="absolute -top-1 left-8 z-30 transform -rotate-2">
-              <div className="bg-[#ffe600] text-black border-2 border-black px-4 py-1 rounded-sm shadow-[3px_3px_0px_#000] font-mono font-black text-[11px] uppercase tracking-wider flex items-center space-x-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-black fill-black" />
-                <span>OFFICIAL PORT ENTRY VISA • NEP-366</span>
-              </div>
-            </div>
+            {/* Embroidered Stitched Inner Seam */}
+            <div className="absolute inset-2 border-2 border-dashed border-amber-400/40 rounded-2xl pointer-events-none" />
 
-            {/* Rotating Animated Port Authority Wax Stamp (Top Right) */}
-            <div className="absolute top-3 right-12 z-20 pointer-events-none opacity-85">
-              <div className="relative w-20 h-20 rounded-full border-2 border-dashed border-[#ff5e36] flex items-center justify-center animate-[spin_16s_linear_infinite]">
-                <svg viewBox="0 0 100 100" className="w-full h-full fill-current">
-                  <path id="passportStamp" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
-                  <text className="text-[7.5px] font-mono font-black uppercase tracking-widest fill-[#ff5e36]">
-                    <textPath href="#passportStamp">★ PORT OF HOLLOW HARBOR ★ NEAR TESTNET ★</textPath>
-                  </text>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Anchor className="w-6 h-6 text-[#ff5e36]" />
-                </div>
+            {/* Golden Corner Grommets */}
+            <div className="absolute top-3 left-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+            <div className="absolute top-3 right-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+            <div className="absolute bottom-3 left-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+            <div className="absolute bottom-3 right-3 w-2.5 h-2.5 rounded-full bg-amber-400 border border-black shadow-[1px_1px_0px_#000] z-20" />
+
+            {/* Pinned Washi-Tape Stamp Badge: 📌 OFFICIAL PORT ENTRY VISA • NEP-366. */}
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 z-30 transform -rotate-1">
+              <div className="bg-[#ffe600] text-black border-2 border-black px-4 py-0.5 rounded shadow-[3px_3px_0px_#000] font-mono font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center space-x-1.5 whitespace-nowrap">
+                <span>📌 OFFICIAL PORT ENTRY VISA • NEP-366.</span>
               </div>
             </div>
 
             {/* Close Button */}
             <button 
               onClick={() => setShowLoginModal(false)}
-              className="absolute top-4 right-4 z-40 w-8 h-8 rounded-xl bg-black text-white hover:text-[#ff5e36] flex items-center justify-center font-black border border-white/20 cursor-pointer shadow-[2px_2px_0px_#000]"
+              className="absolute top-3 right-4 z-40 w-7 h-7 rounded-lg bg-black text-white hover:text-[#ff5e36] flex items-center justify-center font-black border border-white/20 cursor-pointer shadow-[2px_2px_0px_#000] text-xs"
             >
               ✕
             </button>
 
-            {/* Document Header */}
-            <div className="pt-4 pb-4 border-b-2 border-dashed border-white/20 relative z-10">
-              <div className="flex items-center space-x-3 mb-1.5">
-                <div className="w-10 h-10 rounded-xl bg-[#00ec97] text-black border-2 border-black shadow-[3px_3px_0px_#000] flex items-center justify-center font-black text-sm">
-                  Ⓝ
+            {/* Designed Animated Logo Patch Emblem */}
+            <div className="flex flex-col items-center justify-center pt-3 pb-1 text-center">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 mb-2 flex items-center justify-center">
+                {/* Outer Rotating Compass Line */}
+                <div className="absolute inset-0 rounded-full border-2 border-dashed border-amber-400 animate-[spin_18s_linear_infinite]" />
+                {/* Volumetric Glowing Pulse */}
+                <div className="absolute inset-1.5 rounded-full bg-gradient-to-tr from-[#ff5e36]/50 via-amber-400/40 to-cyan-400/30 blur-md animate-pulse" />
+                {/* Inner Shield Core */}
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#040914] border-2 border-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.6)] flex items-center justify-center">
+                  <Anchor className="w-7 h-7 sm:w-8 sm:h-8 text-[#ff5e36] stroke-[2.5] drop-shadow-[0_0_10px_rgba(255,94,54,0.9)]" />
                 </div>
-                <div>
-                  <h3 className="font-cinzel text-2xl font-black text-white tracking-wide leading-tight">
-                    PORT OF ENTRY CLEARANCE
-                  </h3>
-                  <div className="text-[11px] font-mono text-amber-300 uppercase tracking-widest font-bold">
-                    Autonomous Agent Settlement • Near Protocol
+              </div>
+              <h3 className="font-cinzel text-xl sm:text-2xl font-black text-white tracking-widest leading-none drop-shadow-md">
+                HOLLOW HARBOR
+              </h3>
+            </div>
+
+            {/* Single User Preset Only: 👑 JUDGE (01) • judge@near.org */}
+            <div className="my-3.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmailInput('judge@near.org');
+                  handleLogin('judge@near.org');
+                }}
+                className="w-full bg-[#0c182f] hover:bg-[#122344] border-2 border-amber-400/90 rounded-xl p-3 text-left transition shadow-[3px_3px_0px_#000] cursor-pointer flex items-center justify-between group"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-xl">👑</span>
+                  <div>
+                    <div className="font-mono font-black text-xs sm:text-sm text-amber-300 group-hover:text-white uppercase tracking-wider">
+                      👑 JUDGE (01) • judge@near.org
+                    </div>
+                    <div className="text-[10px] font-mono text-emerald-400 font-bold flex items-center space-x-1.5 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      <span>50.0 Coin Starter Purse • Instant Access</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Stamped Red Rubber Approval Seal */}
-              <div className="mt-2.5 flex items-center space-x-2">
-                <div className="inline-block transform -rotate-3 border-2 border-emerald-400 text-emerald-300 font-mono font-black text-[10px] px-2.5 py-0.5 rounded shadow-[2px_2px_0px_#000] tracking-widest uppercase">
-                  ✓ VISA APPROVED: ZERO GAS POPUPS
-                </div>
-                <div className="inline-block transform rotate-2 border-2 border-amber-400/80 text-amber-300 font-mono font-black text-[10px] px-2 py-0.5 rounded shadow-[2px_2px_0px_#000] tracking-wider uppercase">
-                  ⚡ NEP-366 SPONSORED
-                </div>
-              </div>
-            </div>
-
-            {/* Form & Identity Presets */}
-            <div className="py-5 space-y-4 relative z-10 font-mono">
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Sign in with email. An embedded ed25519 NEAR wallet is created silently in local storage—no wallet popups, no seed phrases, no gas interruptions.
-              </p>
-
-              {/* Email Input Field */}
-              <div>
-                <label className="text-[10px] font-black text-[#ff5e36] uppercase tracking-widest block mb-1.5">
-                  Citizen Identification / Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
-                  <input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="judge@near.org"
-                    className="w-full bg-[#050d1a] border-3 border-black rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400 font-mono shadow-[3px_3px_0px_#000]"
-                    onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                  />
-                </div>
-              </div>
-
-              {/* Printed Identity Credential Presets */}
-              <div>
-                <span className="text-[10px] text-slate-400 block mb-2 font-black uppercase tracking-wider">
-                  Select Printed Identity Pass:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {[
-                    { label: '👑 JUDGE (01)', email: 'judge@near.org', color: 'border-amber-400' },
-                    { label: '⚓ CAPTAIN (02)', email: 'captain@hollowharbor.io', color: 'border-cyan-400' },
-                    { label: '📈 INVESTOR (03)', email: 'investor@near.org', color: 'border-[#00ec97]' },
-                  ].map((preset) => (
-                    <button
-                      key={preset.email}
-                      onClick={() => handleLogin(preset.email)}
-                      className={`bg-[#050b17] hover:bg-[#0f1d36] border-2 ${preset.color} p-2 rounded-xl text-left cursor-pointer transition shadow-[2px_2px_0px_#000] group`}
-                    >
-                      <div className="text-[10px] font-black text-white group-hover:text-amber-300 truncate">
-                        {preset.label}
-                      </div>
-                      <div className="text-[9px] text-slate-400 truncate">
-                        {preset.email.split('@')[0]}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Stamped Gasless Grant Banner */}
-              <div className="bg-[#040f1a] border-2 border-emerald-400 p-3.5 rounded-xl flex items-start space-x-2.5 text-xs text-emerald-300 shadow-[3px_3px_0px_#000]">
-                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <span className="text-[11px] leading-relaxed">
-                  <strong>Starter Purse Grant:</strong> Automatically provisions an implicit testnet account with <strong>50.0 Coin</strong> and full gas sponsorship via <strong>NEP-366</strong>.
-                </span>
-              </div>
-            </div>
-
-            {/* Footer Actions */}
-            <div className="pt-4 border-t-2 border-dashed border-white/20 flex items-center justify-between relative z-10">
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="px-4 py-2 text-xs text-slate-400 hover:text-white cursor-pointer font-mono font-bold"
-              >
-                Cancel
+                <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
               </button>
-              
+            </div>
+
+            {/* Email Input & Enter Form */}
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleLogin();
+              }}
+              className="space-y-3"
+            >
+              <div className="relative">
+                <Mail className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
+                <input 
+                  type="email" 
+                  required
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="judge@near.org"
+                  className="w-full bg-[#040813] border-2 border-black rounded-xl py-3 pl-10 pr-4 font-mono text-sm text-white font-bold placeholder:text-slate-500 focus:outline-none focus:border-amber-400 shadow-[2px_2px_0px_#000]"
+                />
+              </div>
+
+              {/* Big Glowing Enter Button */}
               <button
-                onClick={() => handleLogin()}
-                className="neo-btn-orange px-7 py-3 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-2 shadow-[4px_4px_0px_#000] cursor-pointer"
+                type="submit"
+                className="w-full neo-btn-orange py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-widest cursor-pointer shadow-[0_0_30px_rgba(255,94,54,0.9)] transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2 text-white border-2 border-black"
               >
-                <Anchor className="w-4 h-4" />
-                <span>STAMP VISA & ENTER HARBOR</span>
+                <Play className="w-4 h-4 fill-white" />
+                <span>ENTER HARBOR</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
+            </form>
 
           </div>
         </div>
