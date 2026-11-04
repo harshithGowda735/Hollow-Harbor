@@ -897,19 +897,19 @@ export default function App() {
                   </h1>
                 </div>
 
-                {/* Attached Sticker Description with Attached Logo Emblem (No Boring Rectangles!) */}
-                <div className="relative max-w-xl group pt-2">
+                {/* Attached Sticker Description with Attached Logo Emblem (Fixed - No Hover Movement) */}
+                <div className="relative max-w-xl pt-2 select-none">
                   
-                  {/* Attached Top Washi-Tape Sticker */}
-                  <div className="absolute -top-2 left-6 z-20 transform -rotate-3 group-hover:-rotate-1 transition-transform">
+                  {/* Attached Top Washi-Tape Sticker (Fixed) */}
+                  <div className="absolute -top-2 left-6 z-20 transform -rotate-2">
                     <div className="bg-[#ffe600] text-black border-2 border-black px-3 py-0.5 rounded-sm shadow-[2px_2px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-[11px] uppercase tracking-wider">
                       <Sparkles className="w-3 h-3 text-black fill-black" />
                       <span>AUTONOMOUS HARBOR CHARTER</span>
                     </div>
                   </div>
 
-                  {/* Attached Official NEAR Logo Emblem Badge */}
-                  <div className="absolute -top-3.5 -right-2 sm:-right-4 z-20 transform rotate-6 group-hover:rotate-3 transition-transform animate-bob">
+                  {/* Attached Official NEAR Logo Emblem Badge (Fixed) */}
+                  <div className="absolute -top-3.5 -right-2 sm:-right-4 z-20 transform rotate-3">
                     <div className="bg-[#00ec97] text-black border-2 border-black ring-3 ring-white px-3 py-1 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-2 font-mono font-black text-xs">
                       <div className="w-5 h-5 bg-black text-[#00ec97] rounded-md flex items-center justify-center font-black text-xs">
                         Ⓝ
@@ -918,8 +918,8 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Main Die-Cut Sticker Card with White Vinyl Ring & Bold 3D Drop Shadow */}
-                  <div className="bg-[#09152b] text-slate-100 p-5 pt-6 rounded-2xl border-3 border-black ring-3 ring-white/20 shadow-[8px_8px_0px_#000] transform -rotate-0.5 group-hover:rotate-0 transition-all duration-300 relative overflow-hidden">
+                  {/* Main Die-Cut Sticker Card with White Vinyl Ring & Bold 3D Drop Shadow (Fixed) */}
+                  <div className="bg-[#09152b] text-slate-100 p-5 pt-6 rounded-2xl border-3 border-black ring-3 ring-white/20 shadow-[8px_8px_0px_#000] relative overflow-hidden">
                     {/* Glossy Vinyl Highlight */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/15 pointer-events-none" />
 
@@ -931,7 +931,7 @@ export default function App() {
                     {/* Attached Bottom Status Pill */}
                     <div className="mt-3.5 pt-3 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs font-mono">
                       <span className="bg-black/60 text-[#00ec97] border border-[#00ec97]/40 px-2.5 py-0.5 rounded-md font-bold flex items-center space-x-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#00ec97] animate-ping" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00ec97]" />
                         <span>ZERO GAS POPUPS (NEP-366)</span>
                       </span>
                       <span className="bg-black/60 text-cyan-300 border border-cyan-400/40 px-2.5 py-0.5 rounded-md font-bold">
@@ -982,7 +982,7 @@ export default function App() {
 
               </div>
 
-              {/* Right Column: Animated Die-Cut Character Sticker Pack (No Boring Cards!) */}
+              {/* Right Column: Fixed Die-Cut Character Sticker Logo (No Hover, No AI Solver Tape, No Floating Relayer Badge) */}
               <div className="lg:col-span-5 flex justify-center items-center">
                 <div 
                   onClick={() => {
@@ -993,20 +993,12 @@ export default function App() {
                       setActiveMerchantId('forge_marta');
                     }
                   }}
-                  className="relative group cursor-pointer select-none p-6 animate-cinematic-float"
+                  className="relative cursor-pointer select-none p-6"
                   title={user ? "Click to visit Marta's Forge" : "Sign in to visit Marta's Forge"}
                 >
                   
-                  {/* Attached Top Washi-Tape Sticker */}
-                  <div className="absolute -top-1 left-4 z-30 transform -rotate-6 group-hover:-rotate-3 transition-transform">
-                    <div className="bg-[#ffe600] text-black border-2 border-black px-3.5 py-1 rounded-sm shadow-[3px_3px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-xs uppercase tracking-wider">
-                      <Sparkles className="w-3.5 h-3.5 text-black fill-black" />
-                      <span>AI SOLVER #01 • ON-CHAIN</span>
-                    </div>
-                  </div>
-
-                  {/* Attached Speech Bubble Sticker (like in DebateAI reference) */}
-                  <div className="absolute -top-6 -right-4 sm:-right-8 z-30 transform rotate-3 group-hover:rotate-6 transition-transform animate-bob">
+                  {/* Attached Speech Bubble Sticker (Fixed Logo Element) */}
+                  <div className="absolute -top-6 -right-4 sm:-right-8 z-30 transform rotate-2">
                     <div className="bg-white text-black border-3 border-black rounded-2xl px-4 py-2.5 shadow-[5px_5px_0px_#000] relative">
                       <div className="flex items-center space-x-1.5 text-xs font-mono font-black text-[#ff5e36]">
                         <Flame className="w-3.5 h-3.5 fill-[#ff5e36]" />
@@ -1020,9 +1012,9 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* MAIN DIE-CUT CHARACTER STICKER (Thick white vinyl border + bold black drop shadow) */}
-                  <div className="relative transform group-hover:scale-104 transition-all duration-300">
-                    <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-[#091326] p-2 border-4 border-black ring-4 ring-white shadow-[10px_10px_0px_#000] overflow-hidden relative rotate-[-2deg] group-hover:rotate-0 transition-transform">
+                  {/* MAIN DIE-CUT CHARACTER STICKER LOGO (Fixed - Thick white vinyl border + bold black drop shadow) */}
+                  <div className="relative">
+                    <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-[#091326] p-2 border-4 border-black ring-4 ring-white shadow-[10px_10px_0px_#000] overflow-hidden relative rotate-[-2deg]">
                       {/* Marta Portrait Artwork */}
                       <img 
                         src="/assets/marta_avatar.jpg" 
@@ -1034,31 +1026,23 @@ export default function App() {
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none rounded-2xl" />
 
                       {/* Peel-off Corner Accent */}
-                      <div className="absolute top-0 right-0 w-6 h-6 bg-white/20 border-b border-l border-white/40 transform rotate-0 pointer-events-none" />
+                      <div className="absolute top-0 right-0 w-6 h-6 bg-white/20 border-b border-l border-white/40 pointer-events-none" />
                     </div>
                   </div>
 
-                  {/* Attached Stat Sticker #1: Cash Reserve Pill (Bottom Left) */}
-                  <div className="absolute -bottom-2 -left-4 z-30 transform -rotate-4 group-hover:-rotate-1 transition-transform">
+                  {/* Attached Stat Sticker #1: Cash Reserve Pill (Bottom Left - Fixed) */}
+                  <div className="absolute -bottom-2 -left-4 z-30 transform -rotate-3">
                     <div className="bg-[#ff5e36] text-white border-2 border-black px-3.5 py-1.5 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-2 font-mono font-black text-xs">
                       <Coins className="w-4 h-4 text-amber-200 fill-amber-300" />
                       <span>120.0c Cash Reserve</span>
                     </div>
                   </div>
 
-                  {/* Attached Stat Sticker #2: Inventory Target Badge (Bottom Right) */}
-                  <div className="absolute -bottom-4 right-0 sm:-right-4 z-30 transform rotate-4 group-hover:rotate-2 transition-transform">
+                  {/* Attached Stat Sticker #2: Inventory Target Badge (Bottom Right - Fixed) */}
+                  <div className="absolute -bottom-4 right-0 sm:-right-4 z-30 transform rotate-3">
                     <div className="bg-[#05ea9b] text-black border-2 border-black px-3.5 py-1.5 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-xs">
                       <Box className="w-4 h-4 text-black" />
                       <span>40 / 100 Ore Stock</span>
-                    </div>
-                  </div>
-
-                  {/* Attached Tech Badge Sticker: NEP-245 / Gasless (Floating below) */}
-                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
-                    <div className="bg-[#091326] text-cyan-300 border-2 border-cyan-400 px-3 py-1 rounded-full text-[10px] font-mono font-bold flex items-center space-x-1.5 shadow-[3px_3px_0px_#000]">
-                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                      <span>NEP-245 TOKEN ID • GASLESS RELAYER ON</span>
                     </div>
                   </div>
 
