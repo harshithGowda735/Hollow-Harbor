@@ -897,11 +897,50 @@ export default function App() {
                   </h1>
                 </div>
 
-                {/* Subtitle */}
-                <p className="text-base sm:text-lg text-slate-100 max-w-xl font-medium leading-relaxed drop-shadow-[1px_1px_2px_#000] bg-[#071326]/60 p-4 rounded-xl border border-white/10 backdrop-blur-md">
-                  A harbor town where every merchant is an <strong>autonomous agent with a real NEAR wallet</strong>. 
-                  Prices fluctuate on real inventory and survival pressure. Flood iron, watch the forge go bankrupt, and invest to revive it.
-                </p>
+                {/* Attached Sticker Description with Attached Logo Emblem (No Boring Rectangles!) */}
+                <div className="relative max-w-xl group pt-2">
+                  
+                  {/* Attached Top Washi-Tape Sticker */}
+                  <div className="absolute -top-2 left-6 z-20 transform -rotate-3 group-hover:-rotate-1 transition-transform">
+                    <div className="bg-[#ffe600] text-black border-2 border-black px-3 py-0.5 rounded-sm shadow-[2px_2px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-[11px] uppercase tracking-wider">
+                      <Sparkles className="w-3 h-3 text-black fill-black" />
+                      <span>AUTONOMOUS HARBOR CHARTER</span>
+                    </div>
+                  </div>
+
+                  {/* Attached Official NEAR Logo Emblem Badge */}
+                  <div className="absolute -top-3.5 -right-2 sm:-right-4 z-20 transform rotate-6 group-hover:rotate-3 transition-transform animate-bob">
+                    <div className="bg-[#00ec97] text-black border-2 border-black ring-3 ring-white px-3 py-1 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-2 font-mono font-black text-xs">
+                      <div className="w-5 h-5 bg-black text-[#00ec97] rounded-md flex items-center justify-center font-black text-xs">
+                        Ⓝ
+                      </div>
+                      <span className="tracking-wide uppercase">NEAR AGENTS</span>
+                    </div>
+                  </div>
+
+                  {/* Main Die-Cut Sticker Card with White Vinyl Ring & Bold 3D Drop Shadow */}
+                  <div className="bg-[#09152b] text-slate-100 p-5 pt-6 rounded-2xl border-3 border-black ring-3 ring-white/20 shadow-[8px_8px_0px_#000] transform -rotate-0.5 group-hover:rotate-0 transition-all duration-300 relative overflow-hidden">
+                    {/* Glossy Vinyl Highlight */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/15 pointer-events-none" />
+
+                    <p className="text-base sm:text-lg font-medium leading-relaxed drop-shadow-[1px_1px_2px_#000] relative z-10">
+                      A harbor town where every merchant is an <strong className="text-amber-300 underline decoration-[#ff5e36] decoration-2">autonomous agent with a real NEAR wallet</strong>. 
+                      Prices fluctuate on real inventory and survival pressure. Flood iron, watch the forge go bankrupt, and invest to revive it.
+                    </p>
+
+                    {/* Attached Bottom Status Pill */}
+                    <div className="mt-3.5 pt-3 border-t border-white/10 flex flex-wrap items-center gap-2 text-xs font-mono">
+                      <span className="bg-black/60 text-[#00ec97] border border-[#00ec97]/40 px-2.5 py-0.5 rounded-md font-bold flex items-center space-x-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00ec97] animate-ping" />
+                        <span>ZERO GAS POPUPS (NEP-366)</span>
+                      </span>
+                      <span className="bg-black/60 text-cyan-300 border border-cyan-400/40 px-2.5 py-0.5 rounded-md font-bold">
+                        NEP-245 MARKET MAKER
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
 
                 {/* Tactile Start Button */}
                 <div className="flex flex-wrap items-center gap-4 pt-2">
