@@ -122,10 +122,8 @@ export default function App() {
   const [isYtExpanded, setIsYtExpanded] = useState(false);
   const [showYtWidget, setShowYtWidget] = useState(true);
 
-  // 10-Second Cold Open Landing on Login State
-  const [coldOpenActive, setColdOpenActive] = useState(() => {
-    return !localStorage.getItem('hh_intro_seen');
-  });
+  // 10-Second Cold Open Landing on Login State (Always active on reload)
+  const [coldOpenActive, setColdOpenActive] = useState(true);
   const [coldOpenStage, setColdOpenStage] = useState<'dusk' | 'drift' | 'title' | 'login'>('dusk');
   const [martaColdPrice, setMartaColdPrice] = useState(12.2);
   const [martaColdBankrupt, setMartaColdBankrupt] = useState(false);
@@ -269,6 +267,10 @@ export default function App() {
 
   // Restore session on mount & auto-start YouTube on first gesture
   useEffect(() => {
+    try {
+      localStorage.removeItem('hh_intro_seen');
+    } catch {}
+
     const session = EmbeddedWalletManager.getSession();
     if (session) {
       setUser(session);
@@ -345,7 +347,7 @@ export default function App() {
     const finalEmail = presetEmail || emailInput || 'captain@hollowharbor.io';
     handleLogin(finalEmail);
     try {
-      localStorage.setItem('hh_intro_seen', 'true');
+      localStorage.removeItem('hh_intro_seen');
     } catch {}
     setColdOpenActive(false);
     playYouTube();
