@@ -112,7 +112,7 @@ export default function App() {
   const [fastForwardData, setFastForwardData] = useState<FastForwardWeekResult | null>(null);
   const [selectedFFDay, setSelectedFFDay] = useState<number>(1);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
-  const [emailInput, setEmailInput] = useState('judge@near.org');
+  const [emailInput, setEmailInput] = useState('captain@hollowharbor.io');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
   
@@ -342,7 +342,7 @@ export default function App() {
 
   // Complete cold open & enter harbor town
   const finishColdOpen = (presetEmail?: string) => {
-    const finalEmail = presetEmail || emailInput || 'judge@near.org';
+    const finalEmail = presetEmail || emailInput || 'captain@hollowharbor.io';
     handleLogin(finalEmail);
     try {
       localStorage.setItem('hh_intro_seen', 'true');
@@ -399,7 +399,7 @@ export default function App() {
   };
 
   const handleLogin = async (emailToUse?: string) => {
-    const email = emailToUse || emailInput || 'judge@near.org';
+    const email = emailToUse || emailInput || 'captain@hollowharbor.io';
     const loggedInUser = await EmbeddedWalletManager.loginWithEmail(email);
     setUser(loggedInUser);
     setShowLoginModal(false);
@@ -817,19 +817,24 @@ export default function App() {
                 {/* Floating Interactive Merchant Price Badges Over the Harbor */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full my-auto max-w-3xl">
                   
-                  {/* Marta's Forge: Live Price Drop & Bankrupt Crash */}
+                  {/* Marta's Forge: Live Price Drop & Bankrupt Crash (Animated Logo Badge) */}
                   <div className={`transition-all duration-500 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left relative ${
                     martaColdBankrupt 
-                      ? 'bg-rose-950/90 border-rose-600 scale-105 ring-2 ring-rose-500' 
+                      ? 'bg-rose-950/90 border-rose-500 scale-105 ring-2 ring-rose-500 shadow-[0_0_25px_rgba(244,63,94,0.5),4px_4px_0px_#000]' 
                       : 'bg-[#15233c]/90 border-amber-500/60'
                   }`}>
                     <div className="flex items-center justify-between pb-2 border-b border-black/40">
-                      <div className="flex items-center space-x-2">
-                        <Hammer className="w-4 h-4 text-amber-400" />
+                      <div className="flex items-center space-x-2.5">
+                        {/* Animated Forge Logo Badge */}
+                        <div className="relative w-8 h-8 rounded-lg bg-[#0a1220] border-2 border-amber-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(251,191,36,0.6)]">
+                          <div className="absolute inset-0 rounded-lg border border-dashed border-amber-400 animate-[spin_8s_linear_infinite]" />
+                          <div className="absolute inset-0.5 rounded bg-gradient-to-tr from-rose-500/40 to-amber-500/30 animate-pulse" />
+                          <Hammer className="w-4 h-4 text-amber-300 relative z-10 animate-bounce" style={{ animationDuration: '1.8s' }} />
+                        </div>
                         <span className="font-bold text-sm text-white font-mono">Marta's Forge</span>
                       </div>
                       {martaColdBankrupt ? (
-                        <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase font-mono animate-bounce">
+                        <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase font-mono shadow-[2px_2px_0px_#000] border border-white/50 animate-bounce">
                           CLOSED - BANKRUPT
                         </span>
                       ) : (
@@ -855,11 +860,16 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Old Piers Timberyard */}
+                  {/* Old Piers Timberyard (Animated Logo Badge) */}
                   <div className="bg-[#15233c]/90 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left">
                     <div className="flex items-center justify-between pb-2 border-b border-black/40">
-                      <div className="flex items-center space-x-2">
-                        <TreePine className="w-4 h-4 text-emerald-400" />
+                      <div className="flex items-center space-x-2.5">
+                        {/* Animated Timberyard Logo Badge */}
+                        <div className="relative w-8 h-8 rounded-lg bg-[#081814] border-2 border-emerald-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(52,211,153,0.6)]">
+                          <div className="absolute inset-0 rounded-lg border border-dashed border-emerald-400 animate-[spin_10s_linear_infinite]" />
+                          <div className="absolute inset-0.5 rounded bg-gradient-to-tr from-emerald-500/40 to-teal-500/30 animate-pulse" />
+                          <TreePine className="w-4 h-4 text-emerald-300 relative z-10 animate-pulse" />
+                        </div>
                         <span className="font-bold text-sm text-white font-mono">Old Piers Timber</span>
                       </div>
                       <span className="bg-emerald-600/80 text-white text-[10px] font-black px-1.5 py-0.5 rounded font-mono">
@@ -878,11 +888,16 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Gull & Anchor Tavern */}
+                  {/* Gull & Anchor Tavern (Animated Logo Badge) */}
                   <div className="bg-[#15233c]/90 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left">
                     <div className="flex items-center justify-between pb-2 border-b border-black/40">
-                      <div className="flex items-center space-x-2">
-                        <Fish className="w-4 h-4 text-cyan-400" />
+                      <div className="flex items-center space-x-2.5">
+                        {/* Animated Smokehouse Logo Badge */}
+                        <div className="relative w-8 h-8 rounded-lg bg-[#061524] border-2 border-cyan-400 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(34,211,238,0.6)]">
+                          <div className="absolute inset-0 rounded-lg border border-dashed border-cyan-400 animate-[spin_12s_linear_infinite]" />
+                          <div className="absolute inset-0.5 rounded bg-gradient-to-tr from-cyan-500/40 to-blue-500/30 animate-pulse" />
+                          <Fish className="w-4 h-4 text-cyan-300 relative z-10 animate-bounce" style={{ animationDuration: '2.2s' }} />
+                        </div>
                         <span className="font-bold text-sm text-white font-mono">Gull & Anchor</span>
                       </div>
                       <span className="bg-emerald-600/80 text-white text-[10px] font-black px-1.5 py-0.5 rounded font-mono">
@@ -985,21 +1000,21 @@ export default function App() {
                     </h3>
                   </div>
 
-                  {/* Single User Preset Only: 👑 JUDGE (01) • judge@near.org */}
+                  {/* Single User Preset Only: ⚓ CAPTAIN (01) • captain@hollowharbor.io */}
                   <div className="my-3.5">
                     <button
                       type="button"
                       onClick={() => {
-                        setEmailInput('judge@near.org');
-                        finishColdOpen('judge@near.org');
+                        setEmailInput('captain@hollowharbor.io');
+                        finishColdOpen('captain@hollowharbor.io');
                       }}
                       className="w-full bg-[#0c182f] hover:bg-[#122344] border-2 border-amber-400/90 rounded-xl p-3 text-left transition shadow-[3px_3px_0px_#000] cursor-pointer flex items-center justify-between group"
                     >
                       <div className="flex items-center space-x-3">
-                        <span className="text-xl">👑</span>
+                        <span className="text-xl">⚓</span>
                         <div>
                           <div className="font-mono font-black text-xs sm:text-sm text-amber-300 group-hover:text-white uppercase tracking-wider">
-                            👑 JUDGE (01) • judge@near.org
+                            ⚓ CAPTAIN (01) • captain@hollowharbor.io
                           </div>
                           <div className="text-[10px] font-mono text-emerald-400 font-bold flex items-center space-x-1.5 mt-0.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -1026,7 +1041,7 @@ export default function App() {
                         required
                         value={emailInput}
                         onChange={(e) => setEmailInput(e.target.value)}
-                        placeholder="judge@near.org"
+                        placeholder="captain@hollowharbor.io"
                         className="w-full bg-[#040813] border-2 border-black rounded-xl py-3 pl-10 pr-4 font-mono text-sm text-white font-bold placeholder:text-slate-500 focus:outline-none focus:border-amber-400 shadow-[2px_2px_0px_#000]"
                       />
                     </div>
@@ -2003,21 +2018,21 @@ export default function App() {
               </h3>
             </div>
 
-            {/* Single User Preset Only: 👑 JUDGE (01) • judge@near.org */}
+            {/* Single User Preset Only: ⚓ CAPTAIN (01) • captain@hollowharbor.io */}
             <div className="my-3.5">
               <button
                 type="button"
                 onClick={() => {
-                  setEmailInput('judge@near.org');
-                  handleLogin('judge@near.org');
+                  setEmailInput('captain@hollowharbor.io');
+                  handleLogin('captain@hollowharbor.io');
                 }}
                 className="w-full bg-[#0c182f] hover:bg-[#122344] border-2 border-amber-400/90 rounded-xl p-3 text-left transition shadow-[3px_3px_0px_#000] cursor-pointer flex items-center justify-between group"
               >
                 <div className="flex items-center space-x-3">
-                  <span className="text-xl">👑</span>
+                  <span className="text-xl">⚓</span>
                   <div>
                     <div className="font-mono font-black text-xs sm:text-sm text-amber-300 group-hover:text-white uppercase tracking-wider">
-                      👑 JUDGE (01) • judge@near.org
+                      ⚓ CAPTAIN (01) • captain@hollowharbor.io
                     </div>
                     <div className="text-[10px] font-mono text-emerald-400 font-bold flex items-center space-x-1.5 mt-0.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
@@ -2044,7 +2059,7 @@ export default function App() {
                   required
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="judge@near.org"
+                  placeholder="captain@hollowharbor.io"
                   className="w-full bg-[#040813] border-2 border-black rounded-xl py-3 pl-10 pr-4 font-mono text-sm text-white font-bold placeholder:text-slate-500 focus:outline-none focus:border-amber-400 shadow-[2px_2px_0px_#000]"
                 />
               </div>
