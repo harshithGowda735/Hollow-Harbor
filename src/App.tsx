@@ -37,7 +37,10 @@ import {
   Play,
   Pause,
   Calendar,
-  RotateCcw
+  RotateCcw,
+  BookOpen,
+  ScrollText,
+  ChevronLeft
 } from 'lucide-react';
 import { DEFAULT_RULES } from '@shared/rules';
 import { MerchantState, MerchantId, GoodId } from '@shared/types';
@@ -46,6 +49,45 @@ import { simulateFastForwardWeek, FastForwardWeekResult, FastForwardDayResult } 
 import { getVerifiedTestnetTx } from '@shared/testnet';
 import { EmbeddedWalletManager, EmbeddedUser } from './lib/wallet';
 import { harborAudio } from './lib/audio';
+
+const PROLOGUE_SLIDES = [
+  {
+    chapter: "PROLOGUE",
+    title: "Once upon a time...",
+    subtitle: "In the mist-veiled waters of the northern sea",
+    quote: "“Where no king holds sway, and the rhythm of the waves governs the fate of men.”",
+    text: "Beyond the charted trading lanes of the Old Realm, shrouded in eternal coastal fog, lay Hollow Harbor. It was not built on conquest or stone monuments, but on the simple, brutal law of commerce: iron for wood, fish for salt, and coin for sweat.",
+    accent: "The morning ocean surf whispers against the mossy timbers of the dock...",
+    badge: "THE LIVING SEA",
+  },
+  {
+    chapter: "CHAPTER I",
+    title: "Merchants of Flesh & Steel",
+    subtitle: "Every stall is an autonomous small business",
+    quote: "“We do not give charity. When my coin chest is bare, the fires go out.” — Marta",
+    text: "In Hollow Harbor, merchants are not programmed dispensers with bottomless pockets. Master Blacksmith Marta, Old Piers at the sawmill, and the Gull & Anchor tavern keeper run independent balance sheets on the NEAR blockchain. When you flood them with goods, they lower their bids; when their cash drains below survival, they shut their doors in bankruptcy.",
+    accent: "A hammer strikes in the distance. The anvil rings out across the foggy pier...",
+    badge: "AUTONOMOUS AGENTS",
+  },
+  {
+    chapter: "CHAPTER II",
+    title: "The Shadow of Bankruptcy",
+    subtitle: "When the forge goes cold, opportunity ignites",
+    quote: "“A bankrupt forge is a tragedy for the smith, but a fortune for the bold investor.”",
+    text: "Aggressive traders can crash entire supply chains by dumping raw ores into vulnerable workshops. But when a shop collapses, NEAR Intents allow sharp investors to step in. Deposit cross-asset funding to recapitalize the shopkeeper, mint permanent equity shares in their stall, and collect a 10% dividend from every coin that crosses their counter.",
+    accent: "The town notice board trembles in the sea breeze, awaiting an investor's seal...",
+    badge: "NEAR INTENTS & EQUITY",
+  },
+  {
+    chapter: "CHAPTER III",
+    title: "Your Ship Has Docked",
+    subtitle: "The harbor ledger is open, Captain",
+    quote: "“The tide waits for no trader. Will you build an empire, or drown in the flood?”",
+    text: "Your vessel glides alongside the wooden jetty. The harbor bells are tolling in the mist. Your purse carries 50 silver coin, and your crew stands ready. Zero gas interruptions, zero wallet popups — every trade settled directly onto NEAR testnet. Step ashore, and claim your place in the living harbor.",
+    accent: "The harbor master unfurls the morning ledger. Your voyage begins now.",
+    badge: "ZERO GAS FRICTION",
+  },
+];
 
 interface LedgerItem {
   id: string;
@@ -72,6 +114,8 @@ export default function App() {
   const [emailInput, setEmailInput] = useState('');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
+  const [showStoryPrologue, setShowStoryPrologue] = useState(false);
+  const [storyChapter, setStoryChapter] = useState(0);
 
   // Settlement loading state & settled receipt banner
   const [isSettling, setIsSettling] = useState(false);
@@ -188,6 +232,42 @@ export default function App() {
   const toggleSound = () => {
     const on = harborAudio.toggle();
     setIsAudioOn(on);
+    if (on) {
+      showToast('🔊 Coastal Ambiance & Harbor Bells Active');
+    }
+  };
+
+  const startStoryPrologue = () => {
+    setStoryChapter(0);
+    setShowStoryPrologue(true);
+    harborAudio.enable();
+    setIsAudioOn(true);
+    harborAudio.playStoryAdvance();
+  };
+
+  const advanceStoryChapter = () => {
+    if (storyChapter < PROLOGUE_SLIDES.length - 1) {
+      setStoryChapter((prev) => prev + 1);
+      harborAudio.playStoryAdvance();
+    } else {
+      finishStoryPrologue();
+    }
+  };
+
+  const prevStoryChapter = () => {
+    if (storyChapter > 0) {
+      setStoryChapter((prev) => prev - 1);
+      harborAudio.playStoryAdvance();
+    }
+  };
+
+  const finishStoryPrologue = () => {
+    setShowStoryPrologue(false);
+    setInGame(true);
+    harborAudio.enable();
+    setIsAudioOn(true);
+    harborAudio.playHarborBell();
+    showToast('⚓ Welcome ashore to Hollow Harbor! The market awaits.');
   };
 
   const handleLogin = async (emailToUse?: string) => {
@@ -320,6 +400,7 @@ export default function App() {
       [inputGood]: prev[inputGood] - requiredQty,
       [outputGood]: prev[outputGood] + recipe.output_qty,
     }));
+    harborAudio.playAnvilSound();
     showToast(`Crafted 1 ${DEFAULT_RULES.goods[outputGood].name} at Workshop!`);
   };
 
@@ -413,6 +494,7 @@ export default function App() {
         summary: swapSummary,
       });
 
+      harborAudio.playCoinSound();
       showToast(`⚡ Atomic Swap Settled on NEAR Testnet! (+${totalEarned} Coin)`);
     } finally {
       setIsSettling(false);
@@ -466,6 +548,8 @@ export default function App() {
       summary: `Backed ${merchant.name} with $5 Intents (+25 Shares)`,
     });
 
+    harborAudio.playHarborBell();
+    harborAudio.playCoinSound();
     showToast(`🎉 You backed ${merchant.name} via NEAR Intents! Shop reopened, +25 Shares minted!`);
   };
 
@@ -576,6 +660,14 @@ export default function App() {
               className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
             >
               MAIN
+            </button>
+            <button 
+              onClick={startStoryPrologue} 
+              className="hover:text-amber-300 text-amber-200 transition cursor-pointer uppercase flex items-center space-x-1"
+              title="Experience the Story Prologue (Once Upon a Time...)"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              <span>STORY</span>
             </button>
             <button 
               onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }} 
@@ -732,19 +824,27 @@ export default function App() {
                 {/* Tactile DevHack Buttons */}
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <button
-                    onClick={() => setShowLoginModal(true)}
-                    className="neo-btn-dark px-7 py-3.5 rounded-lg font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2"
+                    onClick={startStoryPrologue}
+                    className="neo-btn-orange px-8 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2.5 shadow-[5px_5px_0px_#000] transform hover:scale-102 transition"
                   >
-                    <span>ENTER WITH EMAIL</span>
-                    <ArrowRight className="w-4 h-4 text-[#ff5e36]" />
+                    <BookOpen className="w-4 h-4 text-white" />
+                    <span>ONCE UPON A TIME... (STORY PROLOGUE)</span>
                   </button>
 
                   <button
                     onClick={() => handleLogin('judge@near.org')}
-                    className="neo-btn-orange px-7 py-3.5 rounded-lg font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2"
+                    className="neo-btn-dark px-6 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2 border-2 border-[#ff5e36]"
                   >
-                    <Zap className="w-4 h-4" />
+                    <Zap className="w-4 h-4 text-[#ff5e36]" />
                     <span>LAUNCH JUDGE DEMO</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowLoginModal(true)}
+                    className="neo-btn-dark px-6 py-3.5 rounded-xl font-mono font-bold text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2 text-slate-300"
+                  >
+                    <span>SIGN IN</span>
+                    <ArrowRight className="w-4 h-4 text-slate-400" />
                   </button>
                 </div>
 
@@ -1734,6 +1834,162 @@ export default function App() {
             </div>
 
           </div>
+        </div>
+      )}
+
+      {/* CINEMATIC STORY PROLOGUE: "ONCE UPON A TIME..." */}
+      {showStoryPrologue && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-[#040813]/95 backdrop-blur-2xl text-slate-100 select-none animate-in fade-in duration-500">
+          
+          {/* Top Cinematic Film Bar */}
+          <div className="h-14 sm:h-16 bg-black border-b border-[#ff5e36]/30 px-6 flex items-center justify-between shrink-0">
+            <div className="flex items-center space-x-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5e36] animate-pulse" />
+              <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest uppercase text-amber-200">
+                HOLLOW HARBOR CHRONICLES • PROLOGUE
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={toggleSound}
+                className={`px-3 py-1 rounded-lg border-2 border-black flex items-center space-x-1.5 text-xs font-mono transition-all cursor-pointer shadow-[2px_2px_0px_#000] ${
+                  isAudioOn ? 'bg-[#ff5e36] text-white font-bold' : 'bg-[#15233c] text-slate-300'
+                }`}
+                title="Toggle Coastal Ocean Waves & Harbor Bells"
+              >
+                {isAudioOn ? <Volume2 className="w-3.5 h-3.5 animate-pulse" /> : <VolumeX className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline">{isAudioOn ? 'HARBOR AUDIO ON' : 'AUDIO MUTED'}</span>
+              </button>
+
+              <button
+                onClick={finishStoryPrologue}
+                className="text-xs font-mono text-slate-400 hover:text-white cursor-pointer px-2 py-1"
+                title="Skip prologue and enter docks immediately"
+              >
+                SKIP TO HARBOR ➔
+              </button>
+            </div>
+          </div>
+
+          {/* Center Stage: Cinematic Story Card */}
+          <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative overflow-hidden">
+            {/* Atmospheric background glow */}
+            <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#ff5e36]/15 via-amber-500/10 to-transparent blur-3xl pointer-events-none" />
+
+            {(() => {
+              const slide = PROLOGUE_SLIDES[storyChapter];
+              return (
+                <div 
+                  key={storyChapter} 
+                  className="max-w-2xl w-full neo-box-orange p-6 sm:p-10 rounded-3xl shadow-[14px_14px_0px_#000] relative z-10 space-y-6 animate-in slide-in-from-bottom-4 duration-500"
+                >
+                  {/* Chapter Header */}
+                  <div className="flex items-center justify-between border-b-2 border-black pb-4">
+                    <div className="flex items-center space-x-2.5">
+                      <span className="text-[10px] sm:text-xs font-mono font-black uppercase bg-[#ff5e36] text-white px-2.5 py-1 rounded-md border border-black shadow-[1px_1px_0px_#000]">
+                        {slide.chapter}
+                      </span>
+                      <span className="text-xs font-mono font-bold tracking-wider text-amber-300 uppercase">
+                        {slide.badge}
+                      </span>
+                    </div>
+
+                    <div className="text-xs font-mono text-slate-400 font-bold">
+                      {storyChapter + 1} / {PROLOGUE_SLIDES.length}
+                    </div>
+                  </div>
+
+                  {/* Main Headlines */}
+                  <div className="space-y-2">
+                    <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                      {slide.title}
+                    </h2>
+                    <p className="font-mono text-xs sm:text-sm font-bold text-[#ff5e36] uppercase tracking-wide">
+                      {slide.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Lore Quote Callout */}
+                  <div className="bg-[#050b17] border-l-4 border-[#ff5e36] p-3.5 rounded-r-xl border-y-2 border-r-2 border-black shadow-[3px_3px_0px_#000]">
+                    <p className="font-cinzel italic text-xs sm:text-sm text-amber-200 leading-relaxed">
+                      {slide.quote}
+                    </p>
+                  </div>
+
+                  {/* Narrative Prose */}
+                  <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-sans font-medium">
+                    {slide.text}
+                  </p>
+
+                  {/* Sensory Cue */}
+                  <div className="pt-2 flex items-center space-x-2 text-xs font-mono text-slate-400 italic">
+                    <Waves className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>{slide.accent}</span>
+                  </div>
+
+                  {/* Chapter Navigation Controls */}
+                  <div className="pt-6 border-t-2 border-black flex items-center justify-between gap-3">
+                    {storyChapter > 0 ? (
+                      <button
+                        onClick={prevStoryChapter}
+                        className="neo-btn-dark px-4 py-2.5 rounded-xl font-mono font-bold text-xs flex items-center space-x-1 cursor-pointer"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        <span>BACK</span>
+                      </button>
+                    ) : <div />}
+
+                    {storyChapter < PROLOGUE_SLIDES.length - 1 ? (
+                      <button
+                        onClick={advanceStoryChapter}
+                        className="neo-btn-orange px-7 py-3 rounded-xl font-mono font-black text-xs uppercase tracking-wider flex items-center space-x-2 cursor-pointer shadow-[3px_3px_0px_#000]"
+                      >
+                        <span>NEXT CHAPTER</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={finishStoryPrologue}
+                        className="neo-btn-orange px-8 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider flex items-center space-x-2.5 cursor-pointer shadow-[4px_4px_0px_#000] animate-pulse"
+                      >
+                        <Anchor className="w-4 h-4" />
+                        <span>ENTER HOLLOW HARBOR</span>
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Bottom Cinematic Film Bar */}
+          <div className="h-14 sm:h-16 bg-black border-t border-[#ff5e36]/30 px-6 flex items-center justify-between shrink-0">
+            {/* Story Timeline dots */}
+            <div className="flex items-center space-x-2">
+              {PROLOGUE_SLIDES.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setStoryChapter(idx);
+                    harborAudio.playStoryAdvance();
+                  }}
+                  className={`h-2 transition-all rounded-full cursor-pointer ${
+                    storyChapter === idx 
+                      ? 'w-8 bg-[#ff5e36] shadow-[0_0_8px_#ff5e36]' 
+                      : 'w-2 bg-slate-600 hover:bg-slate-400'
+                  }`}
+                  title={`Go to chapter ${idx + 1}`}
+                />
+              ))}
+            </div>
+
+            <span className="font-mono text-[11px] text-slate-400 hidden sm:inline">
+              AUTONOMOUS NEAR ECONOMY • DSU DEVHACK 3.0 EDITION
+            </span>
+          </div>
+
         </div>
       )}
 
