@@ -647,9 +647,6 @@ export default function App() {
               <span className="font-cinzel text-lg font-black tracking-wide text-white group-hover:text-[#ff5e36] transition-colors">
                 HOLLOW HARBOR
               </span>
-              <span className="text-[10px] font-mono font-black uppercase bg-[#ff5e36] text-white px-2 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000]">
-                3.0
-              </span>
             </div>
           </div>
 
@@ -810,9 +807,6 @@ export default function App() {
                       HARBOR
                     </span>
                   </h1>
-                  <span className="font-mono text-3xl sm:text-5xl font-black text-white block mt-2 drop-shadow-[4px_4px_0px_#000]">
-                    3.0
-                  </span>
                 </div>
 
                 {/* Subtitle */}
@@ -1986,7 +1980,7 @@ export default function App() {
             </div>
 
             <span className="font-mono text-[11px] text-slate-400 hidden sm:inline">
-              AUTONOMOUS NEAR ECONOMY • DSU DEVHACK 3.0 EDITION
+              AUTONOMOUS NEAR ECONOMY • WHERE THE ECONOMY IS THE GAMEPLAY
             </span>
           </div>
 
