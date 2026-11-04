@@ -733,67 +733,62 @@ export default function App() {
             </div>
           </div>
 
-          {/* Center Navigation Links (Matching DEVHACK Navbar) */}
-          <nav className="flex items-center space-x-3 sm:space-x-6 text-xs font-mono font-bold tracking-wider text-slate-200">
-            {user ? (
-              <>
-                <button 
-                  onClick={() => setInGame(false)} 
-                  className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
-                >
-                  MAIN
-                </button>
-                <button 
-                  onClick={startStoryPrologue} 
-                  className="hover:text-amber-300 text-amber-200 transition cursor-pointer uppercase flex items-center space-x-1"
-                  title="Experience the Story Prologue (Once Upon a Time...)"
-                >
-                  <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="hidden sm:inline">STORY</span>
-                </button>
-                <button 
-                  onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }} 
-                  className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
-                >
-                  MERCHANTS
-                </button>
-                <button 
-                  onClick={() => { setInGame(true); setShowWorkshopModal(true); }} 
-                  className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
-                >
-                  WORKSHOP
-                </button>
-                <button 
-                  onClick={() => { setInGame(true); setShowTownBoardModal(true); }} 
-                  className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
-                >
-                  TOWN BOARD
-                </button>
-              </>
-            ) : null}
-
-            {/* Always visible: SKIP WEEK and LEDGER */}
+          {/* Center Navigation Links: MAIN & WORKSHOP */}
+          <nav className="flex items-center space-x-4 sm:space-x-6 text-xs font-mono font-bold tracking-wider text-slate-200">
             <button 
-              onClick={handleOpenFastForward} 
-              className="text-[#ff7844] hover:text-white transition cursor-pointer uppercase flex items-center space-x-1 font-black"
-              title="Fast-Forward 7 Days of Autonomous Market Dynamics"
+              onClick={() => setInGame(false)} 
+              className="hover:text-[#ff5e36] transition cursor-pointer uppercase"
             >
-              <Zap className="w-3.5 h-3.5 fill-[#ff5e36] text-[#ff5e36]" />
-              <span>SKIP WEEK</span>
+              MAIN
             </button>
             <button 
-              onClick={() => setShowLedgerModal(true)} 
+              onClick={() => {
+                if (!user) {
+                  setShowLoginModal(true);
+                } else {
+                  setInGame(true);
+                  setShowWorkshopModal(true);
+                }
+              }} 
               className="hover:text-[#ff5e36] transition cursor-pointer uppercase flex items-center space-x-1"
+            >
+              <Hammer className="w-3.5 h-3.5 text-amber-400" />
+              <span>WORKSHOP</span>
+            </button>
+            {user && (
+              <button 
+                onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }} 
+                className="hover:text-[#ff5e36] transition cursor-pointer uppercase hidden md:inline"
+              >
+                MERCHANTS
+              </button>
+            )}
+          </nav>
+
+          {/* Right Controls: SKIP WEEK, LEDGER, Sound & Sign In */}
+          <div className="flex items-center space-x-2 sm:space-x-2.5">
+            {/* SKIP WEEK on Right Side */}
+            <button 
+              onClick={handleOpenFastForward} 
+              className="neo-btn-orange px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-black cursor-pointer uppercase flex items-center space-x-1"
+              title="Fast-Forward 7 Days of Autonomous Market Dynamics"
+            >
+              <Zap className="w-3.5 h-3.5 fill-white text-white" />
+              <span>SKIP WEEK</span>
+            </button>
+
+            {/* LEDGER on Right Side */}
+            <button 
+              onClick={() => setShowLedgerModal(true)} 
+              className="neo-btn-dark px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer uppercase flex items-center space-x-1 text-slate-200"
+              title="View Public Testnet Ledger"
             >
               <Layers className="w-3.5 h-3.5 text-[#ff5e36]" />
               <span>LEDGER</span>
             </button>
-          </nav>
 
-          {/* Right Controls Pill */}
-          <div className="flex items-center space-x-2.5">
             {inGame && user && (
-              <div className="hidden sm:flex items-center space-x-2 bg-[#060d1a] border-2 border-black px-3 py-1 rounded-lg text-xs shadow-[2px_2px_0px_#000]">
+              <div className="hidden lg:flex items-center space-x-2 bg-[#060d1a] border-2 border-black px-3 py-1 rounded-lg text-xs shadow-[2px_2px_0px_#000]">
                 <Coins className="w-3.5 h-3.5 text-amber-400" />
                 <span className="font-mono font-bold text-amber-300">{playerCoin.toFixed(1)}c</span>
                 {(playerShares['forge_marta'] || 0) > 0 && (
@@ -808,7 +803,7 @@ export default function App() {
             {isAudioOn && (
               <div 
                 onClick={toggleSound}
-                className="hidden md:flex items-center space-x-2 bg-[#060e1f] border border-amber-400/40 px-2.5 py-1 rounded-full cursor-pointer hover:border-amber-400 transition shadow-[0_0_12px_rgba(251,191,36,0.25)]"
+                className="hidden xl:flex items-center space-x-2 bg-[#060e1f] border border-amber-400/40 px-2.5 py-1 rounded-full cursor-pointer hover:border-amber-400 transition shadow-[0_0_12px_rgba(251,191,36,0.25)]"
                 title="Playing Hans Zimmer's Interstellar Theme — click to mute"
               >
                 <div className="flex items-end space-x-0.5 h-3 w-4">
