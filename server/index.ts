@@ -48,6 +48,52 @@ const ledger: LedgerEntry[] = [
   },
 ];
 
+// Root Status & Health Dashboard
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Hollow Harbor — NEP-366 Gasless Relayer API</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; background: #071326; color: #f8fafc; padding: 2.5rem; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+          h1 { color: #ff5e36; font-size: 1.8rem; margin-bottom: 0.5rem; }
+          .badge { background: #00ec97; color: #000; padding: 4px 10px; border-radius: 6px; font-weight: 900; font-family: monospace; display: inline-block; }
+          .card { background: #0d1b33; border: 2px solid #000; box-shadow: 4px 4px 0px #000; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; }
+          a { color: #38bdf8; text-decoration: none; font-weight: bold; }
+          a:hover { text-decoration: underline; }
+          ul { line-height: 2; font-family: monospace; }
+          code { background: #050b17; padding: 2px 6px; border-radius: 4px; color: #fbbf24; }
+        </style>
+      </head>
+      <body>
+        <h1>⚓ Hollow Harbor — NEP-366 Relayer & State API</h1>
+        <p><span class="badge">STATUS: ONLINE 🟢</span> &nbsp; Running on port ${port} (0.0.0.0)</p>
+        <div class="card">
+          <h3 style="margin-top: 0; color: #fbbf24;">Protocol & Relayer Metadata:</h3>
+          <ul>
+            <li><strong>Network:</strong> NEAR Testnet</li>
+            <li><strong>Relayer Account:</strong> hollow-relayer.testnet</li>
+            <li><strong>Gas Policy:</strong> 100% Sponsored (NEP-366 Delegate Actions)</li>
+            <li><strong>Total On-Chain Ledger Entries:</strong> ${ledger.length}</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="margin-top: 0; color: #fbbf24;">Live API Endpoints:</h3>
+          <ul>
+            <li><a href="/api/health">/api/health</a> — Health check & relayer metrics (JSON)</li>
+            <li><a href="/api/ledger">/api/ledger</a> — Public verified on-chain ledger entries (JSON)</li>
+            <li><code>POST /api/relay</code> — Gasless transaction sponsorship</li>
+            <li><code>POST /api/intents/quote</code> — Real-time dynamic intent quotes</li>
+            <li><code>POST /api/intents/settle</code> — Atomic on-chain settlement</li>
+          </ul>
+        </div>
+        <p><a href="http://localhost:3000">← Open Hollow Harbor Game UI (Port 3000)</a></p>
+      </body>
+    </html>
+  `);
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
@@ -291,8 +337,9 @@ app.get('/api/ledger', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Hollow Harbor Relayer & State Server running on port ${port}`);
+const serverPort = Number(port);
+app.listen(serverPort, '0.0.0.0', () => {
+  console.log(`Hollow Harbor Relayer & State Server running on port ${serverPort} (0.0.0.0)`);
 });
 
 export default app;
