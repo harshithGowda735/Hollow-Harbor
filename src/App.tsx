@@ -859,45 +859,76 @@ export default function App() {
 
               </div>
 
-              {/* Right Column: DevHack-Style 3D Isometric Character/Block Cluster */}
-              <div className="lg:col-span-5 flex justify-center">
-                <div className="relative w-80 sm:w-96 p-4">
+              {/* Right Column: Animated Die-Cut Character Sticker Pack (No Boring Cards!) */}
+              <div className="lg:col-span-5 flex justify-center items-center">
+                <div 
+                  onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }}
+                  className="relative group cursor-pointer select-none p-6 animate-cinematic-float"
+                  title="Click to visit Marta's Forge"
+                >
                   
-                  {/* Marta Avatar Feature Card */}
-                  <div className="neo-box-orange p-5 rounded-2xl relative shadow-[8px_8px_0px_#000] transform hover:scale-102 transition-all">
-                    <div className="flex items-center space-x-4 mb-4">
+                  {/* Attached Top Washi-Tape Sticker */}
+                  <div className="absolute -top-1 left-4 z-30 transform -rotate-6 group-hover:-rotate-3 transition-transform">
+                    <div className="bg-[#ffe600] text-black border-2 border-black px-3.5 py-1 rounded-sm shadow-[3px_3px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-xs uppercase tracking-wider">
+                      <Sparkles className="w-3.5 h-3.5 text-black fill-black" />
+                      <span>AI SOLVER #01 • ON-CHAIN</span>
+                    </div>
+                  </div>
+
+                  {/* Attached Speech Bubble Sticker (like in DebateAI reference) */}
+                  <div className="absolute -top-6 -right-4 sm:-right-8 z-30 transform rotate-3 group-hover:rotate-6 transition-transform animate-bob">
+                    <div className="bg-white text-black border-3 border-black rounded-2xl px-4 py-2.5 shadow-[5px_5px_0px_#000] relative">
+                      <div className="flex items-center space-x-1.5 text-xs font-mono font-black text-[#ff5e36]">
+                        <Flame className="w-3.5 h-3.5 fill-[#ff5e36]" />
+                        <span>MARTA'S FORGE</span>
+                      </div>
+                      <div className="font-cinzel font-black text-sm text-slate-900 leading-tight">
+                        “Buying Ore @ <span className="text-[#ff5e36]">8.1c</span>!”
+                      </div>
+                      {/* Speech Bubble Tail */}
+                      <div className="absolute -bottom-2.5 left-6 w-3 h-3 bg-white border-b-2 border-r-2 border-black transform rotate-45" />
+                    </div>
+                  </div>
+
+                  {/* MAIN DIE-CUT CHARACTER STICKER (Thick white vinyl border + bold black drop shadow) */}
+                  <div className="relative transform group-hover:scale-104 transition-all duration-300">
+                    <div className="w-56 h-56 sm:w-64 sm:h-64 rounded-3xl bg-[#091326] p-2 border-4 border-black ring-4 ring-white shadow-[10px_10px_0px_#000] overflow-hidden relative rotate-[-2deg] group-hover:rotate-0 transition-transform">
+                      {/* Marta Portrait Artwork */}
                       <img 
                         src="/assets/marta_avatar.jpg" 
-                        alt="Marta" 
-                        className="w-16 h-16 rounded-xl object-cover border-2 border-black shadow-[3px_3px_0px_#000]" 
+                        alt="Marta Autonomous Merchant" 
+                        className="w-full h-full object-cover rounded-2xl filter saturate-115 contrast-105"
                       />
-                      <div>
-                        <span className="text-[10px] font-mono font-black uppercase text-[#ff5e36] bg-black px-2 py-0.5 rounded">
-                          AI SOLVER #01
-                        </span>
-                        <h3 className="font-cinzel text-xl font-black text-white">Marta's Forge</h3>
-                        <span className="text-xs text-amber-300 font-mono">Autonomous Merchant</span>
-                      </div>
-                    </div>
 
-                    <div className="space-y-2 bg-[#050b17] p-3 rounded-xl border-2 border-black font-mono text-xs">
-                      <div className="flex justify-between text-slate-300">
-                        <span>Cash Reserve:</span>
-                        <span className="text-amber-400 font-black">120.0 Coin</span>
-                      </div>
-                      <div className="flex justify-between text-slate-300">
-                        <span>Iron Ore Stock:</span>
-                        <span className="text-emerald-400 font-black">40 / 100 Target</span>
-                      </div>
-                      <div className="flex justify-between text-slate-300 border-t border-white/10 pt-1.5 font-bold">
-                        <span className="text-white">Dynamic Bid:</span>
-                        <span className="text-[#ff5e36] font-black text-sm">8.1 Coin</span>
-                      </div>
-                    </div>
+                      {/* Glossy Sticker Vinyl Highlight */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none rounded-2xl" />
 
-                    <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-slate-400">
-                      <span>NEP-245 Token ID</span>
-                      <span className="text-emerald-400">Gasless Relayer On</span>
+                      {/* Peel-off Corner Accent */}
+                      <div className="absolute top-0 right-0 w-6 h-6 bg-white/20 border-b border-l border-white/40 transform rotate-0 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  {/* Attached Stat Sticker #1: Cash Reserve Pill (Bottom Left) */}
+                  <div className="absolute -bottom-2 -left-4 z-30 transform -rotate-4 group-hover:-rotate-1 transition-transform">
+                    <div className="bg-[#ff5e36] text-white border-2 border-black px-3.5 py-1.5 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-2 font-mono font-black text-xs">
+                      <Coins className="w-4 h-4 text-amber-200 fill-amber-300" />
+                      <span>120.0c Cash Reserve</span>
+                    </div>
+                  </div>
+
+                  {/* Attached Stat Sticker #2: Inventory Target Badge (Bottom Right) */}
+                  <div className="absolute -bottom-4 right-0 sm:-right-4 z-30 transform rotate-4 group-hover:rotate-2 transition-transform">
+                    <div className="bg-[#05ea9b] text-black border-2 border-black px-3.5 py-1.5 rounded-xl shadow-[4px_4px_0px_#000] flex items-center space-x-1.5 font-mono font-black text-xs">
+                      <Box className="w-4 h-4 text-black" />
+                      <span>40 / 100 Ore Stock</span>
+                    </div>
+                  </div>
+
+                  {/* Attached Tech Badge Sticker: NEP-245 / Gasless (Floating below) */}
+                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+                    <div className="bg-[#091326] text-cyan-300 border-2 border-cyan-400 px-3 py-1 rounded-full text-[10px] font-mono font-bold flex items-center space-x-1.5 shadow-[3px_3px_0px_#000]">
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                      <span>NEP-245 TOKEN ID • GASLESS RELAYER ON</span>
                     </div>
                   </div>
 
