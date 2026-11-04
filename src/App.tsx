@@ -40,7 +40,8 @@ import {
   RotateCcw,
   BookOpen,
   ScrollText,
-  ChevronLeft
+  ChevronLeft,
+  Film
 } from 'lucide-react';
 import { DEFAULT_RULES } from '@shared/rules';
 import { MerchantState, MerchantId, GoodId } from '@shared/types';
@@ -121,10 +122,13 @@ export default function App() {
   const [isYtExpanded, setIsYtExpanded] = useState(false);
   const [showYtWidget, setShowYtWidget] = useState(true);
 
-  // Cinematic Movie Opening State
-  const [showMovieOpening, setShowMovieOpening] = useState(true);
-  const [movieStage, setMovieStage] = useState<'countdown' | 'studio' | 'title' | 'ready'>('countdown');
-  const [countdownNumber, setCountdownNumber] = useState(3);
+  // 10-Second Cold Open Landing on Login State
+  const [coldOpenActive, setColdOpenActive] = useState(() => {
+    return !localStorage.getItem('hh_intro_seen');
+  });
+  const [coldOpenStage, setColdOpenStage] = useState<'dusk' | 'drift' | 'title' | 'login'>('dusk');
+  const [martaColdPrice, setMartaColdPrice] = useState(12.2);
+  const [martaColdBankrupt, setMartaColdBankrupt] = useState(false);
 
   const [showStoryPrologue, setShowStoryPrologue] = useState(false);
   const [storyChapter, setStoryChapter] = useState(0);
@@ -289,43 +293,72 @@ export default function App() {
     };
   }, []);
 
-  // Cinematic Movie Opening Sequence Lifecycle
+  // 10-Second Cold Open Sequence (0 to 2s dusk -> 2 to 6s drift & prices -> 6 to 8s title -> 8 to 10s login)
   useEffect(() => {
-    if (!showMovieOpening) return;
+    if (!coldOpenActive) return;
 
-    // Countdown: 3 -> 2 -> 1
-    const t1 = setTimeout(() => setCountdownNumber(2), 900);
-    const t2 = setTimeout(() => setCountdownNumber(1), 1800);
-    
-    // Studio Card: "NEAR PROTOCOL STUDIOS"
-    const t3 = setTimeout(() => {
-      setMovieStage('studio');
+    setColdOpenStage('dusk');
+
+    // 0 to 2s: Dusk harbor atmosphere
+    // 2 to 6s: Live camera drift past merchants, prices tick, bankruptcy trigger
+    const t1 = setTimeout(() => {
+      setColdOpenStage('drift');
       playYouTube();
-    }, 2700);
+    }, 2000);
 
-    // Title Card: "HOLLOW HARBOR" in giant 3D gold typography with cosmic flares
-    const t4 = setTimeout(() => {
-      setMovieStage('title');
-    }, 4200);
+    const t_tick1 = setTimeout(() => setMartaColdPrice(9.8), 3200);
+    const t_tick2 = setTimeout(() => setMartaColdPrice(6.3), 4400);
+    const t_bankrupt = setTimeout(() => setMartaColdBankrupt(true), 5200);
 
-    // Ready prompt to commence
-    const t5 = setTimeout(() => {
-      setMovieStage('ready');
-    }, 5800);
+    // 6 to 8s: Golden flare & 3D Title lands: HOLLOW HARBOR
+    const t2 = setTimeout(() => {
+      setColdOpenStage('title');
+    }, 6000);
+
+    // 8 to 10s: Enter the harbor with email field (intro doubles as login)
+    const t3 = setTimeout(() => {
+      setColdOpenStage('login');
+    }, 8000);
 
     return () => {
       clearTimeout(t1);
+      clearTimeout(t_tick1);
+      clearTimeout(t_tick2);
+      clearTimeout(t_bankrupt);
       clearTimeout(t2);
       clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(t5);
     };
-  }, [showMovieOpening]);
+  }, [coldOpenActive]);
 
-  const enterHarborMovie = () => {
+  // Skip intro: advances directly to login if earlier, or logs in if at login
+  const skipColdOpen = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (coldOpenStage !== 'login') {
+      setColdOpenStage('login');
+    } else {
+      finishColdOpen();
+    }
+  };
+
+  // Complete cold open & enter harbor town
+  const finishColdOpen = (presetEmail?: string) => {
+    const finalEmail = presetEmail || emailInput || 'judge@near.org';
+    handleLogin(finalEmail);
+    try {
+      localStorage.setItem('hh_intro_seen', 'true');
+    } catch {}
+    setColdOpenActive(false);
     playYouTube();
-    setShowMovieOpening(false);
-    showToast('🎬 Welcome to Hollow Harbor');
+    showToast('⚓ Welcome to Hollow Harbor');
+  };
+
+  // Replay intro anytime
+  const replayIntro = () => {
+    setMartaColdPrice(12.2);
+    setMartaColdBankrupt(false);
+    setColdOpenStage('dusk');
+    setColdOpenActive(true);
+    playYouTube();
   };
 
   const toggleSound = () => {
@@ -675,113 +708,343 @@ export default function App() {
       </div>
 
       {/* ========================================================================= */}
-      {/* CRAZY CINEMATIC MOVIE OPENING ANIMATION (Christopher Nolan Style Intro)   */}
+      {/* 10-SECOND COLD OPEN CINEMATIC (0-2s Dusk -> 2-6s Drift -> 6-8s Title -> 8-10s Login) */}
       {/* ========================================================================= */}
-      {showMovieOpening && (
+      {coldOpenActive && (
         <div 
-          onClick={enterHarborMovie}
-          className="fixed inset-0 z-50 bg-[#000000] flex flex-col justify-between items-center text-center select-none overflow-hidden cursor-pointer"
+          onClick={skipColdOpen}
+          className="fixed inset-0 z-50 bg-black flex flex-col justify-between items-center text-center select-none overflow-hidden cursor-pointer"
         >
           {/* Top Cinema Anamorphic Bar (2.39:1 Letterbox) */}
-          <div className="w-full h-16 sm:h-20 bg-black border-b border-amber-500/20 flex items-center justify-between px-6 sm:px-12 text-[10px] sm:text-xs font-mono text-amber-500/60 tracking-[0.3em] uppercase z-20">
-            <span className="flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-[#ff5e36] animate-ping" />
-              <span>NEAR PROTOCOL PICTURES</span>
-            </span>
-            <span className="text-amber-400 font-bold">2.39:1 CINEMASCOPE • DOLBY ATMOS</span>
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="w-full h-14 sm:h-16 bg-[#040810] border-b-2 border-amber-500/30 flex items-center justify-between px-4 sm:px-8 text-[11px] font-mono text-amber-500/80 tracking-[0.25em] uppercase z-30"
+          >
+            <div className="flex items-center space-x-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5e36] animate-ping" />
+              <span className="font-black text-amber-300">HOLLOW HARBOR</span>
+              <span className="hidden md:inline text-slate-500">• 2.39:1 CINEMASCOPE</span>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              {/* Visible Mute/Soundtrack Toggle */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleYouTube();
+                }}
+                className="flex items-center space-x-1.5 px-3 py-1 rounded bg-[#101b2e] border border-amber-500/40 text-amber-300 hover:text-white hover:border-amber-400 transition cursor-pointer text-[10px] font-mono"
+              >
+                {isYtPlaying ? (
+                  <>
+                    <Volume2 className="w-3.5 h-3.5 text-[#ff5e36] animate-pulse" />
+                    <span>AUDIO ON</span>
+                  </>
+                ) : (
+                  <>
+                    <VolumeX className="w-3.5 h-3.5 text-slate-400" />
+                    <span>AUDIO MUTED</span>
+                  </>
+                )}
+              </button>
+
+              <span className="text-[10px] text-slate-400 hidden sm:inline">
+                {coldOpenStage === 'login' ? 'READY TO DOCK' : 'CLICK ANYWHERE TO ADVANCE'}
+              </span>
+            </div>
           </div>
 
-          {/* Center Stage: Changes based on movieStage */}
-          <div className="my-auto max-w-4xl w-full px-6 relative z-10 py-12 flex flex-col items-center justify-center min-h-[400px]">
+          {/* Center Stage: The Live Harbor Viewport */}
+          <div className="relative w-full flex-1 flex flex-col items-center justify-center overflow-hidden">
             
-            {/* Ambient Volumetric Lens Flares */}
-            <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-amber-500/10 via-[#ff5e36]/15 to-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+            {/* Live Camera Drift Panoramic Backdrop */}
+            <div 
+              className={`absolute inset-0 transition-transform duration-[6000ms] ease-out pointer-events-none ${
+                coldOpenStage === 'dusk' ? 'scale-105 translate-x-0' :
+                coldOpenStage === 'drift' ? 'scale-110 -translate-x-6' :
+                'scale-100 translate-x-0'
+              }`}
+            >
+              <img 
+                src="/assets/harbor_panoramic.jpg" 
+                alt="Harbor View" 
+                className={`w-full h-full object-cover filter transition-all duration-1000 ${
+                  coldOpenStage === 'dusk' ? 'brightness-40 contrast-125' :
+                  coldOpenStage === 'drift' ? 'brightness-75 contrast-110' :
+                  'brightness-60 contrast-105'
+                }`}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60 pointer-events-none" />
+              <div className="absolute inset-0 dot-pattern-overlay opacity-30 pointer-events-none" />
+            </div>
 
-            {/* STAGE 1: Classic Film Reel Countdown (3... 2... 1...) */}
-            {movieStage === 'countdown' && (
-              <div className="space-y-6 animate-in zoom-in-95 duration-500">
-                <div className="relative w-44 h-44 sm:w-56 sm:h-56 mx-auto rounded-full border-4 border-slate-700/80 flex items-center justify-center shadow-[0_0_50px_rgba(251,191,36,0.3)]">
-                  {/* Crosshair grid lines */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-full h-0.5 bg-slate-700/60" />
-                    <div className="h-full w-0.5 bg-slate-700/60 absolute" />
-                  </div>
-                  {/* Rotating radar film line */}
-                  <div className="absolute inset-0 rounded-full border-t-4 border-amber-400 animate-spin" style={{ animationDuration: '0.9s' }} />
-                  {/* Giant Countdown Digit */}
-                  <span className="font-cinzel text-7xl sm:text-9xl font-black text-amber-300 drop-shadow-[0_0_30px_rgba(251,191,36,0.8)]">
-                    {countdownNumber}
+            {/* Ambient Volumetric Flare */}
+            <div className={`absolute w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none transition-opacity duration-1000 ${
+              coldOpenStage === 'title' ? 'opacity-80 bg-gradient-to-tr from-amber-500/30 via-[#ff5e36]/35 to-amber-200/20' : 'opacity-20 bg-amber-500/10'
+            }`} />
+
+            {/* STAGE 1: 0 to 2s — Dusk Harbor Atmosphere & "Once upon a time..." */}
+            {coldOpenStage === 'dusk' && (
+              <div className="relative z-20 space-y-4 px-6 max-w-2xl animate-in fade-in zoom-in-95 duration-1000">
+                <div className="inline-flex items-center space-x-2 bg-black/70 border border-amber-500/40 px-4 py-1.5 rounded-full text-xs font-mono font-black text-amber-300 tracking-[0.3em] uppercase">
+                  <Anchor className="w-3.5 h-3.5 text-[#ff5e36]" />
+                  <span>ONCE UPON A TIME IN THE NORTHERN SEA</span>
+                </div>
+                <h1 className="font-cinzel text-3xl sm:text-5xl font-black text-white tracking-widest drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                  HOLLOW HARBOR
+                </h1>
+                <p className="font-serif italic text-base sm:text-xl text-amber-100/90 leading-relaxed max-w-lg mx-auto drop-shadow-md">
+                  “A coastal trading town where merchants govern their own prices, and every coin traded dictates their survival.”
+                </p>
+                <div className="pt-2 text-[11px] font-mono text-cyan-300 tracking-[0.3em] uppercase animate-pulse">
+                  LANTERNS GLOW • SURF WHISPERS • THE MARKET CALLS
+                </div>
+              </div>
+            )}
+
+            {/* STAGE 2: 2 to 6s — Live Camera Drift Past Merchants with Real Ticking Prices & Bankruptcy */}
+            {coldOpenStage === 'drift' && (
+              <div className="relative z-20 w-full max-w-5xl px-4 flex flex-col items-center justify-between h-full py-6 animate-in fade-in duration-700 pointer-events-none">
+                
+                {/* Upper context banner */}
+                <div className="bg-black/80 border-2 border-black rounded-xl px-5 py-2 shadow-[4px_4px_0px_#000] inline-flex items-center space-x-3">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="font-mono text-xs font-black tracking-widest text-amber-300 uppercase">
+                    LIVE HARBOR DEMO WORLD • AUTONOMOUS AGENT STALLS
                   </span>
                 </div>
-                <div className="text-xs font-mono tracking-[0.4em] text-slate-400 uppercase animate-pulse">
-                  ROLLING LEADER • SYNCING ORCHESTRA
+
+                {/* Floating Interactive Merchant Price Badges Over the Harbor */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full my-auto max-w-3xl">
+                  
+                  {/* Marta's Forge: Live Price Drop & Bankrupt Crash */}
+                  <div className={`transition-all duration-500 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left relative ${
+                    martaColdBankrupt 
+                      ? 'bg-rose-950/90 border-rose-600 scale-105 ring-2 ring-rose-500' 
+                      : 'bg-[#15233c]/90 border-amber-500/60'
+                  }`}>
+                    <div className="flex items-center justify-between pb-2 border-b border-black/40">
+                      <div className="flex items-center space-x-2">
+                        <Hammer className="w-4 h-4 text-amber-400" />
+                        <span className="font-bold text-sm text-white font-mono">Marta's Forge</span>
+                      </div>
+                      {martaColdBankrupt ? (
+                        <span className="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase font-mono animate-bounce">
+                          CLOSED - BANKRUPT
+                        </span>
+                      ) : (
+                        <span className="bg-emerald-600/80 text-white text-[10px] font-black px-1.5 py-0.5 rounded font-mono">
+                          OPEN
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-3 space-y-1">
+                      <div className="flex justify-between items-center text-xs font-mono">
+                        <span className="text-slate-300">Iron Ore Bid:</span>
+                        <span className={`font-black text-sm transition-all ${
+                          martaColdBankrupt ? 'text-rose-400 line-through' : 'text-amber-300'
+                        }`}>
+                          {martaColdPrice.toFixed(1)}c
+                        </span>
+                      </div>
+                      <p className="text-[10px] font-mono text-slate-300 italic pt-1">
+                        {martaColdBankrupt 
+                          ? '⚠️ Drained by iron dumping! Doors shuttered until investment.' 
+                          : 'Flooded with ore, bid dropping fast...'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Old Piers Timberyard */}
+                  <div className="bg-[#15233c]/90 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left">
+                    <div className="flex items-center justify-between pb-2 border-b border-black/40">
+                      <div className="flex items-center space-x-2">
+                        <TreePine className="w-4 h-4 text-emerald-400" />
+                        <span className="font-bold text-sm text-white font-mono">Old Piers Timber</span>
+                      </div>
+                      <span className="bg-emerald-600/80 text-white text-[10px] font-black px-1.5 py-0.5 rounded font-mono">
+                        OPEN
+                      </span>
+                    </div>
+                    <div className="mt-3 space-y-1">
+                      <div className="flex justify-between items-center text-xs font-mono">
+                        <span className="text-slate-300">Timber:</span>
+                        <span className="font-black text-sm text-amber-300">8.5c</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs font-mono">
+                        <span className="text-slate-300">Plank:</span>
+                        <span className="font-black text-sm text-amber-300">14.0c</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Gull & Anchor Tavern */}
+                  <div className="bg-[#15233c]/90 border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000] text-left">
+                    <div className="flex items-center justify-between pb-2 border-b border-black/40">
+                      <div className="flex items-center space-x-2">
+                        <Fish className="w-4 h-4 text-cyan-400" />
+                        <span className="font-bold text-sm text-white font-mono">Gull & Anchor</span>
+                      </div>
+                      <span className="bg-emerald-600/80 text-white text-[10px] font-black px-1.5 py-0.5 rounded font-mono">
+                        OPEN
+                      </span>
+                    </div>
+                    <div className="mt-3 space-y-1">
+                      <div className="flex justify-between items-center text-xs font-mono">
+                        <span className="text-slate-300">Raw Fish:</span>
+                        <span className="font-black text-sm text-amber-300">3.2c</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs font-mono">
+                        <span className="text-slate-300">Smoked Fish:</span>
+                        <span className="font-black text-sm text-amber-300">7.2c</span>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
+
+                {/* Live News Ticker at Bottom */}
+                <div className="w-full bg-black/90 border-2 border-amber-500/40 rounded-xl px-4 py-2 flex items-center space-x-3 overflow-hidden shadow-[4px_4px_0px_#000]">
+                  <span className="bg-[#ff5e36] text-white text-[10px] font-black font-mono px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
+                    DISPATCH TICKER
+                  </span>
+                  <div className="text-xs font-mono font-bold text-amber-300 tracking-wider truncate">
+                    🚨 HARBOR DISPATCH: IRON GLUT CRASHES FORGE RESERVES • MERCHANTS GOVERN PRICES ON REAL SURVIVAL PRESSURE • INVEST TO REVIVE BANKRUPT STALLS
+                  </div>
+                </div>
+
               </div>
             )}
 
-            {/* STAGE 2: Studio Production Card */}
-            {movieStage === 'studio' && (
-              <div className="space-y-4 animate-in fade-in zoom-in-90 duration-700">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-white border-2 border-black flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.4)]">
-                  <Anchor className="w-10 h-10 text-[#ff5e36] stroke-[3]" />
-                </div>
-                <h2 className="font-mono text-xs sm:text-sm text-[#ff5e36] tracking-[0.5em] uppercase font-black">
-                  NEAR PROTOCOL PRESENTS
-                </h2>
-                <h3 className="font-serif italic text-2xl sm:text-4xl text-slate-200 tracking-wide">
-                  An Autonomous Agent Odyssey
-                </h3>
-              </div>
-            )}
-
-            {/* STAGE 3 & 4: Giant 3D Title Reveal & Call to Commence */}
-            {(movieStage === 'title' || movieStage === 'ready') && (
-              <div className="space-y-6 animate-in zoom-in-75 fade-in duration-1000">
-                <div className="inline-block bg-amber-500/10 border border-amber-400/40 px-5 py-1 rounded-full text-xs font-mono font-black text-amber-300 tracking-[0.35em] uppercase">
-                  A HANS ZIMMER SOUNDTRACK EXPERIENCE
+            {/* STAGE 3: 6 to 8s — Golden Flare & 3D Title lands: HOLLOW HARBOR */}
+            {coldOpenStage === 'title' && (
+              <div className="relative z-20 space-y-6 px-6 max-w-4xl animate-in zoom-in-90 fade-in duration-700">
+                <div className="inline-block bg-amber-500/20 border border-amber-400 px-5 py-1.5 rounded-full text-xs font-mono font-black text-amber-300 tracking-[0.35em] uppercase shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                  WHERE THE ECONOMY IS THE GAMEPLAY
                 </div>
 
-                <h1 className="font-cinzel text-6xl sm:text-8xl lg:text-9xl font-black text-white tracking-[0.18em] leading-none drop-shadow-[0_0_60px_rgba(255,94,54,0.7)]">
+                <h1 className="font-cinzel text-6xl sm:text-8xl lg:text-9xl font-black text-white tracking-[0.15em] leading-none drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
                   HOLLOW<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-300 drop-shadow-[0_0_35px_rgba(251,191,36,0.8)]">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-[#ff5e36] drop-shadow-[0_0_40px_rgba(255,94,54,0.8)]">
                     HARBOR
                   </span>
                 </h1>
 
-                <p className="font-mono text-xs sm:text-sm text-cyan-300 tracking-[0.4em] uppercase font-bold">
-                  WHERE THE ECONOMY IS THE GAMEPLAY
+                <p className="font-mono text-xs sm:text-base text-slate-200 tracking-[0.3em] uppercase font-bold max-w-2xl mx-auto">
+                  FOUR AUTONOMOUS MERCHANTS • ONE LIVING ECONOMY
                 </p>
+                <div className="text-xs font-serif italic text-amber-200/80">
+                  “Flood iron, crash the forge, and invest to claim the town.”
+                </div>
+              </div>
+            )}
 
-                {/* Big Glowing Enter Button */}
-                <div className="pt-6">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      enterHarborMovie();
+            {/* STAGE 4: 8 to 10s — Glowing Enter Button with Email Field (Intro Doubles as Login) */}
+            {coldOpenStage === 'login' && (
+              <div 
+                onClick={(e) => e.stopPropagation()} 
+                className="relative z-20 w-full max-w-lg px-6 py-6 animate-in zoom-in-95 fade-in duration-500"
+              >
+                {/* Neo-brutalist Vintage Maritime Stamp Card */}
+                <div className="neo-card-parchment p-6 sm:p-8 rounded-2xl shadow-[10px_10px_0px_#000] border-3 border-black text-left relative overflow-hidden">
+                  
+                  {/* Subtle Stamp Decoration */}
+                  <div className="absolute top-3 right-3 border-2 border-dashed border-[#ff5e36]/40 px-2 py-0.5 rounded text-[10px] font-mono font-black text-[#ff5e36] uppercase rotate-6">
+                    OFFICIAL VISA
+                  </div>
+
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-black border-2 border-black flex items-center justify-center text-amber-400 shadow-[2px_2px_0px_#ff5e36]">
+                      <Anchor className="w-6 h-6 stroke-[2.5]" />
+                    </div>
+                    <div>
+                      <h3 className="font-cinzel font-black text-xl text-black leading-tight">
+                        Enter Hollow Harbor
+                      </h3>
+                      <p className="font-mono text-xs text-slate-700 font-bold">
+                        Autonomous Maritime Trading Pass
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="font-serif text-xs text-slate-800 leading-relaxed mb-4">
+                    Claim your trader visa and 50.0 Coin purse. Instant seamless access—no wallet popups, no seed phrases, no gas interruptions.
+                  </p>
+
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      finishColdOpen();
                     }}
-                    className="neo-btn-orange px-10 py-4 rounded-2xl font-mono font-black text-sm sm:text-base uppercase tracking-widest cursor-pointer shadow-[0_0_40px_rgba(255,94,54,0.8)] transform hover:scale-105 transition-all flex items-center space-x-3 mx-auto"
+                    className="space-y-4"
                   >
-                    <Play className="w-5 h-5 fill-white text-white" />
-                    <span>COMMENCE THE JOURNEY</span>
-                    <ArrowRight className="w-5 h-5 text-white" />
-                  </button>
+                    <div>
+                      <label className="block text-[10px] font-mono font-black uppercase text-slate-700 tracking-wider mb-1">
+                        Merchant Email Address
+                      </label>
+                      <input 
+                        type="email" 
+                        required
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                        placeholder="judge@near.org"
+                        className="w-full bg-white border-2 border-black rounded-xl px-4 py-3 font-mono text-sm text-black font-bold focus:outline-none focus:ring-2 focus:ring-[#ff5e36] shadow-[2px_2px_0px_#000]"
+                      />
+                    </div>
+
+                    {/* Quick Demo Profile Pills */}
+                    <div className="space-y-1.5">
+                      <div className="text-[10px] font-mono font-bold text-slate-600 uppercase">
+                        Quick Demo Profiles:
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {['judge@near.org', 'captain@hollowharbor.io', 'investor@near.org'].map((em) => (
+                          <button
+                            key={em}
+                            type="button"
+                            onClick={() => {
+                              setEmailInput(em);
+                              finishColdOpen(em);
+                            }}
+                            className="text-[11px] font-mono font-bold bg-amber-100 hover:bg-amber-200 text-black border border-black px-2.5 py-1 rounded-lg transition shadow-[1px_1px_0px_#000] cursor-pointer"
+                          >
+                            ⚡ {em}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Big Glowing Enter Button */}
+                    <button
+                      type="submit"
+                      className="w-full neo-btn-orange py-4 rounded-xl font-mono font-black text-sm uppercase tracking-widest cursor-pointer shadow-[0_0_25px_rgba(255,94,54,0.8)] transform hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-2 text-white border-2 border-black"
+                    >
+                      <Play className="w-4 h-4 fill-white" />
+                      <span>ENTER THE HARBOR</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </form>
                 </div>
               </div>
             )}
 
           </div>
 
-          {/* Bottom Cinema Anamorphic Bar */}
-          <div className="w-full h-16 sm:h-20 bg-black border-t border-amber-500/20 flex items-center justify-between px-6 sm:px-12 text-[10px] sm:text-xs font-mono text-amber-500/60 tracking-[0.25em] uppercase z-20">
-            <span>SOUNDTRACK: HANS ZIMMER (INTERSTELLAR)</span>
+          {/* Bottom Cinema Anamorphic Bar (2.39:1 Letterbox) */}
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="w-full h-14 sm:h-16 bg-[#040810] border-t-2 border-amber-500/30 flex items-center justify-between px-4 sm:px-8 text-[11px] font-mono text-amber-500/80 tracking-[0.2em] uppercase z-30"
+          >
+            <div className="flex items-center space-x-3">
+              <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <span className="hidden sm:inline">SOUNDTRACK: HANS ZIMMER</span>
+            </div>
+
             <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                enterHarborMovie();
-              }}
-              className="text-amber-400 hover:text-white cursor-pointer hover:underline"
+              onClick={skipColdOpen}
+              className="text-amber-300 hover:text-white cursor-pointer hover:underline font-black flex items-center space-x-1.5 bg-[#121f36] px-3 py-1 rounded border border-amber-500/50"
             >
-              SKIP INTRO ➔
+              <span>{coldOpenStage === 'login' ? 'SKIP TO GAME ➔' : 'SKIP INTRO ➔'}</span>
             </button>
           </div>
 
@@ -922,6 +1185,16 @@ export default function App() {
             >
               <Layers className="w-3.5 h-3.5 text-[#ff5e36]" />
               <span>LEDGER</span>
+            </button>
+
+            {/* REPLAY INTRO */}
+            <button 
+              onClick={replayIntro} 
+              className="neo-btn-dark px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer text-amber-300 hover:text-white flex items-center space-x-1"
+              title="Replay 10-Second Cinematic Cold Open"
+            >
+              <Film className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden md:inline">INTRO</span>
             </button>
 
             {inGame && user && (
