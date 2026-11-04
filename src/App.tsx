@@ -114,7 +114,6 @@ export default function App() {
   const [emailInput, setEmailInput] = useState('');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
-  const [hasEntered, setHasEntered] = useState(false);
   const [showStoryPrologue, setShowStoryPrologue] = useState(false);
   const [storyChapter, setStoryChapter] = useState(0);
 
@@ -221,13 +220,31 @@ export default function App() {
     },
   });
 
-  // Restore session on mount
+  // Restore session on mount & auto-start Interstellar audio on first gesture
   useEffect(() => {
     const session = EmbeddedWalletManager.getSession();
     if (session) {
       setUser(session);
       setInGame(true);
     }
+
+    const startAudioOnGesture = () => {
+      harborAudio.enable();
+      setIsAudioOn(true);
+      window.removeEventListener('click', startAudioOnGesture);
+      window.removeEventListener('keydown', startAudioOnGesture);
+      window.removeEventListener('touchstart', startAudioOnGesture);
+    };
+
+    window.addEventListener('click', startAudioOnGesture);
+    window.addEventListener('keydown', startAudioOnGesture);
+    window.addEventListener('touchstart', startAudioOnGesture);
+
+    return () => {
+      window.removeEventListener('click', startAudioOnGesture);
+      window.removeEventListener('keydown', startAudioOnGesture);
+      window.removeEventListener('touchstart', startAudioOnGesture);
+    };
   }, []);
 
   const toggleSound = () => {
@@ -579,88 +596,6 @@ export default function App() {
         <div className="absolute inset-0 dot-pattern-overlay pointer-events-none opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050c19]/80 via-transparent to-black/20 pointer-events-none" />
       </div>
-
-      {/* ========================================================================= */}
-      {/* CINEMATIC INTERSTELLAR ENTRY OVERLAY ("LOOK WOW" ENTRANCE)                */}
-      {/* ========================================================================= */}
-      {!hasEntered && (
-        <div className="fixed inset-0 z-50 bg-[#020612]/95 backdrop-blur-xl flex flex-col justify-between items-center p-6 sm:p-10 text-center select-none overflow-hidden transition-all duration-700">
-          
-          {/* Top Letterbox Cinema Header */}
-          <div className="w-full flex justify-between items-center text-[10px] sm:text-xs font-mono text-slate-500 tracking-widest uppercase border-b border-white/10 pb-4">
-            <span className="flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-[#ff5e36] animate-ping" />
-              <span>NEAR PROTOCOL • GAMES WITH REAL ECONOMIES</span>
-            </span>
-            <span className="text-amber-400 font-bold">2.39:1 CINEMASCOPE</span>
-          </div>
-
-          {/* Center Cosmic Mystery Visual & Prompt */}
-          <div className="max-w-2xl mx-auto space-y-8 my-auto relative z-10 py-8">
-            {/* Ambient Cosmic Gold Aura */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-[#ff5e36]/15 via-amber-500/10 to-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
-            {/* Interstellar Quote */}
-            <div className="space-y-3">
-              <span className="text-[11px] font-mono uppercase tracking-[0.35em] text-[#ff5e36] font-black inline-block bg-black/60 px-3 py-1 rounded-full border border-[#ff5e36]/40">
-                PROLOGUE • HANS ZIMMER SYNTHESIZER
-              </span>
-              <p className="font-serif italic text-xl sm:text-3xl text-slate-100 leading-relaxed drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] max-w-xl mx-auto">
-                “We used to look up at the sky and wonder at our place in the stars. Now we just look down and worry about our place in the dirt.”
-              </p>
-              <div className="text-xs font-mono text-amber-300/80 tracking-widest uppercase">
-                — Interstellar
-              </div>
-            </div>
-
-            {/* Giant Title */}
-            <div className="space-y-1">
-              <h1 className="font-cinzel text-5xl sm:text-7xl font-black text-white tracking-wider drop-shadow-[0_0_35px_rgba(255,94,54,0.45)]">
-                HOLLOW HARBOR
-              </h1>
-              <p className="font-mono text-xs sm:text-sm text-cyan-300 tracking-[0.3em] uppercase">
-                Where The Economy Is The Gameplay
-              </p>
-            </div>
-
-            {/* Call To Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <button
-                onClick={() => {
-                  harborAudio.enable();
-                  setIsAudioOn(true);
-                  setHasEntered(true);
-                  showToast('🎵 Hans Zimmer — Interstellar Theme Active');
-                }}
-                className="neo-btn-orange px-8 py-4 rounded-2xl font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-3 shadow-[0_0_35px_rgba(255,94,54,0.6)] transform hover:scale-105 transition-all duration-300"
-              >
-                <Volume2 className="w-5 h-5 animate-pulse text-white" />
-                <span>ENTER WITH INTERSTELLAR SOUND</span>
-              </button>
-
-              <button
-                onClick={() => setHasEntered(true)}
-                className="text-slate-400 hover:text-white font-mono text-xs tracking-wider uppercase transition cursor-pointer px-4 py-2 hover:underline"
-              >
-                Enter Silently →
-              </button>
-            </div>
-
-            {/* Headphones Advisory */}
-            <div className="text-[11px] font-mono text-slate-400 tracking-wider flex items-center justify-center space-x-2">
-              <span>🎧</span>
-              <span>Headphones Recommended for 36Hz Deep Sub-Bass Organ Resonances</span>
-            </div>
-          </div>
-
-          {/* Bottom Letterbox Bar */}
-          <div className="w-full flex justify-between items-center text-[10px] font-mono text-slate-500 tracking-wider uppercase border-t border-white/10 pt-4">
-            <span>AUTONOMOUS AGENTS • REAL TESTNET SETTLEMENTS</span>
-            <span>PRESS ENTER TO EXPERIENCE THE HARBOR</span>
-          </div>
-
-        </div>
-      )}
 
       {/* Toast Notification */}
       {toastMessage && (
