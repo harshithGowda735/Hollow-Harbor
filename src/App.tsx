@@ -121,6 +121,11 @@ export default function App() {
   const [isYtExpanded, setIsYtExpanded] = useState(false);
   const [showYtWidget, setShowYtWidget] = useState(true);
 
+  // Cinematic Movie Opening State
+  const [showMovieOpening, setShowMovieOpening] = useState(true);
+  const [movieStage, setMovieStage] = useState<'countdown' | 'studio' | 'title' | 'ready'>('countdown');
+  const [countdownNumber, setCountdownNumber] = useState(3);
+
   const [showStoryPrologue, setShowStoryPrologue] = useState(false);
   const [storyChapter, setStoryChapter] = useState(0);
 
@@ -283,6 +288,45 @@ export default function App() {
       window.removeEventListener('touchstart', startAudioOnGesture);
     };
   }, []);
+
+  // Cinematic Movie Opening Sequence Lifecycle
+  useEffect(() => {
+    if (!showMovieOpening) return;
+
+    // Countdown: 3 -> 2 -> 1
+    const t1 = setTimeout(() => setCountdownNumber(2), 900);
+    const t2 = setTimeout(() => setCountdownNumber(1), 1800);
+    
+    // Studio Card: "NEAR PROTOCOL STUDIOS"
+    const t3 = setTimeout(() => {
+      setMovieStage('studio');
+      playYouTube();
+    }, 2700);
+
+    // Title Card: "HOLLOW HARBOR" in giant 3D gold typography with cosmic flares
+    const t4 = setTimeout(() => {
+      setMovieStage('title');
+    }, 4200);
+
+    // Ready prompt to commence
+    const t5 = setTimeout(() => {
+      setMovieStage('ready');
+    }, 5800);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+    };
+  }, [showMovieOpening]);
+
+  const enterHarborMovie = () => {
+    playYouTube();
+    setShowMovieOpening(false);
+    showToast('🎬 Welcome to Hollow Harbor');
+  };
 
   const toggleSound = () => {
     toggleYouTube();
@@ -630,6 +674,120 @@ export default function App() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050c19]/80 via-transparent to-black/20 pointer-events-none" />
       </div>
 
+      {/* ========================================================================= */}
+      {/* CRAZY CINEMATIC MOVIE OPENING ANIMATION (Christopher Nolan Style Intro)   */}
+      {/* ========================================================================= */}
+      {showMovieOpening && (
+        <div 
+          onClick={enterHarborMovie}
+          className="fixed inset-0 z-50 bg-[#000000] flex flex-col justify-between items-center text-center select-none overflow-hidden cursor-pointer"
+        >
+          {/* Top Cinema Anamorphic Bar (2.39:1 Letterbox) */}
+          <div className="w-full h-16 sm:h-20 bg-black border-b border-amber-500/20 flex items-center justify-between px-6 sm:px-12 text-[10px] sm:text-xs font-mono text-amber-500/60 tracking-[0.3em] uppercase z-20">
+            <span className="flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-[#ff5e36] animate-ping" />
+              <span>NEAR PROTOCOL PICTURES</span>
+            </span>
+            <span className="text-amber-400 font-bold">2.39:1 CINEMASCOPE • DOLBY ATMOS</span>
+          </div>
+
+          {/* Center Stage: Changes based on movieStage */}
+          <div className="my-auto max-w-4xl w-full px-6 relative z-10 py-12 flex flex-col items-center justify-center min-h-[400px]">
+            
+            {/* Ambient Volumetric Lens Flares */}
+            <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-amber-500/10 via-[#ff5e36]/15 to-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            {/* STAGE 1: Classic Film Reel Countdown (3... 2... 1...) */}
+            {movieStage === 'countdown' && (
+              <div className="space-y-6 animate-in zoom-in-95 duration-500">
+                <div className="relative w-44 h-44 sm:w-56 sm:h-56 mx-auto rounded-full border-4 border-slate-700/80 flex items-center justify-center shadow-[0_0_50px_rgba(251,191,36,0.3)]">
+                  {/* Crosshair grid lines */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-full h-0.5 bg-slate-700/60" />
+                    <div className="h-full w-0.5 bg-slate-700/60 absolute" />
+                  </div>
+                  {/* Rotating radar film line */}
+                  <div className="absolute inset-0 rounded-full border-t-4 border-amber-400 animate-spin" style={{ animationDuration: '0.9s' }} />
+                  {/* Giant Countdown Digit */}
+                  <span className="font-cinzel text-7xl sm:text-9xl font-black text-amber-300 drop-shadow-[0_0_30px_rgba(251,191,36,0.8)]">
+                    {countdownNumber}
+                  </span>
+                </div>
+                <div className="text-xs font-mono tracking-[0.4em] text-slate-400 uppercase animate-pulse">
+                  ROLLING LEADER • SYNCING ORCHESTRA
+                </div>
+              </div>
+            )}
+
+            {/* STAGE 2: Studio Production Card */}
+            {movieStage === 'studio' && (
+              <div className="space-y-4 animate-in fade-in zoom-in-90 duration-700">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-white border-2 border-black flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.4)]">
+                  <Anchor className="w-10 h-10 text-[#ff5e36] stroke-[3]" />
+                </div>
+                <h2 className="font-mono text-xs sm:text-sm text-[#ff5e36] tracking-[0.5em] uppercase font-black">
+                  NEAR PROTOCOL PRESENTS
+                </h2>
+                <h3 className="font-serif italic text-2xl sm:text-4xl text-slate-200 tracking-wide">
+                  An Autonomous Agent Odyssey
+                </h3>
+              </div>
+            )}
+
+            {/* STAGE 3 & 4: Giant 3D Title Reveal & Call to Commence */}
+            {(movieStage === 'title' || movieStage === 'ready') && (
+              <div className="space-y-6 animate-in zoom-in-75 fade-in duration-1000">
+                <div className="inline-block bg-amber-500/10 border border-amber-400/40 px-5 py-1 rounded-full text-xs font-mono font-black text-amber-300 tracking-[0.35em] uppercase">
+                  A HANS ZIMMER SOUNDTRACK EXPERIENCE
+                </div>
+
+                <h1 className="font-cinzel text-6xl sm:text-8xl lg:text-9xl font-black text-white tracking-[0.18em] leading-none drop-shadow-[0_0_60px_rgba(255,94,54,0.7)]">
+                  HOLLOW<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-300 drop-shadow-[0_0_35px_rgba(251,191,36,0.8)]">
+                    HARBOR
+                  </span>
+                </h1>
+
+                <p className="font-mono text-xs sm:text-sm text-cyan-300 tracking-[0.4em] uppercase font-bold">
+                  WHERE THE ECONOMY IS THE GAMEPLAY
+                </p>
+
+                {/* Big Glowing Enter Button */}
+                <div className="pt-6">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      enterHarborMovie();
+                    }}
+                    className="neo-btn-orange px-10 py-4 rounded-2xl font-mono font-black text-sm sm:text-base uppercase tracking-widest cursor-pointer shadow-[0_0_40px_rgba(255,94,54,0.8)] transform hover:scale-105 transition-all flex items-center space-x-3 mx-auto"
+                  >
+                    <Play className="w-5 h-5 fill-white text-white" />
+                    <span>COMMENCE THE JOURNEY</span>
+                    <ArrowRight className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* Bottom Cinema Anamorphic Bar */}
+          <div className="w-full h-16 sm:h-20 bg-black border-t border-amber-500/20 flex items-center justify-between px-6 sm:px-12 text-[10px] sm:text-xs font-mono text-amber-500/60 tracking-[0.25em] uppercase z-20">
+            <span>SOUNDTRACK: HANS ZIMMER (INTERSTELLAR)</span>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                enterHarborMovie();
+              }}
+              className="text-amber-400 hover:text-white cursor-pointer hover:underline"
+            >
+              SKIP INTRO ➔
+            </button>
+          </div>
+
+        </div>
+      )}
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 neo-btn-orange px-6 py-2.5 rounded-xl font-black text-sm flex items-center space-x-2 animate-bounce">
@@ -829,25 +987,6 @@ export default function App() {
               </div>
             )}
             
-            {/* Live YouTube Interstellar Indicator */}
-            <div 
-              onClick={toggleYouTube}
-              className={`hidden xl:flex items-center space-x-2 bg-[#060e1f] border px-2.5 py-1 rounded-full cursor-pointer transition shadow-[0_0_12px_rgba(255,0,0,0.25)] ${
-                isYtPlaying ? 'border-amber-400 text-amber-300' : 'border-slate-700 text-slate-400'
-              }`}
-              title="Click to toggle Hans Zimmer Interstellar on YouTube"
-            >
-              <div className="flex items-end space-x-0.5 h-3 w-4">
-                <span className={`w-1 bg-[#ff0000] rounded-sm h-full ${isYtPlaying ? 'animate-[bounce_1s_infinite_100ms]' : ''}`} />
-                <span className={`w-1 bg-amber-400 rounded-sm h-2/3 ${isYtPlaying ? 'animate-[bounce_1.2s_infinite_300ms]' : ''}`} />
-                <span className={`w-1 bg-amber-300 rounded-sm h-4/5 ${isYtPlaying ? 'animate-[bounce_0.8s_infinite_200ms]' : ''}`} />
-              </div>
-              <span className="text-[10px] font-mono font-black tracking-wider uppercase flex items-center space-x-1">
-                <span className="text-[#ff0000]">▶</span>
-                <span>INTERSTELLAR (YOUTUBE)</span>
-              </span>
-            </div>
-
             {/* Audio Toggle */}
             <button
               onClick={toggleYouTube}
