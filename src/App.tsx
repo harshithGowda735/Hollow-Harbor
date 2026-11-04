@@ -796,67 +796,16 @@ export default function App() {
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* FLOATING RETRO-NEOBRUTALIST YOUTUBE INTERSTELLAR PLAYER WIDGET             */}
-      {/* ========================================================================= */}
-      {showYtWidget && (
-        <div className="fixed bottom-4 right-4 z-40 select-none animate-in slide-in-from-bottom-4 duration-300">
-          <div className="bg-[#09152b] border-[2.5px] border-black ring-2 ring-white/10 shadow-[6px_6px_0px_#000] rounded-2xl p-3 max-w-xs sm:max-w-sm relative backdrop-blur-md">
-            
-            {/* Header Track Info & Controls */}
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-7 h-7 rounded-lg bg-[#ff0000] border border-black text-white flex items-center justify-center font-black text-xs shadow-[1.5px_1.5px_0px_#000]">
-                  ▶
-                </div>
-                <div className="text-left">
-                  <div className="text-xs font-mono font-black text-amber-300 leading-tight flex items-center space-x-1">
-                    <span>Interstellar Theme</span>
-                    <span className="text-[9px] bg-[#ff0000] text-white px-1 py-0.2 rounded font-mono font-bold">YT</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-slate-300">
-                    Hans Zimmer • Official Score
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center space-x-1.5">
-                <button
-                  onClick={toggleYouTube}
-                  className={`p-1.5 rounded-lg border-2 border-black font-black text-xs cursor-pointer shadow-[2px_2px_0px_#000] transition ${
-                    isYtPlaying ? 'bg-[#ff5e36] text-white' : 'bg-[#00ec97] text-black'
-                  }`}
-                  title={isYtPlaying ? "Pause YouTube Music" : "Play YouTube Music"}
-                >
-                  {isYtPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                </button>
-                <button
-                  onClick={() => setIsYtExpanded(!isYtExpanded)}
-                  className="px-2 py-1.5 rounded-lg border-2 border-black bg-[#121e33] text-slate-200 hover:text-white cursor-pointer text-[10px] font-mono font-bold shadow-[2px_2px_0px_#000]"
-                  title={isYtExpanded ? "Hide Video Window" : "Show Video Window"}
-                >
-                  {isYtExpanded ? "MIN" : "EXP"}
-                </button>
-              </div>
-            </div>
-
-            {/* Embedded YouTube Player (Continues playing whether expanded or minimized) */}
-            <div className={isYtExpanded ? "mt-3 pt-2 border-t border-white/10 block" : "w-0 h-0 overflow-hidden opacity-0 pointer-events-none absolute"}>
-              <div className="w-72 sm:w-80 aspect-video rounded-xl overflow-hidden border-2 border-black shadow-[3px_3px_0px_#000]">
-                <iframe
-                  ref={ytIframeRef}
-                  src="https://www.youtube-nocookie.com/embed/UDVtMYqUAyw?enablejsapi=1&autoplay=1&loop=1&playlist=UDVtMYqUAyw"
-                  title="Hans Zimmer - Interstellar Main Theme"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  className="w-full h-full"
-                />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
+      {/* Hidden Background YouTube Soundtrack Stream (Zero Visual Clutter) */}
+      <div className="w-0 h-0 overflow-hidden opacity-0 pointer-events-none absolute -bottom-96">
+        <iframe
+          ref={ytIframeRef}
+          src="https://www.youtube-nocookie.com/embed/UDVtMYqUAyw?enablejsapi=1&autoplay=1&loop=1&playlist=UDVtMYqUAyw"
+          title="Hans Zimmer - Interstellar Main Theme"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          className="w-1 h-1"
+        />
+      </div>
 
       {/* On-Chain Settlement Banner with Explorer Link (Slice 3: First Real Trade) */}
       {lastSettlement && (
@@ -1711,86 +1660,154 @@ export default function App() {
         </div>
       )}
 
-      {/* LOGIN MODAL */}
+      {/* CRAZY PRINTED IMMIGRATION PASSPORT LOGIN MODAL (Animated Logos & Wax Seals) */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-[#040912]/85 backdrop-blur-2xl z-50 flex items-center justify-center p-4">
-          <div className="neo-box-orange max-w-md w-full rounded-2xl p-8 shadow-[10px_10px_0px_#000] relative">
-            <div className="flex items-center justify-between pb-4 border-b-2 border-black">
-              <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-xl bg-white border-2 border-black shadow-[2px_2px_0px_#000] flex items-center justify-center font-black text-black">
-                  <KeyRound className="w-5 h-5 text-[#ff5e36]" />
-                </div>
-                <h3 className="font-cinzel text-lg font-black text-white">Enter Hollow Harbor</h3>
+        <div className="fixed inset-0 bg-[#020612]/90 backdrop-blur-2xl z-50 flex items-center justify-center p-4 select-none">
+          
+          {/* Main Die-Cut Boarding Pass Container with White Vinyl Ring & Deep 3D Shadow */}
+          <div className="relative max-w-lg w-full bg-[#0a1528] border-4 border-black ring-4 ring-white shadow-[16px_16px_0px_#000] rounded-3xl p-6 sm:p-8 animate-in zoom-in-95 duration-300 overflow-hidden">
+            
+            {/* Ticket Stub Cutout Notches (Left & Right) */}
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#020612] border-r-4 border-black z-30" />
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#020612] border-l-4 border-black z-30" />
+
+            {/* Slanted Top Washi Tape Sticker */}
+            <div className="absolute -top-1 left-8 z-30 transform -rotate-2">
+              <div className="bg-[#ffe600] text-black border-2 border-black px-4 py-1 rounded-sm shadow-[3px_3px_0px_#000] font-mono font-black text-[11px] uppercase tracking-wider flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-black fill-black" />
+                <span>OFFICIAL PORT ENTRY VISA • NEP-366</span>
               </div>
-              <button 
-                onClick={() => setShowLoginModal(false)}
-                className="text-slate-400 hover:text-white cursor-pointer font-bold font-mono"
-              >
-                ✕
-              </button>
             </div>
 
-            <div className="py-5 space-y-4">
-              <p className="text-xs text-slate-300 leading-relaxed font-mono">
+            {/* Rotating Animated Port Authority Wax Stamp (Top Right) */}
+            <div className="absolute top-3 right-12 z-20 pointer-events-none opacity-85">
+              <div className="relative w-20 h-20 rounded-full border-2 border-dashed border-[#ff5e36] flex items-center justify-center animate-[spin_16s_linear_infinite]">
+                <svg viewBox="0 0 100 100" className="w-full h-full fill-current">
+                  <path id="passportStamp" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
+                  <text className="text-[7.5px] font-mono font-black uppercase tracking-widest fill-[#ff5e36]">
+                    <textPath href="#passportStamp">★ PORT OF HOLLOW HARBOR ★ NEAR TESTNET ★</textPath>
+                  </text>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Anchor className="w-6 h-6 text-[#ff5e36]" />
+                </div>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowLoginModal(false)}
+              className="absolute top-4 right-4 z-40 w-8 h-8 rounded-xl bg-black text-white hover:text-[#ff5e36] flex items-center justify-center font-black border border-white/20 cursor-pointer shadow-[2px_2px_0px_#000]"
+            >
+              ✕
+            </button>
+
+            {/* Document Header */}
+            <div className="pt-4 pb-4 border-b-2 border-dashed border-white/20 relative z-10">
+              <div className="flex items-center space-x-3 mb-1.5">
+                <div className="w-10 h-10 rounded-xl bg-[#00ec97] text-black border-2 border-black shadow-[3px_3px_0px_#000] flex items-center justify-center font-black text-sm">
+                  Ⓝ
+                </div>
+                <div>
+                  <h3 className="font-cinzel text-2xl font-black text-white tracking-wide leading-tight">
+                    PORT OF ENTRY CLEARANCE
+                  </h3>
+                  <div className="text-[11px] font-mono text-amber-300 uppercase tracking-widest font-bold">
+                    Autonomous Agent Settlement • Near Protocol
+                  </div>
+                </div>
+              </div>
+
+              {/* Stamped Red Rubber Approval Seal */}
+              <div className="mt-2.5 flex items-center space-x-2">
+                <div className="inline-block transform -rotate-3 border-2 border-emerald-400 text-emerald-300 font-mono font-black text-[10px] px-2.5 py-0.5 rounded shadow-[2px_2px_0px_#000] tracking-widest uppercase">
+                  ✓ VISA APPROVED: ZERO GAS POPUPS
+                </div>
+                <div className="inline-block transform rotate-2 border-2 border-amber-400/80 text-amber-300 font-mono font-black text-[10px] px-2 py-0.5 rounded shadow-[2px_2px_0px_#000] tracking-wider uppercase">
+                  ⚡ NEP-366 SPONSORED
+                </div>
+              </div>
+            </div>
+
+            {/* Form & Identity Presets */}
+            <div className="py-5 space-y-4 relative z-10 font-mono">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 Sign in with email. An embedded ed25519 NEAR wallet is created silently in local storage—no wallet popups, no seed phrases, no gas interruptions.
               </p>
 
+              {/* Email Input Field */}
               <div>
-                <label className="text-[10px] font-bold text-[#ff5e36] uppercase tracking-wider block mb-1.5 font-mono">
-                  Email Address
+                <label className="text-[10px] font-black text-[#ff5e36] uppercase tracking-widest block mb-1.5">
+                  Citizen Identification / Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                  <Mail className="w-4 h-4 text-amber-400 absolute left-3.5 top-3.5" />
                   <input
                     type="email"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="judge@near.org"
-                    className="w-full bg-[#030712] border-2 border-black rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-[#ff5e36] font-mono shadow-[2px_2px_0px_#000]"
+                    className="w-full bg-[#050d1a] border-3 border-black rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400 font-mono shadow-[3px_3px_0px_#000]"
                     onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                   />
                 </div>
               </div>
 
-              {/* Demo Quick Presets */}
+              {/* Printed Identity Credential Presets */}
               <div>
-                <span className="text-[10px] text-slate-400 block mb-2 font-mono font-bold">Quick Demo Profiles:</span>
-                <div className="flex flex-wrap gap-2">
-                  {['judge@near.org', 'captain@hollowharbor.io', 'investor@near.org'].map((preset) => (
+                <span className="text-[10px] text-slate-400 block mb-2 font-black uppercase tracking-wider">
+                  Select Printed Identity Pass:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {[
+                    { label: '👑 JUDGE (01)', email: 'judge@near.org', color: 'border-amber-400' },
+                    { label: '⚓ CAPTAIN (02)', email: 'captain@hollowharbor.io', color: 'border-cyan-400' },
+                    { label: '📈 INVESTOR (03)', email: 'investor@near.org', color: 'border-[#00ec97]' },
+                  ].map((preset) => (
                     <button
-                      key={preset}
-                      onClick={() => handleLogin(preset)}
-                      className="neo-btn-dark text-xs px-3 py-1.5 rounded-md font-mono"
+                      key={preset.email}
+                      onClick={() => handleLogin(preset.email)}
+                      className={`bg-[#050b17] hover:bg-[#0f1d36] border-2 ${preset.color} p-2 rounded-xl text-left cursor-pointer transition shadow-[2px_2px_0px_#000] group`}
                     >
-                      {preset}
+                      <div className="text-[10px] font-black text-white group-hover:text-amber-300 truncate">
+                        {preset.label}
+                      </div>
+                      <div className="text-[9px] text-slate-400 truncate">
+                        {preset.email.split('@')[0]}
+                      </div>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-emerald-500/15 border-2 border-black p-3.5 rounded-xl flex items-start space-x-2.5 text-xs text-emerald-300 shadow-[2px_2px_0px_#000]">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <span className="font-mono text-[11px]">
-                  <strong>Gasless Grant:</strong> Grants 50.0 Coin purse & registers implicit account on NEAR testnet with NEP-366 relayer sponsorship.
+              {/* Stamped Gasless Grant Banner */}
+              <div className="bg-[#040f1a] border-2 border-emerald-400 p-3.5 rounded-xl flex items-start space-x-2.5 text-xs text-emerald-300 shadow-[3px_3px_0px_#000]">
+                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <span className="text-[11px] leading-relaxed">
+                  <strong>Starter Purse Grant:</strong> Automatically provisions an implicit testnet account with <strong>50.0 Coin</strong> and full gas sponsorship via <strong>NEP-366</strong>.
                 </span>
               </div>
             </div>
 
-            <div className="pt-4 border-t-2 border-black flex items-center justify-end space-x-3">
+            {/* Footer Actions */}
+            <div className="pt-4 border-t-2 border-dashed border-white/20 flex items-center justify-between relative z-10">
               <button
                 onClick={() => setShowLoginModal(false)}
                 className="px-4 py-2 text-xs text-slate-400 hover:text-white cursor-pointer font-mono font-bold"
               >
                 Cancel
               </button>
+              
               <button
                 onClick={() => handleLogin()}
-                className="neo-btn-orange px-6 py-2.5 rounded-lg text-xs font-mono font-black uppercase flex items-center space-x-2"
+                className="neo-btn-orange px-7 py-3 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-2 shadow-[4px_4px_0px_#000] cursor-pointer"
               >
-                <span>ENTER HARBOR</span>
+                <Anchor className="w-4 h-4" />
+                <span>STAMP VISA & ENTER HARBOR</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
+
           </div>
         </div>
       )}
