@@ -40,7 +40,11 @@ import {
   RotateCcw,
   BookOpen,
   ScrollText,
-  ChevronLeft
+  ChevronLeft,
+  Film,
+  Star,
+  Crosshair,
+  Radio
 } from 'lucide-react';
 import { DEFAULT_RULES } from '@shared/rules';
 import { MerchantState, MerchantId, GoodId } from '@shared/types';
@@ -50,43 +54,83 @@ import { getVerifiedTestnetTx } from '@shared/testnet';
 import { EmbeddedWalletManager, EmbeddedUser } from './lib/wallet';
 import { harborAudio } from './lib/audio';
 
-const PROLOGUE_SLIDES = [
+const GTA_INTRO_SLIDES = [
   {
-    chapter: "PROLOGUE",
-    title: "Once upon a time...",
-    subtitle: "In the mist-veiled waters of the northern sea",
-    quote: "“Where no king holds sway, and the rhythm of the waves governs the fate of men.”",
-    text: "Beyond the charted trading lanes of the Old Realm, shrouded in eternal coastal fog, lay Hollow Harbor. It was not built on conquest or stone monuments, but on the simple, brutal law of commerce: iron for wood, fish for salt, and coin for sweat.",
-    accent: "The morning ocean surf whispers against the mossy timbers of the dock...",
-    badge: "THE LIVING SEA",
+    chapter: "CHAPTER 00",
+    tagline: "HIGH ALTITUDE SATELLITE DESCENT",
+    title: "HOLLOW HARBOR V",
+    subtitle: "Where The Economy Is The Gameplay",
+    location: "COASTAL SECTOR 09 • NEAR TESTNET",
+    altitude: "14,800 FT ➔ DESCENT VECTOR LOCK",
+    wantedStars: 5,
+    quote: "“Where no king holds sway, and the brutal law of supply and demand governs the fate of men.”",
+    description: "Beyond the charted lanes of Web3, shrouded in coastal mist, lies Hollow Harbor. No scripted NPCs. No idle clickers. A living market town where every single merchant is an autonomous AI agent running their own on-chain balance sheet.",
+    accent: "The coastal winds roar as the camera swoops through the clouds toward the harbor pier...",
+    image: "/assets/harbor_panoramic.jpg",
+    badge: "MISSION BRIEFING #01",
+    stats: [
+      { label: "TERRITORY", val: "HOLLOW HARBOR DOCKS" },
+      { label: "WANTED LEVEL", val: "5-STAR GASLESS" },
+      { label: "BLOCKCHAIN", val: "NEAR PROTOCOL SHARD 0" },
+    ]
   },
   {
-    chapter: "CHAPTER I",
-    title: "Merchants of Flesh & Steel",
-    subtitle: "Every stall is an autonomous small business",
-    quote: "“We do not give charity. When my coin chest is bare, the fires go out.” — Marta",
-    text: "In Hollow Harbor, merchants are not programmed dispensers with bottomless pockets. Master Blacksmith Marta, Old Piers at the sawmill, and the Gull & Anchor tavern keeper run independent balance sheets on the NEAR blockchain. When you flood them with goods, they lower their bids; when their cash drains below survival, they shut their doors in bankruptcy.",
-    accent: "A hammer strikes in the distance. The anvil rings out across the foggy pier...",
-    badge: "AUTONOMOUS AGENTS",
+    chapter: "CHAPTER 01",
+    tagline: "MEET THE AUTONOMOUS BOSS",
+    title: "MARTA 'THE HAMMER'",
+    subtitle: "Master Blacksmith & Sovereign Trader",
+    location: "FORGE LANE • QUAYSIDE STALL #01",
+    altitude: "120 FT ➔ BLACKSMITH ANVIL",
+    wantedStars: 4,
+    quote: "“We don't give charity. When my coin chest is bare, the fires go out and the shop shuts.”",
+    description: "Marta operates on an autonomous on-chain balance sheet. She buys iron ore to craft tools. Dump 100 ore on her and watch her dynamic bid price crash on-chain. Drain her funds below survival threshold, and she goes bankrupt.",
+    accent: "A hammer strikes glowing steel. Dynamic bids update on-chain via NEP-245 tokens...",
+    image: "/assets/marta_avatar.jpg",
+    badge: "AUTONOMOUS MERCHANT",
+    stats: [
+      { label: "CASH RESERVE", val: "120.0 COIN" },
+      { label: "ORE STOCK", val: "40 / 100 TARGET" },
+      { label: "DYNAMIC BID", val: "8.1c PER ORE" },
+    ]
   },
   {
-    chapter: "CHAPTER II",
-    title: "The Shadow of Bankruptcy",
-    subtitle: "When the forge goes cold, opportunity ignites",
-    quote: "“A bankrupt forge is a tragedy for the smith, but a fortune for the bold investor.”",
-    text: "Aggressive traders can crash entire supply chains by dumping raw ores into vulnerable workshops. But when a shop collapses, NEAR Intents allow sharp investors to step in. Deposit cross-asset funding to recapitalize the shopkeeper, mint permanent equity shares in their stall, and collect a 10% dividend from every coin that crosses their counter.",
-    accent: "The town notice board trembles in the sea breeze, awaiting an investor's seal...",
+    chapter: "CHAPTER 02",
+    tagline: "HOSTILE TAKEOVER & EQUITY",
+    title: "BANKRUPTCY & BAILOUTS",
+    subtitle: "Crash A Competitor. Own The Town.",
+    location: "MERCHANT EXCHANGE • QUAYSIDE POST",
+    altitude: "45 FT ➔ TRADING NOTICE BOARD",
+    wantedStars: 5,
+    quote: "“A bankrupt forge is a disaster for the smith, but an empire for the bold investor.”",
+    description: "When an autonomous merchant collapses, don't wait for a dev patch. Step in with gasless NEAR Intents: deposit capital to reopen their doors, mint permanent equity shares, and pocket a 10% dividend from every coin that crosses their counter.",
+    accent: "The town bailiff nails an investment prospectus to the wooden post...",
+    image: "/assets/harbor_panoramic.jpg",
     badge: "NEAR INTENTS & EQUITY",
+    stats: [
+      { label: "EQUITY YIELD", val: "10% FOREVER" },
+      { label: "GAS BARRIER", val: "ZERO GAS FEES" },
+      { label: "STALLS TO OWN", val: "3 MONOPOLIES" },
+    ]
   },
   {
-    chapter: "CHAPTER III",
-    title: "Your Ship Has Docked",
-    subtitle: "The harbor ledger is open, Captain",
-    quote: "“The tide waits for no trader. Will you build an empire, or drown in the flood?”",
-    text: "Your vessel glides alongside the wooden jetty. The harbor bells are tolling in the mist. Your purse carries 50 silver coin, and your crew stands ready. Zero gas interruptions, zero wallet popups — every trade settled directly onto NEAR testnet. Step ashore, and claim your place in the living harbor.",
-    accent: "The harbor master unfurls the morning ledger. Your voyage begins now.",
-    badge: "ZERO GAS FRICTION",
-  },
+    chapter: "CHAPTER 03",
+    tagline: "MISSION OBJECTIVE: SURVIVE & EXPAND",
+    title: "TOUCHDOWN: ENTER HARBOR",
+    subtitle: "Your Ship Has Tied To The Pier",
+    location: "HOLLOW HARBOR JETTY • SLIPWAY #04",
+    altitude: "0 FT ➔ QUAYSIDE COBBLESTONES",
+    wantedStars: 5,
+    quote: "“The tide waits for no trader. Will you corner the market or drown in the flood?”",
+    description: "Your vessel glides alongside the wooden jetty. Your purse carries 50 silver coin. Zero gas fees, zero wallet popups — every trade settled directly onto NEAR Testnet with real verifiable explorer receipts. Step ashore, Captain.",
+    accent: "The harbor fog bell tolls. The market day has officially begun.",
+    image: "/assets/harbor_panoramic.jpg",
+    badge: "MISSION: READY",
+    stats: [
+      { label: "STARTING PURSE", val: "50.0 COIN" },
+      { label: "RELAYER POOL", val: "NEP-366 ACTIVE" },
+      { label: "PRIMARY GOAL", val: "CORNER HOLLOW HARBOR" },
+    ]
+  }
 ];
 
 interface LedgerItem {
@@ -114,8 +158,9 @@ export default function App() {
   const [emailInput, setEmailInput] = useState('');
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
-  const [showStoryPrologue, setShowStoryPrologue] = useState(false);
-  const [storyChapter, setStoryChapter] = useState(0);
+  // GTA V Style Entrance Opening: Defaults to true so entering the website immediately triggers the cinematic experience
+  const [showGtaIntro, setShowGtaIntro] = useState(true);
+  const [gtaSlideIdx, setGtaSlideIdx] = useState(0);
 
   // Settlement loading state & settled receipt banner
   const [isSettling, setIsSettling] = useState(false);
@@ -237,38 +282,70 @@ export default function App() {
     }
   };
 
-  const startStoryPrologue = () => {
-    setStoryChapter(0);
-    setShowStoryPrologue(true);
+  const startGtaIntro = () => {
+    setGtaSlideIdx(0);
+    setShowGtaIntro(true);
     harborAudio.enable();
     setIsAudioOn(true);
-    harborAudio.playStoryAdvance();
+    harborAudio.playGtaSlideHit();
   };
 
-  const advanceStoryChapter = () => {
-    if (storyChapter < PROLOGUE_SLIDES.length - 1) {
-      setStoryChapter((prev) => prev + 1);
-      harborAudio.playStoryAdvance();
+  const advanceGtaSlide = () => {
+    if (gtaSlideIdx < GTA_INTRO_SLIDES.length - 1) {
+      setGtaSlideIdx((prev) => prev + 1);
+      harborAudio.playGtaSlideHit();
     } else {
-      finishStoryPrologue();
+      diveIntoHarbor();
     }
   };
 
-  const prevStoryChapter = () => {
-    if (storyChapter > 0) {
-      setStoryChapter((prev) => prev - 1);
-      harborAudio.playStoryAdvance();
+  const prevGtaSlide = () => {
+    if (gtaSlideIdx > 0) {
+      setGtaSlideIdx((prev) => prev - 1);
+      harborAudio.playGtaSlideHit();
     }
   };
 
-  const finishStoryPrologue = () => {
-    setShowStoryPrologue(false);
+  const diveIntoHarbor = () => {
+    setShowGtaIntro(false);
     setInGame(true);
     harborAudio.enable();
     setIsAudioOn(true);
+    harborAudio.playGtaSwoop();
+    harborAudio.playGtaArrivalFanfare();
     harborAudio.playHarborBell();
-    showToast('⚓ Welcome ashore to Hollow Harbor! The market awaits.');
+    showToast('⚓ MISSION COMMENCED: You have docked at Hollow Harbor! 50.0 Coin in purse.');
   };
+
+  // Keyboard navigation for GTA 5 cinematic entrance
+  useEffect(() => {
+    if (!showGtaIntro) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        if (gtaSlideIdx < GTA_INTRO_SLIDES.length - 1) {
+          setGtaSlideIdx((prev) => prev + 1);
+          harborAudio.playGtaSlideHit();
+        } else {
+          diveIntoHarbor();
+        }
+      } else if (e.code === 'ArrowRight') {
+        if (gtaSlideIdx < GTA_INTRO_SLIDES.length - 1) {
+          setGtaSlideIdx((prev) => prev + 1);
+          harborAudio.playGtaSlideHit();
+        }
+      } else if (e.code === 'ArrowLeft') {
+        if (gtaSlideIdx > 0) {
+          setGtaSlideIdx((prev) => prev - 1);
+          harborAudio.playGtaSlideHit();
+        }
+      } else if (e.code === 'Escape') {
+        diveIntoHarbor();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showGtaIntro, gtaSlideIdx]);
 
   const handleLogin = async (emailToUse?: string) => {
     const email = emailToUse || emailInput || 'judge@near.org';
@@ -659,12 +736,12 @@ export default function App() {
               MAIN
             </button>
             <button 
-              onClick={startStoryPrologue} 
-              className="hover:text-amber-300 text-amber-200 transition cursor-pointer uppercase flex items-center space-x-1"
-              title="Experience the Story Prologue (Once Upon a Time...)"
+              onClick={startGtaIntro} 
+              className="bg-amber-400 text-black px-2.5 py-1 rounded-md text-xs font-mono font-black flex items-center space-x-1 hover:bg-amber-300 transition shadow-[2px_2px_0px_#000] cursor-pointer"
+              title="Experience the GTA 5 Cinematic Entrance"
             >
-              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-              <span>STORY</span>
+              <Film className="w-3.5 h-3.5" />
+              <span>🎬 GTA INTRO</span>
             </button>
             <button 
               onClick={() => { setInGame(true); setActiveMerchantId('forge_marta'); }} 
@@ -818,11 +895,20 @@ export default function App() {
                 {/* Tactile DevHack Buttons */}
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <button
-                    onClick={startStoryPrologue}
-                    className="neo-btn-orange px-8 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2.5 shadow-[5px_5px_0px_#000] transform hover:scale-102 transition"
+                    onClick={() => { setInGame(true); }}
+                    className="neo-btn-orange px-8 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider cursor-pointer flex items-center space-x-2.5 shadow-[5px_5px_0px_#000] transform hover:scale-102 transition animate-pulse"
                   >
-                    <BookOpen className="w-4 h-4 text-white" />
-                    <span>ONCE UPON A TIME... (STORY PROLOGUE)</span>
+                    <Anchor className="w-4 h-4 text-white" />
+                    <span>ENTER HARBOR DOCKS ➔</span>
+                  </button>
+
+                  <button
+                    onClick={startGtaIntro}
+                    className="neo-btn-dark px-5 py-3.5 rounded-xl font-mono font-black text-xs uppercase tracking-wider cursor-pointer flex items-center space-x-2 border-2 border-amber-400 text-amber-300 shadow-[3px_3px_0px_#000] hover:bg-amber-400/10 transition"
+                    title="Experience the GTA 5 Style Cinematic Opening Intro"
+                  >
+                    <Film className="w-4 h-4 text-amber-400" />
+                    <span>🎬 GTA INTRO</span>
                   </button>
 
                   <button
@@ -1862,157 +1948,324 @@ export default function App() {
         </div>
       )}
 
-      {/* CINEMATIC STORY PROLOGUE: "ONCE UPON A TIME..." */}
-      {showStoryPrologue && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-[#040813]/95 backdrop-blur-2xl text-slate-100 select-none animate-in fade-in duration-500">
+      {/* CINEMATIC GTA 5 STYLE ENTRANCE OPENING (TRIGGERED ON ENTRY) */}
+      {showGtaIntro && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-black text-slate-100 select-none overflow-hidden animate-in fade-in duration-700">
           
-          {/* Top Cinematic Film Bar */}
-          <div className="h-14 sm:h-16 bg-black border-b border-[#ff5e36]/30 px-6 flex items-center justify-between shrink-0">
+          {/* TOP CINEMATIC LETTERBOX BAR: GTA HUD & SATELLITE RADAR */}
+          <div className="h-16 sm:h-20 bg-black/95 border-b-2 border-white/10 px-4 sm:px-8 flex items-center justify-between shrink-0 z-30 backdrop-blur-md">
+            
+            {/* Left: Satellite Telemetry & Location */}
             <div className="flex items-center space-x-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5e36] animate-pulse" />
-              <span className="font-cinzel text-xs sm:text-sm font-black tracking-widest uppercase text-amber-200">
-                HOLLOW HARBOR CHRONICLES • PROLOGUE
-              </span>
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
+              <div className="flex flex-col">
+                <div className="flex items-center space-x-2 text-[10px] sm:text-xs font-mono font-black tracking-wider text-slate-300">
+                  <span className="text-red-400">REC ● 60FPS</span>
+                  <span className="text-slate-600">|</span>
+                  <span className="text-white">SECTOR: HOLLOW HARBOR</span>
+                  <span className="text-slate-600 hidden md:inline">|</span>
+                  <span className="text-cyan-400 font-bold hidden md:inline">NEAR PROTOCOL SHARD 0</span>
+                </div>
+                <div className="text-[10px] font-mono text-amber-400 font-bold tracking-tight">
+                  {GTA_INTRO_SLIDES[gtaSlideIdx].location} • {GTA_INTRO_SLIDES[gtaSlideIdx].altitude}
+                </div>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            {/* Right: GTA Wanted Stars & Controls */}
+            <div className="flex items-center space-x-3 sm:space-x-5">
+              
+              {/* GTA 5 Wanted Level Stars */}
+              <div className="hidden sm:flex items-center space-x-1 bg-black/80 px-3 py-1.5 rounded-xl border border-amber-400/40 shadow-[0_0_12px_rgba(251,191,36,0.25)]">
+                <span className="text-[10px] font-mono font-black text-amber-300 tracking-widest mr-1.5 uppercase">
+                  WANTED LEVEL:
+                </span>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star 
+                    key={star} 
+                    className={`w-3.5 h-3.5 transition-all ${
+                      star <= GTA_INTRO_SLIDES[gtaSlideIdx].wantedStars 
+                        ? 'text-amber-400 fill-amber-400 drop-shadow-[0_0_6px_#f59e0b] animate-pulse' 
+                        : 'text-slate-700'
+                    }`} 
+                  />
+                ))}
+              </div>
+
+              {/* Immersive Sound Engine Toggle */}
               <button
                 onClick={toggleSound}
-                className={`px-3 py-1 rounded-lg border-2 border-black flex items-center space-x-1.5 text-xs font-mono transition-all cursor-pointer shadow-[2px_2px_0px_#000] ${
+                className={`px-3 py-1.5 rounded-xl border-2 border-black flex items-center space-x-1.5 text-xs font-mono transition-all cursor-pointer shadow-[3px_3px_0px_#000] ${
                   isAudioOn ? 'bg-[#ff5e36] text-white font-bold' : 'bg-[#15233c] text-slate-300'
                 }`}
-                title="Toggle Coastal Ocean Waves & Harbor Bells"
+                title="Toggle Coastal Ocean Waves & GTA Audio Effects"
               >
                 {isAudioOn ? <Volume2 className="w-3.5 h-3.5 animate-pulse" /> : <VolumeX className="w-3.5 h-3.5" />}
-                <span className="hidden sm:inline">{isAudioOn ? 'HARBOR AUDIO ON' : 'AUDIO MUTED'}</span>
+                <span className="hidden md:inline font-mono text-[11px] font-black">
+                  {isAudioOn ? 'HARBOR AUDIO ON' : 'AUDIO MUTED'}
+                </span>
               </button>
 
+              {/* Instant Skip Into Harbor */}
               <button
-                onClick={finishStoryPrologue}
-                className="text-xs font-mono text-slate-400 hover:text-white cursor-pointer px-2 py-1"
-                title="Skip prologue and enter docks immediately"
+                onClick={diveIntoHarbor}
+                className="text-xs font-mono text-slate-400 hover:text-white cursor-pointer px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/30 transition flex items-center space-x-1 bg-white/5"
+                title="Skip intro and dock at Hollow Harbor immediately"
               >
-                SKIP TO HARBOR ➔
+                <span>SKIP [ESC]</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
+
             </div>
           </div>
 
-          {/* Center Stage: Cinematic Story Card */}
-          <div className="flex-1 flex items-center justify-center p-4 sm:p-8 relative overflow-hidden">
-            {/* Atmospheric background glow */}
-            <div className="absolute w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#ff5e36]/15 via-amber-500/10 to-transparent blur-3xl pointer-events-none" />
+          {/* CENTER STAGE: GTA 5 CINEMATIC SPLASH CARD */}
+          <div className="flex-1 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 lg:p-12">
+            
+            {/* Cinematic Fullscreen Background with Subtle Slow Zoom (Ken Burns Effect) */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+              <img 
+                key={gtaSlideIdx}
+                src={GTA_INTRO_SLIDES[gtaSlideIdx].image} 
+                alt="Cinematic Background" 
+                className="w-full h-full object-cover filter brightness-45 contrast-125 saturate-110 transform scale-105 animate-pulse transition-all duration-1000"
+              />
+              {/* Cinematic Vignette & Color Gradients */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/85" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-black/90" />
+              {/* Scanline CRT overlay effect */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
+            </div>
 
+            {/* Central Content Grid */}
             {(() => {
-              const slide = PROLOGUE_SLIDES[storyChapter];
+              const slide = GTA_INTRO_SLIDES[gtaSlideIdx];
               return (
                 <div 
-                  key={storyChapter} 
-                  className="max-w-2xl w-full neo-box-orange p-6 sm:p-10 rounded-3xl shadow-[14px_14px_0px_#000] relative z-10 space-y-6 animate-in slide-in-from-bottom-4 duration-500"
+                  key={gtaSlideIdx} 
+                  className="relative z-10 max-w-5xl w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-in slide-in-from-bottom-6 duration-500"
                 >
-                  {/* Chapter Header */}
-                  <div className="flex items-center justify-between border-b-2 border-black pb-4">
-                    <div className="flex items-center space-x-2.5">
-                      <span className="text-[10px] sm:text-xs font-mono font-black uppercase bg-[#ff5e36] text-white px-2.5 py-1 rounded-md border border-black shadow-[1px_1px_0px_#000]">
+                  
+                  {/* Left Column: GTA Mission Briefing & Lore (7 cols) */}
+                  <div className="lg:col-span-7 space-y-4 sm:space-y-5">
+                    
+                    {/* Chapter & Badge Washi Strip */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="bg-[#ff5e36] text-black font-mono font-black text-xs px-3 py-1 uppercase rounded-sm border-2 border-black shadow-[3px_3px_0px_#000]">
                         {slide.chapter}
                       </span>
-                      <span className="text-xs font-mono font-bold tracking-wider text-amber-300 uppercase">
+                      <span className="bg-[#ffe600] text-black font-mono font-black text-xs px-3 py-1 uppercase rounded-sm border-2 border-black shadow-[3px_3px_0px_#000]">
                         {slide.badge}
+                      </span>
+                      <span className="text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider hidden sm:inline">
+                        • {slide.tagline}
                       </span>
                     </div>
 
-                    <div className="text-xs font-mono text-slate-400 font-bold">
-                      {storyChapter + 1} / {PROLOGUE_SLIDES.length}
+                    {/* Massive GTA-Style Condensed Headline */}
+                    <div className="space-y-1">
+                      <h1 className="font-cinzel text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase drop-shadow-[5px_5px_0px_#000] leading-none">
+                        {slide.title}
+                      </h1>
+                      <div className="font-mono text-xs sm:text-sm font-black text-[#ff5e36] tracking-widest uppercase">
+                        {slide.subtitle}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Main Headlines */}
-                  <div className="space-y-2">
-                    <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-                      {slide.title}
-                    </h2>
-                    <p className="font-mono text-xs sm:text-sm font-bold text-[#ff5e36] uppercase tracking-wide">
-                      {slide.subtitle}
+                    {/* Lore Quote Callout (Classic GTA Flavor Text) */}
+                    <div className="bg-[#050b17]/90 border-l-4 border-amber-400 p-3 sm:p-4 rounded-r-xl border-y-2 border-r-2 border-black shadow-[4px_4px_0px_#000] backdrop-blur-md">
+                      <p className="font-cinzel italic text-xs sm:text-sm text-amber-200 leading-relaxed font-semibold">
+                        {slide.quote}
+                      </p>
+                    </div>
+
+                    {/* Story Narrative Description */}
+                    <p className="text-xs sm:text-sm lg:text-base text-slate-200 leading-relaxed font-sans font-medium drop-shadow-md">
+                      {slide.description}
                     </p>
+
+                    {/* Sensory Environmental Cue */}
+                    <div className="flex items-center space-x-2 text-xs font-mono text-cyan-300">
+                      <Waves className="w-4 h-4 text-cyan-400 shrink-0 animate-bounce" />
+                      <span className="italic">{slide.accent}</span>
+                    </div>
+
+                    {/* GTA 5 Stat Sheet Strip */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
+                      {slide.stats.map((s, idx) => (
+                        <div 
+                          key={idx} 
+                          className="bg-[#060e1d]/90 border-2 border-black p-2.5 rounded-xl shadow-[3px_3px_0px_#000] backdrop-blur-sm"
+                        >
+                          <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">
+                            {s.label}
+                          </div>
+                          <div className="text-xs sm:text-sm font-mono font-black text-amber-300 truncate">
+                            {s.val}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
                   </div>
 
-                  {/* Lore Quote Callout */}
-                  <div className="bg-[#050b17] border-l-4 border-[#ff5e36] p-3.5 rounded-r-xl border-y-2 border-r-2 border-black shadow-[3px_3px_0px_#000]">
-                    <p className="font-cinzel italic text-xs sm:text-sm text-amber-200 leading-relaxed">
-                      {slide.quote}
-                    </p>
-                  </div>
+                  {/* Right Column: GTA Character Poster / Satellite Radar Cutout (5 cols) */}
+                  <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
+                    
+                    {/* For Marta Slide: Die-cut sticker poster */}
+                    {gtaSlideIdx === 1 ? (
+                      <div className="relative group animate-cinematic-float">
+                        
+                        {/* Slanted Crime Tape / Badge */}
+                        <div className="absolute -top-3 left-4 z-20 transform -rotate-6">
+                          <span className="bg-[#ff5e36] text-white border-2 border-black font-mono font-black text-xs px-3 py-1 uppercase rounded-md shadow-[3px_3px_0px_#000]">
+                            TARGET: MARTA • FORGE BOSS
+                          </span>
+                        </div>
 
-                  {/* Narrative Prose */}
-                  <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-sans font-medium">
-                    {slide.text}
-                  </p>
+                        {/* Speech Bubble */}
+                        <div className="absolute -top-6 -right-6 z-20 transform rotate-3 animate-bob hidden sm:block">
+                          <div className="bg-white text-black border-3 border-black rounded-2xl px-3.5 py-2 shadow-[4px_4px_0px_#000] relative">
+                            <span className="font-cinzel text-xs font-black text-slate-900">
+                              “Buying Ore @ <span className="text-[#ff5e36]">8.1c</span>!”
+                            </span>
+                            <div className="absolute -bottom-2 left-4 w-2.5 h-2.5 bg-white border-b-2 border-r-2 border-black transform rotate-45" />
+                          </div>
+                        </div>
 
-                  {/* Sensory Cue */}
-                  <div className="pt-2 flex items-center space-x-2 text-xs font-mono text-slate-400 italic">
-                    <Waves className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>{slide.accent}</span>
-                  </div>
+                        {/* Character Image */}
+                        <div className="w-56 h-56 sm:w-72 sm:h-72 rounded-3xl bg-[#091326] p-2 border-4 border-black ring-4 ring-white shadow-[12px_12px_0px_#000] overflow-hidden rotate-[-2deg]">
+                          <img 
+                            src="/assets/marta_avatar.jpg" 
+                            alt="Marta Autonomous Blacksmith" 
+                            className="w-full h-full object-cover rounded-2xl filter saturate-125 contrast-110"
+                          />
+                        </div>
 
-                  {/* Chapter Navigation Controls */}
-                  <div className="pt-6 border-t-2 border-black flex items-center justify-between gap-3">
-                    {storyChapter > 0 ? (
-                      <button
-                        onClick={prevStoryChapter}
-                        className="neo-btn-dark px-4 py-2.5 rounded-xl font-mono font-bold text-xs flex items-center space-x-1 cursor-pointer"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                        <span>BACK</span>
-                      </button>
-                    ) : <div />}
+                        {/* Floating Status Pill */}
+                        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-20 whitespace-nowrap">
+                          <div className="bg-[#05ea9b] text-black border-2 border-black px-4 py-1.5 rounded-full text-xs font-mono font-black shadow-[4px_4px_0px_#000]">
+                            ⚡ AUTONOMOUS AGENT ACTIVE
+                          </div>
+                        </div>
 
-                    {storyChapter < PROLOGUE_SLIDES.length - 1 ? (
-                      <button
-                        onClick={advanceStoryChapter}
-                        className="neo-btn-orange px-7 py-3 rounded-xl font-mono font-black text-xs uppercase tracking-wider flex items-center space-x-2 cursor-pointer shadow-[3px_3px_0px_#000]"
-                      >
-                        <span>NEXT CHAPTER</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
+                      </div>
                     ) : (
-                      <button
-                        onClick={finishStoryPrologue}
-                        className="neo-btn-orange px-8 py-3.5 rounded-xl font-mono font-black text-sm uppercase tracking-wider flex items-center space-x-2.5 cursor-pointer shadow-[4px_4px_0px_#000] animate-pulse"
-                      >
-                        <Anchor className="w-4 h-4" />
-                        <span>ENTER HOLLOW HARBOR</span>
-                      </button>
+                      /* For Other Slides: GTA Radar & Quayside Telemetry */
+                      <div className="flex flex-col items-center justify-center p-6 bg-black/60 border-2 border-cyan-400/40 rounded-3xl backdrop-blur-md shadow-[8px_8px_0px_#000] space-y-4">
+                        
+                        {/* Radar Reticle Graphic */}
+                        <div className="relative w-44 h-44 rounded-full border-2 border-cyan-400/60 bg-cyan-950/20 flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(34,211,238,0.2)]">
+                          {/* Radar Grid Circles */}
+                          <div className="absolute w-32 h-32 rounded-full border border-cyan-400/30" />
+                          <div className="absolute w-20 h-20 rounded-full border border-cyan-400/40" />
+                          {/* Crosshair Lines */}
+                          <div className="absolute w-full h-[1px] bg-cyan-400/40" />
+                          <div className="absolute h-full w-[1px] bg-cyan-400/40" />
+                          
+                          {/* Spinning Radar Sweep */}
+                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-400/20 to-cyan-300/40 rounded-full animate-spin [animation-duration:3s] pointer-events-none origin-center" />
+                          
+                          {/* Radar Blips */}
+                          <div className="absolute top-12 left-14 w-2.5 h-2.5 rounded-full bg-[#ff5e36] animate-ping" title="Marta's Forge" />
+                          <div className="absolute bottom-12 right-14 w-2 h-2 rounded-full bg-[#05ea9b] animate-ping [animation-delay:0.5s]" title="Sawmill" />
+                          <div className="absolute top-16 right-12 w-2 h-2 rounded-full bg-amber-400 animate-ping [animation-delay:1s]" title="Tavern" />
+
+                          {/* Center Marker */}
+                          <div className="w-3 h-3 rounded-full bg-white border border-black shadow-[0_0_8px_#fff]" />
+                          <div className="absolute top-2 font-mono text-[10px] text-cyan-300 font-black">N</div>
+                        </div>
+
+                        {/* Telemetry Readout */}
+                        <div className="text-center space-y-1 font-mono">
+                          <div className="text-[11px] font-black text-cyan-300 tracking-wider">
+                            GPS: 48.8566° N, 2.3522° E
+                          </div>
+                          <div className="text-[10px] text-slate-400">
+                            HOLLOW HARBOR QUAYSIDE DOCKS
+                          </div>
+                          <div className="inline-block bg-[#ff5e36]/20 border border-[#ff5e36] text-[#ff5e36] text-[10px] font-bold px-2 py-0.5 rounded-md">
+                            SECTOR PATROL: GASLESS RELAYER ON
+                          </div>
+                        </div>
+
+                      </div>
                     )}
+
                   </div>
 
                 </div>
               );
             })()}
+
           </div>
 
-          {/* Bottom Cinematic Film Bar */}
-          <div className="h-14 sm:h-16 bg-black border-t border-[#ff5e36]/30 px-6 flex items-center justify-between shrink-0">
-            {/* Story Timeline dots */}
+          {/* BOTTOM CINEMATIC LETTERBOX BAR: GTA NAVIGATION CONTROLS */}
+          <div className="h-16 sm:h-20 bg-black/95 border-t-2 border-white/10 px-4 sm:px-8 flex items-center justify-between shrink-0 z-30 backdrop-blur-md">
+            
+            {/* Mission Checkpoint Stepper (00, 01, 02, 03) */}
             <div className="flex items-center space-x-2">
-              {PROLOGUE_SLIDES.map((_, idx) => (
+              {GTA_INTRO_SLIDES.map((s, idx) => (
                 <button
                   key={idx}
                   onClick={() => {
-                    setStoryChapter(idx);
-                    harborAudio.playStoryAdvance();
+                    setGtaSlideIdx(idx);
+                    harborAudio.playGtaSlideHit();
                   }}
-                  className={`h-2 transition-all rounded-full cursor-pointer ${
-                    storyChapter === idx 
-                      ? 'w-8 bg-[#ff5e36] shadow-[0_0_8px_#ff5e36]' 
-                      : 'w-2 bg-slate-600 hover:bg-slate-400'
+                  className={`px-3 py-1.5 rounded-lg font-mono text-xs font-black transition-all cursor-pointer border-2 ${
+                    gtaSlideIdx === idx 
+                      ? 'bg-[#ff5e36] text-black border-black shadow-[3px_3px_0px_#000] scale-105' 
+                      : 'bg-[#0f172a] text-slate-400 border-white/10 hover:border-white/30'
                   }`}
-                  title={`Go to chapter ${idx + 1}`}
-                />
+                  title={`Jump to ${s.title}`}
+                >
+                  {idx === 0 ? 'START' : `0${idx}`}
+                </button>
               ))}
             </div>
 
-            <span className="font-mono text-[11px] text-slate-400 hidden sm:inline">
-              AUTONOMOUS NEAR ECONOMY • WHERE THE ECONOMY IS THE GAMEPLAY
-            </span>
+            {/* Keyboard Hint */}
+            <div className="hidden lg:flex items-center space-x-2 text-xs font-mono text-slate-400">
+              <span className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-slate-200">SPACE</span>
+              <span>OR</span>
+              <span className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-slate-200">➔</span>
+              <span>TO ADVANCE •</span>
+              <span className="bg-white/10 px-2 py-0.5 rounded border border-white/20 text-slate-200">ESC</span>
+              <span>TO DIVE IN</span>
+            </div>
+
+            {/* Next / Dive Action Button */}
+            <div className="flex items-center space-x-3">
+              {gtaSlideIdx > 0 && (
+                <button
+                  onClick={prevGtaSlide}
+                  className="neo-btn-dark px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-mono font-bold text-xs flex items-center space-x-1 cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">BACK</span>
+                </button>
+              )}
+
+              {gtaSlideIdx < GTA_INTRO_SLIDES.length - 1 ? (
+                <button
+                  onClick={advanceGtaSlide}
+                  className="neo-btn-orange px-6 py-2.5 sm:px-8 sm:py-3 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-wider flex items-center space-x-2 cursor-pointer shadow-[4px_4px_0px_#000] transform hover:scale-103 transition"
+                >
+                  <span>NEXT CHAPTER</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={diveIntoHarbor}
+                  className="bg-[#ff5e36] text-white hover:bg-[#ff4015] border-3 border-black px-6 py-2.5 sm:px-9 sm:py-3.5 rounded-xl font-mono font-black text-xs sm:text-sm uppercase tracking-widest flex items-center space-x-2 cursor-pointer shadow-[5px_5px_0px_#000] transform hover:scale-105 transition animate-pulse"
+                >
+                  <Anchor className="w-4 h-4" />
+                  <span>DIVE INTO HARBOR [SPACE]</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
           </div>
 
         </div>

@@ -202,6 +202,136 @@ class HarborAudioEngine {
   }
 
   /**
+   * GTA V Style Cinematic Camera Swoop (Sub-bass drop + high-speed cloud whoosh)
+   */
+  public playGtaSwoop() {
+    this.initContext();
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+
+      // 1. Heavy Sub-Bass Dive (150Hz -> 38Hz)
+      const subOsc = this.ctx.createOscillator();
+      const subGain = this.ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(150, now);
+      subOsc.frequency.exponentialRampToValueAtTime(38, now + 1.2);
+
+      subGain.gain.setValueAtTime(0.22, now);
+      subGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+
+      subOsc.connect(subGain);
+      subGain.connect(this.ctx.destination);
+      subOsc.start(now);
+      subOsc.stop(now + 1.5);
+
+      // 2. High-speed Wind / Cloud Camera Whoosh
+      const bufferSize = this.ctx.sampleRate * 1.5;
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const bandFilter = this.ctx.createBiquadFilter();
+      bandFilter.type = 'bandpass';
+      bandFilter.frequency.setValueAtTime(1800, now);
+      bandFilter.frequency.exponentialRampToValueAtTime(320, now + 1.2);
+      bandFilter.Q.setValueAtTime(3.0, now);
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.01, now);
+      noiseGain.gain.linearRampToValueAtTime(0.12, now + 0.3);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+      noise.connect(bandFilter);
+      bandFilter.connect(noiseGain);
+      noiseGain.connect(this.ctx.destination);
+      noise.start(now);
+      noise.stop(now + 1.4);
+    } catch {}
+  }
+
+  /**
+   * GTA V Character Slide Impact Slam (Deep kick + metallic sting)
+   */
+  public playGtaSlideHit() {
+    this.initContext();
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+
+      // Punchy transient kick
+      const kickOsc = this.ctx.createOscillator();
+      const kickGain = this.ctx.createGain();
+      kickOsc.type = 'triangle';
+      kickOsc.frequency.setValueAtTime(180, now);
+      kickOsc.frequency.exponentialRampToValueAtTime(45, now + 0.18);
+
+      kickGain.gain.setValueAtTime(0.18, now);
+      kickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+      kickOsc.connect(kickGain);
+      kickGain.connect(this.ctx.destination);
+      kickOsc.start(now);
+      kickOsc.stop(now + 0.35);
+
+      // Stylized metallic high ping
+      const pingOsc = this.ctx.createOscillator();
+      const pingGain = this.ctx.createGain();
+      pingOsc.type = 'sine';
+      pingOsc.frequency.setValueAtTime(880, now); // A5
+      pingOsc.frequency.exponentialRampToValueAtTime(440, now + 0.2);
+
+      pingGain.gain.setValueAtTime(0.06, now);
+      pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+
+      pingOsc.connect(pingGain);
+      pingGain.connect(this.ctx.destination);
+      pingOsc.start(now);
+      pingOsc.stop(now + 0.4);
+    } catch {}
+  }
+
+  /**
+   * GTA Mission / Harbor Arrival Fanfare
+   */
+  public playGtaArrivalFanfare() {
+    this.initContext();
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      // D-minor punchy arpeggio chord: D3, A3, D4, F4
+      const chords = [146.83, 220.0, 293.66, 349.23];
+      chords.forEach((freq, idx) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        const start = now + idx * 0.09;
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, start);
+
+        const filter = this.ctx!.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1400, start);
+        filter.frequency.exponentialRampToValueAtTime(400, start + 1.2);
+
+        gain.gain.setValueAtTime(0.05, start);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.6);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx!.destination);
+
+        osc.start(start);
+        osc.stop(start + 1.6);
+      });
+    } catch {}
+  }
+
+  /**
    * Story prologue advance chime (warm harp-like arpeggio)
    */
   public playStoryAdvance() {
