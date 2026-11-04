@@ -716,43 +716,7 @@ export default function App() {
           className="fixed inset-0 z-50 bg-black flex flex-col justify-between items-center text-center select-none overflow-hidden cursor-pointer"
         >
           {/* Top Cinema Anamorphic Bar (2.39:1 Letterbox) */}
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            className="w-full h-14 sm:h-16 bg-[#040810] border-b-2 border-amber-500/30 flex items-center justify-between px-4 sm:px-8 text-[11px] font-mono text-amber-500/80 tracking-[0.25em] uppercase z-30"
-          >
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5e36] animate-ping" />
-              <span className="font-black text-amber-300">HOLLOW HARBOR</span>
-              <span className="hidden md:inline text-slate-500">• 2.39:1 CINEMASCOPE</span>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Visible Mute/Soundtrack Toggle */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleYouTube();
-                }}
-                className="flex items-center space-x-1.5 px-3 py-1 rounded bg-[#101b2e] border border-amber-500/40 text-amber-300 hover:text-white hover:border-amber-400 transition cursor-pointer text-[10px] font-mono"
-              >
-                {isYtPlaying ? (
-                  <>
-                    <Volume2 className="w-3.5 h-3.5 text-[#ff5e36] animate-pulse" />
-                    <span>AUDIO ON</span>
-                  </>
-                ) : (
-                  <>
-                    <VolumeX className="w-3.5 h-3.5 text-slate-400" />
-                    <span>AUDIO MUTED</span>
-                  </>
-                )}
-              </button>
-
-              <span className="text-[10px] text-slate-400 hidden sm:inline">
-                {coldOpenStage === 'login' ? 'READY TO DOCK' : 'CLICK ANYWHERE TO ADVANCE'}
-              </span>
-            </div>
-          </div>
+          <div className="w-full h-10 sm:h-14 bg-black border-b border-black z-30 shrink-0" />
 
           {/* Center Stage: The Live Harbor Viewport */}
           <div className="relative w-full flex-1 flex flex-col items-center justify-center overflow-hidden">
@@ -805,14 +769,6 @@ export default function App() {
             {/* STAGE 2: 2 to 6s — Live Camera Drift Past Merchants with Real Ticking Prices & Bankruptcy */}
             {coldOpenStage === 'drift' && (
               <div className="relative z-20 w-full max-w-5xl px-4 flex flex-col items-center justify-between h-full py-6 animate-in fade-in duration-700 pointer-events-none">
-                
-                {/* Upper context banner */}
-                <div className="bg-black/80 border-2 border-black rounded-xl px-5 py-2 shadow-[4px_4px_0px_#000] inline-flex items-center space-x-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span className="font-mono text-xs font-black tracking-widest text-amber-300 uppercase">
-                    LIVE HARBOR DEMO WORLD • AUTONOMOUS AGENT STALLS
-                  </span>
-                </div>
 
                 {/* Floating Interactive Merchant Price Badges Over the Harbor */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full my-auto max-w-3xl">
@@ -1066,16 +1022,11 @@ export default function App() {
           {/* Bottom Cinema Anamorphic Bar (2.39:1 Letterbox) */}
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="w-full h-14 sm:h-16 bg-[#040810] border-t-2 border-amber-500/30 flex items-center justify-between px-4 sm:px-8 text-[11px] font-mono text-amber-500/80 tracking-[0.2em] uppercase z-30"
+            className="w-full h-10 sm:h-14 bg-black border-t border-black flex items-center justify-end px-6 sm:px-10 z-30 shrink-0"
           >
-            <div className="flex items-center space-x-3">
-              <span className="w-2 h-2 rounded-full bg-amber-400" />
-              <span className="hidden sm:inline">SOUNDTRACK: HANS ZIMMER</span>
-            </div>
-
             <button 
               onClick={skipColdOpen}
-              className="text-amber-300 hover:text-white cursor-pointer hover:underline font-black flex items-center space-x-1.5 bg-[#121f36] px-3 py-1 rounded border border-amber-500/50"
+              className="text-amber-400/70 hover:text-amber-300 cursor-pointer hover:underline font-mono text-xs font-bold tracking-widest uppercase transition"
             >
               <span>{coldOpenStage === 'login' ? 'SKIP TO GAME ➔' : 'SKIP INTRO ➔'}</span>
             </button>
@@ -1218,16 +1169,6 @@ export default function App() {
             >
               <Layers className="w-3.5 h-3.5 text-[#ff5e36]" />
               <span>LEDGER</span>
-            </button>
-
-            {/* REPLAY INTRO */}
-            <button 
-              onClick={replayIntro} 
-              className="neo-btn-dark px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer text-amber-300 hover:text-white flex items-center space-x-1"
-              title="Replay 10-Second Cinematic Cold Open"
-            >
-              <Film className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden md:inline">INTRO</span>
             </button>
 
             {inGame && user && (
