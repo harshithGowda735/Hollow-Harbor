@@ -145,17 +145,17 @@ export default function App() {
       id: 'genesis-1',
       action: 'Genesis Init',
       tokensSwapped: 'Coin / Shop Deeds',
-      txHash: '9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe',
-      explorerUrl: 'https://testnet.nearblocks.io/txns/9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe',
-      status: 'Testnet Verified',
+      txHash: 'sim_init_genesis_hash',
+      explorerUrl: 'https://testnet.nearblocks.io',
+      status: 'Simulated (In-Memory Ledger)',
       time: '1h ago',
     },
     {
       id: 'relayer-1',
       action: 'NEP-366 Relayer',
       tokensSwapped: 'Gas Sponsorship Pool',
-      txHash: 'J7UmfyuBq1Acz4KPSNWtE6Z7psoe2xwrijtLWASMoPQv',
-      explorerUrl: 'https://testnet.nearblocks.io/txns/J7UmfyuBq1Acz4KPSNWtE6Z7psoe2xwrijtLWASMoPQv',
+      txHash: 'sim_relayer_sponsorship_pool',
+      explorerUrl: 'https://testnet.nearblocks.io',
       status: 'Active (Zero Gas Prompt)',
       time: '30m ago',
     },
@@ -469,7 +469,7 @@ export default function App() {
             tokensSwapped: e.tokensSwapped,
             txHash: e.transactionHash,
             explorerUrl: e.explorerUrl,
-            status: 'Testnet Verified (Batch)',
+            status: 'Simulated (In-Memory Ledger)',
             time: 'Just now',
           }));
           setLedgerEntries((prev) => [...formatted, ...prev]);
@@ -485,7 +485,7 @@ export default function App() {
           tokensSwapped: `${weekResult.totalVolume}c Vol • ${weekResult.totalTrades} Swaps • ${weekResult.totalDividends}c Div`,
           txHash: day7.settlementTx.txHash,
           explorerUrl: day7.settlementTx.explorerUrl,
-          status: 'Testnet Verified (Batch)',
+          status: 'Simulated (In-Memory Ledger)',
           time: 'Just now',
         },
         ...prev,
@@ -611,7 +611,7 @@ export default function App() {
         tokensSwapped: swapSummary,
         txHash: mockTxHash,
         explorerUrl,
-        status: 'Testnet Verified (Sponsored)',
+        status: 'Simulated (In-Memory Ledger)',
         time: 'Just now',
       };
 
@@ -625,7 +625,7 @@ export default function App() {
       });
 
       harborAudio.playCoinSound();
-      showToast(`⚡ Atomic Swap Settled on NEAR Testnet! (+${totalEarned} Coin)`);
+      showToast(`Trade Settled (+${totalEarned} Coin)`);
     } finally {
       setIsSettling(false);
     }
@@ -636,7 +636,7 @@ export default function App() {
     const merchant = merchants[merchantId];
     const sharesToMint = 25;
     const cashBoost = 100.0;
-    const verifiedTx = getVerifiedTestnetTx(2); // Real verified on-chain investment tx
+    const verifiedTx = getVerifiedTestnetTx(2); // In-memory ledger simulated tx
     const txHash = verifiedTx.hash;
     const explorerUrl = verifiedTx.explorerUrl;
 
@@ -667,7 +667,7 @@ export default function App() {
       tokensSwapped: `$5 USDC (Intents) ⇄ 25 share:${merchantId}`,
       txHash,
       explorerUrl,
-      status: 'Testnet Verified (Sponsored)',
+      status: 'Simulated (In-Memory Ledger)',
       time: 'Just now',
     };
     setLedgerEntries((prev) => [newLedgerItem, ...prev]);
@@ -680,7 +680,7 @@ export default function App() {
 
     harborAudio.playHarborBell();
     harborAudio.playCoinSound();
-    showToast(`🎉 You backed ${merchant.name} via NEAR Intents! Shop reopened, +25 Shares minted!`);
+    showToast(`You backed ${merchant.name}! Stall reopened, +25 Shares minted.`);
   };
 
   const selectedMerchant = activeMerchantId ? merchants[activeMerchantId] : null;

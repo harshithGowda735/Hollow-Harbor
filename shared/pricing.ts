@@ -70,14 +70,17 @@ export function getMerchantQuote(
       };
     }
 
-    const rawBid = basePrice * stockPressureFactor * (1 - spread);
+    // Flood protection: when stock is double or more than target stock, cut bid price by 50%
+    const isFlooded = currentStock >= 2 * targetStock;
+    const floodMultiplier = isFlooded ? 0.5 : 1.0;
+    const rawBid = basePrice * stockPressureFactor * (1 - spread) * floodMultiplier;
     const unitPrice = Math.max(0.1, Number(rawBid.toFixed(2)));
 
     // Maximum the merchant is willing to spend per trade
     const maxSpend = merchant.cash * rule.caps.max_buy_per_trade_pct_of_cash;
     const maxQuantity = Math.max(0, Math.floor(maxSpend / unitPrice));
 
-    const plainReason = `${rules.goods[goodId].name}: I hold ${currentStock} (target ${targetStock}), so I bid ${unitPrice.toFixed(1)} Coin. Cash reserve is ${merchant.cash.toFixed(1)}, capping purchase at ${maxQuantity} per trade.`;
+    const plainReason = `${rules.goods[goodId].name}: I hold ${currentStock} (target ${targetStock}), so I bid ${unitPrice.toFixed(1)} Coin${isFlooded ? ' (50% flood penalty at >=2x target)' : ''}. Cash reserve is ${merchant.cash.toFixed(1)}, capping purchase at ${maxQuantity} per trade.`;
 
     return {
       merchantId: merchant.id,

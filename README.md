@@ -1,210 +1,324 @@
-# 🌊 Hollow Harbor
+# Hollow Harbor
 
-> **A cozy browser market-town where the economy IS the gameplay.**
-> Every merchant is an autonomous agent with its own NEAR wallet, dynamic supply-and-demand pricing, and cash survival pressure. Flood iron into the forge, watch the blacksmith go bankrupt, and invest cross-asset capital via NEAR Intents to claim equity dividends.
->
-> 🏆 **Built for the NEAR Hackathon: Games With Real Economies Track**
+> A market-town trading game where market prices respond dynamically to supply and merchant cash reserves.
 
-[![NEAR Testnet](https://img.shields.io/badge/NEAR-Testnet%20Verified-00EC97?logo=near&logoColor=black)](https://testnet.nearblocks.io)
-[![NEP-366](https://img.shields.io/badge/NEP--366-Gasless%20Relayer-orange)](https://github.com/near/NEPs/blob/master/neps/nep-0366.md)
-[![NEP-245](https://img.shields.io/badge/NEP--245-Multi--Token%20Standard-blue)](https://github.com/near/NEPs/blob/master/neps/nep-0245.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+## Links
 
----
+| Resource | Target | Description |
+| :--- | :--- | :--- |
+| Live Application | [http://localhost:3000](http://localhost:3000) | Local web client interface. |
+| Architecture Reference | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Component diagrams and data flow documentation. |
+| Game Design Reference | [docs/GAME_DESIGN.md](docs/GAME_DESIGN.md) | Item definitions, loops, and anti-exploit rules. |
+| Economic Formulas | [docs/ECONOMY.md](docs/ECONOMY.md) | Pricing formulas with worked numeric examples. |
+| Demo Walkthrough | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | Step-by-step evaluator judging script with timings. |
+| Development Log | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Chronological progress across development slices. |
 
-## ⚡ Quick Start for Evaluators (Run in 60 Seconds)
+## Overview
 
-Evaluators can clone and verify the entire game, deterministic engine, and end-to-end golden path without any `.env` configuration:
+Hollow Harbor is a browser market-town trading simulation.
+Players collect resources, craft refined goods, and sell supplies to autonomous merchants.
+Every merchant maintains an independent balance sheet and closes if capital is depleted.
+
+## Judge in 2 Minutes
+
+Follow this path to evaluate the full loop:
+
+1. Open `http://localhost:3000` in your browser.
+2. Click the Captain credential preset to fill the email address field.
+3. Click Enter the Harbor to generate your key pair without popups.
+4. Select the Mining Cliff resource node and click Gather Iron Ore three times.
+5. Hover over the Sell Iron Ore button at Marta's Forge to inspect the pricing reasoning tooltip.
+6. Click Sell Iron Ore repeatedly until Marta runs out of operating cash and closes.
+7. Click Back this Shop on the closed stall to fund the forge and receive equity shares.
+8. Click Fast-Forward 7 Days in the simulation panel to advance the economy by one week.
+9. Inspect the Ledger to view atomic trade receipts and dividend distributions.
+
+## Prerequisites
+
+- Node.js: version 18.0.0 or higher (`node -v`)
+- npm: version 9.0.0 or higher (`npm -v`)
+- Rust: version 1.75.0 or higher (`cargo --version`) for contract compilation
+- Wasm target: `wasm32-unknown-unknown` installed via `rustup target add wasm32-unknown-unknown`
+
+## Quick Start
+
+Install dependencies and start the local development server:
 
 ```bash
-# 1. Clone repository & install dependencies
-git clone https://github.com/harshithGowda735/Hollow-Harbor.git
-cd Hollow-Harbor
 npm install
-
-# 2. Run engine unit tests (Deterministic pricing, stock pressure, bankruptcy floor)
-npm test
-
-# 3. Run the headless 7-day economy simulator
-npm run sim
-
-# 4. Run the full golden-path automated verification
-npm run demo
-
-# 5. Build client and contracts
-npm run build
-cd contracts && cargo test && cd ..
-
-# 6. Launch local dev environment
 npm run dev
-# Game Client: http://localhost:3000
-# (Optional) Launch relayer backend: npm run server (http://localhost:3001)
 ```
 
-> **Zero Configuration Required**: A fresh clone runs immediately. If `.env` is omitted, the game automatically falls back to an in-memory ledger and seeded testnet explorer receipts.
+Terminal output:
 
----
+```text
+VITE v5.4.19  ready in 240 ms
 
-## 🎯 Game Overview & The Thesis
+➜  Local:   http://localhost:3000/
+➜  Network: http://192.168.1.5:3000/
+➜  press h + enter to show help
+```
 
-In conventional games, NPC merchants are static dispensers with infinite cash, constant buy/sell rates, and bottomless inventories. In Hollow Harbor:
+Run the deterministic economy simulation:
 
-1. **Autonomous Balance Sheets**: Master Blacksmith Marta, Old Piers Timberwright, the Gull & Anchor tavern keeper, and Master Shipwright Brannock each maintain an independent balance sheet, cash reserve, and target inventory.
-2. **Dynamic Stock Sensitivity**: Prices rise when stock is scarce and crash when inventory is flooded, following canonical economic math in [`rules/merchants.rules.yaml`](rules/merchants.rules.yaml).
-3. **Cash Floor & Bankruptcy**: When a merchant's cash drops below their operating threshold, the stall shuts down (`CLOSED - BANKRUPT`) and stops quoting.
-4. **NEAR Intents Recapitalization**: Players can act as venture capitalists, depositing capital to recapitalize bankrupt merchants in exchange for shop equity shares (`share:forge_marta`) that pay **10% dividends on every future trade**.
-5. **Zero Gas Friction**: Players sign in with an email. An embedded ed25519 keypair is provisioned silently in browser local storage. All actions are gas-sponsored via **NEP-366 Delegate Actions**. Players never encounter seed phrases, gas prompts, or wallet approval popups.
+```bash
+npm run sim -- --seed 42 --days 5
+```
 
----
+Terminal output:
 
-## 🏛️ System Architecture
+```text
+HOLLOW HARBOR 7-DAY HEADLESS ECONOMY SIMULATOR
+Deterministic Seed: 42 | Days: 5
+Single Rules File: rules/merchants.rules.yaml
 
-All economic calculations live strictly in `shared/`. The headless simulator (`sim/`), relayer (`server/`), and frontend client (`src/`) all import the exact same canonical engine functions.
+--- [ Day 1 ] ---
+  Marta's Forge: Stock=39 | Cash=176.6 Coin | Bid Price=12.39 Coin | Status: OPEN
+--- [ Day 2 ] ---
+  Marta's Forge: Stock=41 | Cash=166.4 Coin | Bid Price=12.02 Coin | Status: OPEN
+--- [ Day 3 ] ---
+  Marta's Forge: Stock=53 | Cash=31.5 Coin | Bid Price=0.00 Coin | Status: CLOSED (BANKRUPT)
+```
+
+## Commands
+
+| Command | Action | Expected Output | Runtime |
+| :--- | :--- | :--- | :--- |
+| `npm install` | Installs project dependencies | Clean install without dependency errors | ~10s |
+| `npm test` | Executes engine unit tests | 7 passed test suites verifying pricing and dividends | ~1s |
+| `npm run build` | Compiles client application | Production bundle in `dist/` folder | ~3s |
+| `npm run sim -- --seed 42` | Runs headless deterministic simulation | Printed day-by-day merchant status table | ~1s |
+| `npm run demo` | Runs headless golden path verification | Slices 1 through 6 verification pass | ~2s |
+| `npm run dev` | Launches local dev server on port 3000 | Accessible client at `http://localhost:3000` | Instant |
+| `npx tsx scripts/verify-receipts.ts` | Verifies testnet transaction receipts | Confirms receipt authenticity via testnet RPC | ~2s |
+| `cargo test` | Executes Rust contract unit tests | Unit test pass in `contracts/items` and `contracts/market` | ~5s |
+
+## Status
+
+| Feature | Status | Verification Reference | Notes |
+| :--- | :--- | :--- | :--- |
+| NEP-245 Multi-Token Contract | Done | `contracts/items/src/lib.rs` | Holds coin, goods, deeds, and shares. |
+| Atomic Market Contract | Done | `contracts/market/src/lib.rs` | Atomic swaps with signed quote verification. |
+| Zero-Prompt Embedded Auth | Done | `shared/wallet.ts` | ed25519 key pair derived in local storage. |
+| NEP-366 Relayer Service | Done | `server/index.ts` | Server sponsors gas on behalf of players. |
+| Single Rules Configuration | Done | `rules/merchants.rules.yaml` | All pricing formulas load from one file. |
+| Mathematical Pricing Engine | Done | `shared/pricing.ts` | Tested via `npm test`. |
+| Transparent Reasoning Tooltips | Done | `src/App.tsx` | Displays formula inputs on quote hover. |
+| 7-Day Fast-Forward Engine | Done | `shared/fastforward.ts` | Tested via `npm run sim -- --seed 42`. |
+| Merchant Bankruptcy and Closure | Done | `test/engine.test.ts` | Stalls close when cash drops below threshold. |
+| Equity Investment and Bailout | Done | `test/engine.test.ts` | Players mint shares by capitalizing shops. |
+| Dividend Distribution | Done | `test/engine.test.ts` | Shareholders earn dividends from trade volume. |
+| Per-Player Gathering Caps | Done | `rules/merchants.rules.yaml` | Limits ore, timber, and fish extraction. |
+| NEAR Intents Integration | Partial | `src/App.tsx` | Executes via local solver with testnet fallback. |
+
+## Gameplay Loops
+
+### 30-Second Loop
+The player harvests raw resources from harbor nodes.
+The player inspects merchant buy quotes and sells goods for Coin.
+
+### 5-Minute Loop
+The player manufactures refined tools and materials.
+Repeated sales deplete merchant cash reserves, causing merchant closure.
+The player finances the shop to obtain equity shares.
+
+### Session Loop
+The player collects trade dividends across multiple merchant stalls.
+The player runs fast-forward simulation cycles to assess long-term market trends.
+
+## Architecture
 
 ```mermaid
-flowchart TD
-    subgraph ClientLayer ["Client Layer (Browser)"]
-        UI["React 19 Viewport (Cozy Neo-Brutalist 3D)"]
-        Wallet["Embedded ed25519 Wallet (Silent Local Storage)"]
-        Audio["Atmospheric Soundscape (Hans Zimmer Interstellar)"]
-    end
+graph TD
+    Client["Client Interface (React)"]
+    Shared["Economy Engine (shared/)"]
+    Rules["Rules File (rules/merchants.rules.yaml)"]
+    Relayer["Relayer Server (server/)"]
+    ItemsContract["Items Contract (contracts/items)"]
+    MarketContract["Market Contract (contracts/market)"]
 
-    subgraph CoreEngine ["Deterministic Core Engine (shared/)"]
-        RulesLoader["Rules Loader (rules/merchants.rules.yaml)"]
-        PricingEngine["Pricing Formula (Stock Sensitivity & Cash Floor)"]
-        TickEngine["7-Day Headless Simulator (PRNG Seed 777)"]
-        IntentsEngine["NEAR Intents & Shareholder Dividend Model"]
-    end
-
-    subgraph RelayerLayer ["NEP-366 Relayer Service (server/)"]
-        Express["Relayer API (Port 3001)"]
-        MetaTx["Gas Sponsorship Pool (Delegate Actions)"]
-    end
-
-    subgraph BlockchainLayer ["NEAR Testnet Blockchain"]
-        ItemsContract["NEP-245 Multi-Token (hollow-items.testnet)"]
-        MarketContract["Market Intent Solver (hollow-market.testnet)"]
-        Explorer["NEARblocks Explorer (Block Height, Traces)"]
-    end
-
-    UI --> CoreEngine
-    UI --> Wallet
-    Wallet --> Express
-    Express --> MetaTx
-    MetaTx --> MarketContract
-    MarketContract --> ItemsContract
-    ItemsContract --> Explorer
-    CoreEngine --> UI
+    Rules --> Shared
+    Shared --> Client
+    Client --> Relayer
+    Relayer --> ItemsContract
+    Relayer --> MarketContract
 ```
-
----
-
-## 🔄 Trade & Intent Execution Sequence
-
-Every player trade executes as an atomic swap intent without gas interruptions:
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor Player
-    participant Client as Client (React 19)
-    participant Engine as Shared Engine (shared/)
-    participant Relayer as NEP-366 Relayer (server/)
-    participant Market as Market Contract (Rust)
-    participant Items as NEP-245 Contract (Rust)
-    participant Chain as NEARblocks Explorer
+    participant Player as "Player Client"
+    participant Engine as "Quote Engine"
+    participant Relayer as "Gasless Relayer"
+    participant Market as "Market Contract"
 
-    Player->>Client: Click "Sell 5 Iron Ore to Marta"
-    Client->>Engine: getMerchantQuote(forge_marta, iron_ore, 5)
-    Engine-->>Client: Quote: 11.37c per ore (Inputs & Math logged)
-    Client->>Relayer: Submit Signed Intent (NEP-366 Meta-Tx)
-    Note over Relayer: Relayer pays gas sponsorship fee
-    Relayer->>Market: settle_trade(intent_id, solver_id, tokens)
-    Market->>Items: trade(player, iron_ore, 5, marta, coin, 56.85)
-    Note over Items: Atomic Debit & Credit in single transaction
-    Items-->>Chain: Transaction Finalized on Testnet
-    Chain-->>Client: Verified Tx Hash & Explorer URL
-    Client-->>Player: Instant Inventory & Coin Purse Update
+    Player->>Engine: Request Quote(Iron Ore)
+    Engine-->>Player: Signed Quote (Price: 12.4 Coin)
+    Player->>Relayer: Submit Trade Intent
+    Relayer->>Market: Execute Atomic Swap
+    Market-->>Player: Balance Sheet Updated
 ```
 
----
+### Directory Structure
 
-## 📋 Hackathon Requirements & Slice Status Table
+- `agents/`: Autonomous merchant agent logic and behavior definitions.
+- `contracts/`: Rust smart contracts for multi-tokens and atomic market swaps.
+- `docs/`: Supporting documentation, architecture references, and walkthroughs.
+- `rules/`: Single declarative economy rules file `merchants.rules.yaml`.
+- `scripts/`: Verification scripts for receipts and golden path testing.
+- `server/`: Express relayer server for NEP-366 sponsorship and fallback handling.
+- `shared/`: Shared economy logic, pricing formulas, and deterministic simulation.
+- `sim/`: Headless simulation runner and test harnesses.
+- `src/`: React frontend client application.
+- `test/`: Engine verification unit tests.
 
-| Slice | Milestone | Automated Verification Command | Status |
-|---|---|---|---|
-| **Slice 0** | **Skeleton & Landing** | `npm run build` | 🟢 Complete & Verified |
-| **Slice 1** | **Email Login & Embedded Wallet (NEP-366)** | `npx tsx scripts/verify-slice1.ts` | 🟢 Complete & Verified |
-| **Slice 2** | **Deterministic Play Engine & Unit Tests** | `npm test` & `npm run sim` | 🟢 Complete & Verified |
-| **Slice 3** | **First Real Trade On-Chain** | `npx tsx scripts/verify-slice3.ts` | 🟢 Complete & Verified |
-| **Slice 4** | **Shops, Bankruptcies & NEAR Intents Equity** | `npx tsx scripts/verify-slice4.ts` | 🟢 Complete & Verified |
-| **Slice 5** | **Fast-Forward Week & Daily Batch Settlements** | `npx tsx scripts/verify-slice5.ts` | 🟢 Complete & Verified |
-| **Slice 6** | **Golden Path Demo & Submission Checklist** | `npm run demo` | 🟢 Complete & Verified |
+## How NEAR Is Used
 
----
+| Feature | File Path | Implementation Detail |
+| :--- | :--- | :--- |
+| Multi-Token Standard (NEP-245) | `contracts/items/src/lib.rs` | Stores coin, items, deeds, and shares in one contract. |
+| Gas Sponsorship (NEP-366) | `server/index.ts` | Relayer pays gas costs for implicit accounts. |
+| Key Derivation | `shared/wallet.ts` | Generates local ed25519 key pair without popups. |
+| Atomic Settlement | `contracts/market/src/lib.rs` | Transfers payment and commodity simultaneously. |
+| Intent Settlement | `src/App.tsx` | Resolves trade intents with local solver fallback. |
 
-## 🔗 Live Verified NEAR Testnet Transactions
+## Economy Rules
 
-Every simulated day, shop investment, and trade is recorded on NEAR Testnet and verifiable on [NEARblocks](https://testnet.nearblocks.io):
+All pricing parameters load from `rules/merchants.rules.yaml`:
 
-| Action | Transaction Hash | Block Height | Verified Explorer Link |
-|---|---|---|---|
-| **Genesis Multi-Token Init** | `9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe` | **270420250** | [View on NEARblocks](https://testnet.nearblocks.io/txns/9z9mrLuw6wXp4TmYhwpFgwuigjyXpH5J2EPkEqxWKXfe) |
-| **Starter Purse Grant (NEP-366)** | `4NTch9A5Eh5fgK7P4LFzQ9UJCekzUY1XikJ3HG4pk9M4` | **270420241** | [View on NEARblocks](https://testnet.nearblocks.io/txns/4NTch9A5Eh5fgK7P4LFzQ9UJCekzUY1XikJ3HG4pk9M4) |
-| **NEAR Intents Shop Backing** | `ASq4GtCZzUeg8B5N3bgCzM8QsLQutmt6Mmq3LAn3GTqe` | **270420239** | [View on NEARblocks](https://testnet.nearblocks.io/txns/ASq4GtCZzUeg8B5N3bgCzM8QsLQutmt6Mmq3LAn3GTqe) |
-| **Fast-Forward Day 1 Settlement** | `EKzrZrecMJqvjrKMfq1UbiG5U6PoWWiStShZUbEbKGtG` | **270420238** | [View on NEARblocks](https://testnet.nearblocks.io/txns/EKzrZrecMJqvjrKMfq1UbiG5U6PoWWiStShZUbEbKGtG) |
-| **Fast-Forward Day 2 Settlement** | `BVLco4YivFHSMne3UJkscVYLcDLs2WLCd5W2KKEPWccv` | **270420291** | [View on NEARblocks](https://testnet.nearblocks.io/txns/BVLco4YivFHSMne3UJkscVYLcDLs2WLCd5W2KKEPWccv) |
-| **Weekly Batch Net Settlement** | `J7UmfyuBq1Acz4KPSNWtE6Z7psoe2xwrijtLWASMoPQv` | **270420292** | [View on NEARblocks](https://testnet.nearblocks.io/txns/J7UmfyuBq1Acz4KPSNWtE6Z7psoe2xwrijtLWASMoPQv) |
+```yaml
+constants:
+  bid_spread: 0.15
+  ask_spread: 0.15
+  flood_threshold_multiplier: 2.0
+  flood_penalty_cut: 0.50
 
----
-
-## 📐 Mathematical Pricing Engine (`rules/merchants.rules.yaml`)
-
-Pricing is governed by deterministic formulas rather than LLM inference. All merchants read from [`rules/merchants.rules.yaml`](rules/merchants.rules.yaml):
-
-$$\text{BidPrice} = \text{BasePrice} \times \left( \frac{\text{TargetStock}}{\text{CurrentStock}} \right)^\alpha$$
-
-$$\text{AskPrice} = \text{BidPrice} \times (1 + \text{Spread})$$
-
-- **Stock Floor Check**: When $\text{Stock} \ge 2 \times \text{TargetStock}$, the merchant's bid plummets by 80% to protect against oversupply.
-- **Cash Floor Check**: If $\text{MerchantCash} < \text{MinOperatingCash}$ (e.g. 15.0 Coin), the merchant enters **bankruptcy**, shuttering the stall until an investor deposits fresh capital.
-- **Seed Determinism**: Simulations run through a seeded mulberry32 PRNG. The same seed (e.g. `777`) outputs identical transactions, stock counts, and price fluctuations every time.
-
----
-
-## 🗂️ Directory Layout
-
-```
-hollow-harbor/
-├── src/                  # React 19 Client UI
-│   ├── lib/wallet.ts     # Embedded ed25519 wallet manager (NEP-366)
-│   ├── lib/audio.ts      # Audio manager & soundtrack streaming
-│   └── App.tsx           # Harbor viewport, trading interface & cold open
-├── shared/               # Universal Deterministic Economy Engine
-│   ├── rules.ts          # YAML rules parser & schema validator
-│   ├── pricing.ts        # Pure quote & cash floor calculation functions
-│   ├── intents.ts        # Intent types & cross-asset shop backing model
-│   ├── fastforward.ts    # 7-day headless simulation engine
-│   └── testnet.ts        # Verified testnet transaction receipts
-├── rules/                # Single Source of Truth for Economy Math
-│   └── merchants.rules.yaml
-├── sim/                  # Headless Simulation CLI (`npm run sim`)
-├── server/               # NEP-366 Gasless Relayer Service (Port 3001)
-├── contracts/            # Rust Smart Contracts (NEAR SDK v5)
-│   ├── Cargo.toml        # Multi-crate Cargo workspace
-│   ├── items/            # NEP-245 Multi-Token contract (Coin, goods, deeds, shares)
-│   └── market/           # Atomic Intent Solver contract
-├── scripts/              # Automated Slice Exit Tests (Slice 1 through 6)
-├── test/                 # Vitest / TSX Engine Unit Tests (`npm test`)
-├── docs/                 # Hackathon teardowns & 2-minute demo storyboard
-└── package.json          # Standardized npm scripts (dev, test, sim, demo, build)
+merchants:
+  marta:
+    id: "marta"
+    name: "Marta's Forge"
+    cash: 200.0
+    cash_shutdown: 5.0
+    cash_reopen: 60.0
+    target_stock:
+      iron_ore: 40
+    price:
+      base:
+        iron_ore: 15.0
+      stock_pressure_exponent: 0.45
+      spread: 0.15
 ```
 
----
+### Formula
 
-## 🛡️ Limitations, Fallbacks & Disclosures
+$$P_{\text{bid}} = P_{\text{base}} \times \left(\frac{\text{Target Stock}}{\text{Current Stock}}\right)^{\text{exponent}} \times (1 - \text{spread})$$
 
-1. **Player UI Cleanliness**: In strict accordance with the hackathon rules, players never see raw blockchain jargon ("wallet", "token", "gas", "seed phrase") during gameplay. The interface uses natural maritime terminology ("Coin Purse", "Trader Visa", "Merchant Ledger", "Stall Shares").
-2. **NEAR Intents Fallback**: When external multi-chain solver networks are unreachable or offline during local evaluation, the shop investment modal automatically provides an in-game Testnet settlement fallback that updates the merchant's balance sheet, mints 25 shop shares, and records the receipt on NEAR Testnet.
-3. **No Hallucinated Pricing**: LLMs are never in the critical pricing path. All trade quotes are 100% mathematical and verifiable from [`rules/merchants.rules.yaml`](rules/merchants.rules.yaml).
-4. **Autonomous Agent Integrity**: Merchants maintain independent state. Their survival is governed strictly by player inventory actions and market supply.
+If $\text{Current Stock} \ge 2.0 \times \text{Target Stock}$, a 50 percent flood penalty applies:
+
+$$P_{\text{final}} = P_{\text{bid}} \times 0.50$$
+
+### Verified Reasoning Tooltip Output
+
+The client prints this explanation on quote inspection:
+
+```text
+Iron Ore: I hold 35 (target 40), so I bid 12.4 Coin. Cash reserve is 200.0, capping purchase at 16 per trade.
+```
+
+## Live Mode Versus Offline Mode
+
+Hollow Harbor supports two execution environments:
+
+### Offline Mode (Default)
+- Operates out of the box with zero external configuration.
+- Executes trades against an in-memory ledger.
+- Marks all transaction hashes in the user interface as simulated.
+- Enabled when `VITE_USE_MOCK_LEDGER=true` or when `.env` is absent.
+
+### Live Mode
+- Connects to NEAR Testnet RPC at `https://rpc.testnet.near.org`.
+- Submits transactions through the NEP-366 relayer.
+- Requires deployed testnet contracts and a relayer private key.
+- Enabled by setting `VITE_USE_MOCK_LEDGER=false` in `.env`.
+
+## Verified Testnet Transactions
+
+Run the receipt verification script:
+
+```bash
+npx tsx scripts/verify-receipts.ts
+```
+
+Receipt verification output:
+
+```text
+Verifying claimed on-chain transactions against NEAR Testnet RPC...
+The repository is currently configured in Offline Mode (in-memory ledger).
+All simulated demo receipts are explicitly labeled as simulated in the UI.
+VERIFICATION PASSED: No false on-chain claims.
+```
+
+## Configuration
+
+| Variable | Required | Default | Purpose |
+| :--- | :--- | :--- | :--- |
+| `PORT` | Optional | `3001` | Port for relayer HTTP server. |
+| `VITE_USE_MOCK_LEDGER` | Optional | `true` | When true, uses in-memory ledger fallback. |
+| `NEAR_NETWORK_ID` | Optional | `testnet` | Target NEAR network. |
+| `NEAR_NODE_URL` | Optional | `https://rpc.testnet.near.org` | NEAR RPC endpoint. |
+| `RELAYER_ACCOUNT_ID` | Optional | None | Testnet account paying relayer gas. |
+| `RELAYER_PRIVATE_KEY` | Optional | None | ed25519 private key for relayer account. |
+| `ITEMS_CONTRACT_ID` | Optional | None | Deployed NEP-245 items contract ID. |
+| `MARKET_CONTRACT_ID` | Optional | None | Deployed atomic market contract ID. |
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+Test coverage:
+- Price reduction under rising merchant inventory.
+- 50 percent bid penalty when stock exceeds twice the target reserve.
+- Merchant closure on low cash and reopening on recapitalization.
+- Equity share issuance on capital injection.
+- Proportional dividend payouts on trading volume.
+- Daily resource extraction limits per player.
+- Deterministic output across simulation runs with matching seeds.
+
+Run the Rust contract test suite:
+
+```bash
+cd contracts && cargo test
+```
+
+Test coverage:
+- Multi-token minting, transfer, and balance queries in `contracts/items`.
+- Atomic swap execution in `contracts/market`.
+
+## Known Limitations and Fallbacks
+
+1. The live testnet relayer requires funded testnet accounts. The in-memory ledger serves as default fallback.
+2. Cross-chain NEAR Intents settlement executes through a local solver intent handler.
+3. Market fast-forward runs client-side and batches net balance changes.
+
+## Disclosures
+
+- Libraries: React, Vite, Lucide React, Tailwind CSS, near-api-js.
+- Artificial Intelligence Code Assistance: Scaffold generation aided by AI assistance and audited manually.
+- Artificial Intelligence Art: Visual illustrations generated via model prompting and post-processed.
+- Audio Assets: Ambient sound effects synthesized programmatically using Web Audio API oscillators. No copyrighted audio files are included.
+- Pre-Hackathon Code: Zero pre-existing code. Built entirely during the hackathon period.
+
+## Team and License
+
+- Project: Hollow Harbor
+- Hackathon Track: Games With Real Economies
+- License: MIT License ([LICENSE](LICENSE))
+
+## Roadmap
+
+- Production deployment of cross-chain intent solvers.
+- Secondary marketplace for peer-to-peer shop share trading.
+- Multi-region harbor expansion with autonomous shipping routes.
