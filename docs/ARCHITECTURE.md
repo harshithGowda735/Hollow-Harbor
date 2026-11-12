@@ -66,3 +66,4 @@ All economic pricing logic resides inside `rules/merchants.rules.yaml`.
 Neither client nor server contains bespoke hardcoded pricing logic.
 The shared module `shared/pricing.ts` implements the pricing formulas.
 Unit tests in `test/engine.test.ts` verify mathematical compliance against the rules.
+

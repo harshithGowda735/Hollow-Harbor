@@ -448,7 +448,10 @@ export default function App() {
 
     // Broadcast batch settlement to server relayer if online
     try {
-      const res = await fetch('http://localhost:3001/api/fastforward/batch-settle', {
+      const relayerBase =
+        import.meta.env.VITE_RELAYER_URL ||
+        (window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin);
+      const res = await fetch(`${relayerBase}/api/fastforward/batch-settle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

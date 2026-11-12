@@ -1,14 +1,28 @@
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Nep366Relayer } from './relayer';
 import { TradeIntent, SolverQuote, SettlementReceipt, ShopInvestmentIntent } from '../shared/intents';
 import { getVerifiedTestnetTx } from '../shared/testnet';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distDir = path.resolve(__dirname, '../dist');
+const shouldServeClient =
+  (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') &&
+  fs.existsSync(path.join(distDir, 'index.html'));
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+if (shouldServeClient) {
+  app.use(express.static(distDir));
+}
 
 const relayer = new Nep366Relayer();
 
@@ -48,8 +62,12 @@ const ledger: LedgerEntry[] = [
   },
 ];
 
-// Root Status & Health Dashboard
-app.get('/', (req, res) => {
+// Root Status & Health Dashboard (served at / in API-only mode, or /api/status when serving client)
+app.get('/health', (_req, res) => {
+  res.json({ ok: true, status: 'online', network: 'testnet' });
+});
+
+app.get(shouldServeClient ? '/api/status' : '/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -336,6 +354,12 @@ app.get('/api/ledger', (req, res) => {
     ledger,
   });
 });
+
+if (shouldServeClient) {
+  app.get('/{*splat}', (_req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
 
 const serverPort = Number(port);
 app.listen(serverPort, '0.0.0.0', () => {

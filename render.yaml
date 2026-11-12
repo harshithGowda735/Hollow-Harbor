@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hollow-harbor
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_USE_MOCK_LEDGER
+        value: "true"

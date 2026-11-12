@@ -35,3 +35,4 @@ This script walks judges through the complete gameplay and economic cycle within
 3. Watch daily trade volume, price ticks, and caravan supply events in the log.
 4. Daily dividend payouts credit to your balance sheet from forge profits.
 5. Open the On-Chain Ledger panel to view settlement transaction hashes.
+

@@ -66,3 +66,4 @@ Caravans and random events alter harbor supply deterministically based on run se
 2. Merchant bids cut by 50 percent when merchant inventory exceeds twice the target reserve.
 3. Maximum transaction limits prevent single-order capital depletion of merchants.
 4. Deterministic pseudo-random number seeds ensure reproducible trade outcomes.
+

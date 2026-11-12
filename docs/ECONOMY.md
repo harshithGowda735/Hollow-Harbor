@@ -94,3 +94,4 @@ When stock rises above target stock to 80 units:
    - Operating margin: 10 percent = 23.0 Coin profit.
    - Dividend payout ratio: 50 percent of profit = 11.5 Coin.
    - Shareholder with 25 of 50 shares (50 percent) receives 5.75 Coin.
+
