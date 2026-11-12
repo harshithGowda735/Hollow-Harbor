@@ -11,3 +11,4 @@ services:
         value: production
       - key: VITE_USE_MOCK_LEDGER
         value: "true"
+

@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distDir = path.resolve(__dirname, '../dist');
 const shouldServeClient =
+  !process.env.VERCEL &&
   (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') &&
   fs.existsSync(path.join(distDir, 'index.html'));
 
@@ -362,8 +363,10 @@ if (shouldServeClient) {
 }
 
 const serverPort = Number(port);
-app.listen(serverPort, '0.0.0.0', () => {
-  console.log(`Hollow Harbor Relayer & State Server running on port ${serverPort} (0.0.0.0)`);
-});
+if (!process.env.VERCEL) {
+  app.listen(serverPort, '0.0.0.0', () => {
+    console.log(`Hollow Harbor Relayer & State Server running on port ${serverPort} (0.0.0.0)`);
+  });
+}
 
 export default app;
